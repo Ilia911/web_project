@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public enum  ConnectionPool {
     INSTANCE;
@@ -22,25 +26,54 @@ public enum  ConnectionPool {
     private static final int MAX_CONNECTIONS_AMOUNT =
             Integer.parseInt(RESOURCE.getString("maxConnectionsAmount"));
 
-    private final Stack<Connection> freeConnections = new Stack<>();
-    private final List<Connection> busyConnections = new ArrayList<>();
+    private final Lock lock = new ReentrantLock();
+    private final Condition retrieveCondition = lock.newCondition();
+    private final Condition returnCondition = lock.newCondition();
 
-    public Connection retrieveConnection() {
-        Connection connection = freeConnections.pop();
-        busyConnections.add(connection);
+//    private static final Thread thread
+
+    private final Stack<Connection> freeConnections = new Stack<>();
+    private final List<Connection> busyConnections = new LinkedList<>();
+
+    public Connection retrieveConnection() throws InterruptedException {
+        Connection connection;
+        lock.lock();
+        try {
+            while (freeConnections.size() == 0) {
+                retrieveCondition.await();
+            }
+            connection = freeConnections.pop();
+            busyConnections.add(connection);
+            returnCondition.signal();
+        }
+        finally {
+            lock.unlock();
+        }
+
         return connection;
     }
 
-    public void returnConnection(Connection connection){
-        if (connection != null) {
-            for (int i = 0; i < busyConnections.size(); i++) {
-                if (connection.equals(busyConnections.get(i))) {
-                    freeConnections.push(connection);
-                    busyConnections.remove(i);
-                    break;
+    public void returnConnection(Connection connection) throws InterruptedException {
+        lock.lock();
+        try {
+            while (busyConnections.size() == 0) {
+                retrieveCondition.await();
+            }
+            if (connection != null) {
+                for (int i = 0; i < busyConnections.size(); i++) {
+                    if (connection.equals(busyConnections.get(i))) {
+                        freeConnections.push(connection);
+                        busyConnections.remove(i);
+                        break;
+                    }
                 }
             }
+            retrieveCondition.signal();
         }
+        finally {
+            lock.unlock();
+        }
+
     }
 
     private void init() throws SQLException {
@@ -82,10 +115,5 @@ public enum  ConnectionPool {
 //        }
 //
 //    }
-
-   static class EnlargeConnectionPoolHelper {
-
-
-    }
 
 }
