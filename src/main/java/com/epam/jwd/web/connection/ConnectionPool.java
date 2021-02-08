@@ -1,35 +1,69 @@
 package com.epam.jwd.web.connection;
 
-import com.epam.jwd.web.entity.User;
-import com.epam.jwd.web.util.reader.PropertyReader;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Stack;
 
 public enum  ConnectionPool {
     INSTANCE;
 
-    private static final String DATABASE_URL = PropertyReader.INSTANCE.getProperties().getProperty("databaseURL");
-    private static final String DATABASE_LOGIN = PropertyReader.INSTANCE.getProperties().getProperty("databaseLogin");
-    private static final String DATABASE_PASSWORD = PropertyReader.INSTANCE.getProperties().getProperty("databasePassword");
-    private static final int INITIAL_CONNECTIONS_AMOUNT =
-            Integer.parseInt(PropertyReader.INSTANCE.getProperties().getProperty("minConnectionsAmount"));
-    private static final int MAX_CONNECTIONS_AMOUNT =
-            Integer.parseInt(PropertyReader.INSTANCE.getProperties().getProperty("maxConnectionsAmount"));
+    private static final ResourceBundle RESOURCE = ResourceBundle.getBundle("database");
 
-    private Stack<Connection> connections = new Stack<>();
+    private static final String DATABASE_URL = RESOURCE.getString("databaseURL");
+    private static final String DATABASE_LOGIN = RESOURCE.getString("databaseLogin");
+    private static final String DATABASE_PASSWORD = RESOURCE.getString("databasePassword");
+
+    private static final int INITIAL_CONNECTIONS_AMOUNT =
+            Integer.parseInt(RESOURCE.getString("minConnectionsAmount"));
+    private static final int MAX_CONNECTIONS_AMOUNT =
+            Integer.parseInt(RESOURCE.getString("maxConnectionsAmount"));
+
+    private final Stack<Connection> freeConnections = new Stack<>();
+    private final List<Connection> busyConnections = new ArrayList<>();
 
     public Connection retrieveConnection() {
-        return connections.pop();
+        Connection connection = freeConnections.pop();
+        busyConnections.add(connection);
+        return connection;
+    }
 
-    }
     public void returnConnection(Connection connection){
-        connections.push(connection);
+        if (connection != null) {
+            for (int i = 0; i < busyConnections.size(); i++) {
+                if (connection.equals(busyConnections.get(i))) {
+                    freeConnections.push(connection);
+                    busyConnections.remove(i);
+                    break;
+                }
+            }
+        }
     }
+
+    private void init() throws SQLException {
+        for (int i = 0; i <= INITIAL_CONNECTIONS_AMOUNT; i++) {
+            addConnection();
+        }
+    }
+
+    private boolean checkSufficiencyOfCurrentAmountOfFreConnections() {
+        final int currentAmountOfConnections = freeConnections.size() + busyConnections.size();
+        final double currentPercentOfFreeConnections = freeConnections.size()/currentAmountOfConnections;
+        if (currentPercentOfFreeConnections < 0.25 && currentAmountOfConnections < MAX_CONNECTIONS_AMOUNT) {
+            return false;
+        }
+        return true;
+    }
+
+    private void addConnection() throws SQLException {
+        final Connection realConnection= DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD);
+        final ProxyConnection proxyConnection = new ProxyConnection(realConnection);
+        freeConnections.push(proxyConnection);
+    }
+
 //    public static void main(String[] args) {
 //
 //        try (final Connection connection = DriverManager
@@ -48,5 +82,10 @@ public enum  ConnectionPool {
 //        }
 //
 //    }
+
+   static class EnlargeConnectionPoolHelper {
+
+
+    }
 
 }
