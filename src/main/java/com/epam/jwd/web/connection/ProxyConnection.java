@@ -78,7 +78,7 @@ public class ProxyConnection implements Connection{
 
     public void closeConnection() {
         try {
-            this.close();
+            this.realConnection.close();
         } catch (SQLException e) {
            LOGGER.error("Connection was not able to be closed!");
         }

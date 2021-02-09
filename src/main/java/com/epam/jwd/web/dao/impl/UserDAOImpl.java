@@ -9,30 +9,33 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class UserDAOImpl implements UserDAO {
     private final ConnectionPool connectionPool = ConnectionPool.INSTANCE;
 
     @Override
     public boolean authorization(String login, String password) throws UserDAOException {
-        String sql = "select * from auction_user where user_login = ?";
-        boolean result = false;
+        String sql = "SELECT * FROM a_user where u_login = ? and u_password = ?";
 
         try (Connection connection = connectionPool.retrieveConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, login);
+            preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            if (password != null && password.equals(resultSet.getString("user_name"))) {
+
+            String sqlLogin = resultSet.getString("u_login");
+            if (sqlLogin != null && sqlLogin.equals(login)) {
                 return true;
             }
+
         } catch (InterruptedException e) {
             throw new UserDAOException("Connection Lock was interrupted!");
         } catch (SQLException e) {
             throw new UserDAOException(e);
         }
-
-        return result;
+        return false;
     }
 
     @Override

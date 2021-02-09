@@ -32,12 +32,12 @@ public enum ConnectionPool {
 
     private final Thread thread = new AddConnectionThread();
 
-    private final Stack<ProxyConnection> freeConnections = new Stack<>();
+    private final Stack<ProxyConnection> freeConnections = new Stack<ProxyConnection>();
     private Connection connection;
     private int currentAmountOfConnections = 0;
 
     public void init() throws SQLException {
-        for (int i = 0; i <= INITIAL_CONNECTIONS_AMOUNT; i++) {
+        for (int i = 0; i < INITIAL_CONNECTIONS_AMOUNT; i++) {
             addConnection();
         }
         thread.setDaemon(true);
@@ -62,12 +62,11 @@ public enum ConnectionPool {
     public void returnConnection(Connection returnedConnection) {
         lock.lock();
         try {
-            while (returnedConnection != null && (returnedConnection.equals(connection))) {
-                if (((double) freeConnections.size() / currentAmountOfConnections) > 0.75
+            if (returnedConnection != null && (returnedConnection.equals(connection))) {
+                if (((double) freeConnections.size() / currentAmountOfConnections) > 0.25
                         && currentAmountOfConnections > INITIAL_CONNECTIONS_AMOUNT) {
                     ((ProxyConnection) returnedConnection).closeConnection();
                     --currentAmountOfConnections;
-                    break;
                 }
                 freeConnections.push((ProxyConnection) returnedConnection);
                 retrieveCondition.signal();
@@ -85,7 +84,9 @@ public enum ConnectionPool {
     }
 
     private void destroy() throws SQLException {
-        freeConnections.forEach(ProxyConnection::closeConnection);
+        for (ProxyConnection freeConnection : freeConnections) {
+            freeConnection.closeConnection();
+        }
     }
 
     private class AddConnectionThread extends Thread {
