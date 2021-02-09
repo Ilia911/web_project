@@ -17,6 +17,9 @@ public class Main {
 
         Locale chinalocale = new Locale("zh", "TW");
         Locale germanyLocale = Locale.GERMAN;
+        int a = 7, b = 10;
+        double c = (double)a/b;
+        System.out.println("c = " + c);
 
 //
 //        System.out.println(Locale.getDefault());

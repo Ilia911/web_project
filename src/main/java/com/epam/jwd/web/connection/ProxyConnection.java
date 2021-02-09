@@ -1,5 +1,8 @@
 package com.epam.jwd.web.connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -16,11 +19,13 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
 public class ProxyConnection implements Connection{
     private Connection realConnection;
+    private final Logger LOGGER = LoggerFactory.getLogger(ProxyConnection.class);
 
     public ProxyConnection(Connection realConnection) {
         this.realConnection = realConnection;
@@ -70,8 +75,13 @@ public class ProxyConnection implements Connection{
     public void close() throws SQLException {
         ConnectionPool.INSTANCE.returnConnection(this);
     }
-    public void closeConnection() throws SQLException {
-        this.close();
+
+    public void closeConnection() {
+        try {
+            this.close();
+        } catch (SQLException e) {
+           LOGGER.error("Connection was not able to be closed!");
+        }
     }
 
     @Override
@@ -297,5 +307,25 @@ public class ProxyConnection implements Connection{
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return realConnection.isWrapperFor(iface);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProxyConnection that = (ProxyConnection) o;
+        return Objects.equals(realConnection, that.realConnection);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(realConnection);
+    }
+
+    @Override
+    public String toString() {
+        return "ProxyConnection{" +
+                "realConnection=" + realConnection +
+                '}';
     }
 }

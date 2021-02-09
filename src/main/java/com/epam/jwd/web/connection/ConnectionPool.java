@@ -1,26 +1,26 @@
 package com.epam.jwd.web.connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public enum  ConnectionPool {
+public enum ConnectionPool {
     INSTANCE;
 
-    private static final ResourceBundle RESOURCE = ResourceBundle.getBundle("database");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionPool.class);
 
+    private static final ResourceBundle RESOURCE = ResourceBundle.getBundle("database");
     private static final String DATABASE_URL = RESOURCE.getString("databaseURL");
     private static final String DATABASE_LOGIN = RESOURCE.getString("databaseLogin");
     private static final String DATABASE_PASSWORD = RESOURCE.getString("databasePassword");
-
     private static final int INITIAL_CONNECTIONS_AMOUNT =
             Integer.parseInt(RESOURCE.getString("minConnectionsAmount"));
     private static final int MAX_CONNECTIONS_AMOUNT =
@@ -28,92 +28,90 @@ public enum  ConnectionPool {
 
     private final Lock lock = new ReentrantLock();
     private final Condition retrieveCondition = lock.newCondition();
-    private final Condition returnCondition = lock.newCondition();
+    private final Condition enlargeCondition = lock.newCondition();
 
-//    private static final Thread thread
+    private final Thread thread = new AddConnectionThread();
 
-    private final Stack<Connection> freeConnections = new Stack<>();
-    private final List<Connection> busyConnections = new LinkedList<>();
+    private final Stack<ProxyConnection> freeConnections = new Stack<>();
+    private Connection connection;
+    private int currentAmountOfConnections = 0;
+
+    public void init() throws SQLException {
+        for (int i = 0; i <= INITIAL_CONNECTIONS_AMOUNT; i++) {
+            addConnection();
+        }
+        thread.setDaemon(true);
+        thread.start();
+    }
 
     public Connection retrieveConnection() throws InterruptedException {
-        Connection connection;
+
         lock.lock();
         try {
             while (freeConnections.size() == 0) {
                 retrieveCondition.await();
             }
             connection = freeConnections.pop();
-            busyConnections.add(connection);
-            returnCondition.signal();
-        }
-        finally {
+            enlargeCondition.signal();
+        } finally {
             lock.unlock();
         }
-
         return connection;
     }
 
-    public void returnConnection(Connection connection) throws InterruptedException {
+    public void returnConnection(Connection returnedConnection) {
         lock.lock();
         try {
-            while (busyConnections.size() == 0) {
-                retrieveCondition.await();
-            }
-            if (connection != null) {
-                for (int i = 0; i < busyConnections.size(); i++) {
-                    if (connection.equals(busyConnections.get(i))) {
-                        freeConnections.push(connection);
-                        busyConnections.remove(i);
-                        break;
-                    }
+            while (returnedConnection != null && (returnedConnection.equals(connection))) {
+                if (((double) freeConnections.size() / currentAmountOfConnections) > 0.75
+                        && currentAmountOfConnections > INITIAL_CONNECTIONS_AMOUNT) {
+                    ((ProxyConnection) returnedConnection).closeConnection();
+                    --currentAmountOfConnections;
+                    break;
                 }
+                freeConnections.push((ProxyConnection) returnedConnection);
+                retrieveCondition.signal();
             }
-            retrieveCondition.signal();
-        }
-        finally {
+        } finally {
             lock.unlock();
         }
-
-    }
-
-    private void init() throws SQLException {
-        for (int i = 0; i <= INITIAL_CONNECTIONS_AMOUNT; i++) {
-            addConnection();
-        }
-    }
-
-    private boolean checkSufficiencyOfCurrentAmountOfFreConnections() {
-        final int currentAmountOfConnections = freeConnections.size() + busyConnections.size();
-        final double currentPercentOfFreeConnections = freeConnections.size()/currentAmountOfConnections;
-        if (currentPercentOfFreeConnections < 0.25 && currentAmountOfConnections < MAX_CONNECTIONS_AMOUNT) {
-            return false;
-        }
-        return true;
     }
 
     private void addConnection() throws SQLException {
-        final Connection realConnection= DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD);
+        final Connection realConnection = DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD);
         final ProxyConnection proxyConnection = new ProxyConnection(realConnection);
         freeConnections.push(proxyConnection);
+        ++currentAmountOfConnections;
     }
 
-//    public static void main(String[] args) {
-//
-//        try (final Connection connection = DriverManager
-//                .getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD);
-//             final Statement statement = connection.createStatement();
-//             final ResultSet resultSet = statement.executeQuery("select * from a_user where id = 1")
-//
-//        ) {
-//            resultSet.next();
-//            User user = new User(resultSet.getInt("id"), resultSet.getString("u_login"),
-//                    resultSet.getString("u_password"));
-//            System.out.println(user.toString());
-//        }
-//        catch(SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+    private void destroy() throws SQLException {
+        freeConnections.forEach(ProxyConnection::closeConnection);
+    }
 
+    private class AddConnectionThread extends Thread {
+        @Override
+        public void run() {
+            lock.lock();
+            try {
+                while (checkSufficiencyOfCurrentAmountOfFreConnections()) {
+                    enlargeCondition.await();
+                }
+                addConnection();
+            } catch (InterruptedException e) {
+                LOGGER.error("Lock was interrupted!");
+            } catch (SQLException e) {
+                LOGGER.error("It's not allowed to create additional connection!");
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        private boolean checkSufficiencyOfCurrentAmountOfFreConnections() {
+            final double currentPercentOfFreeConnections = (double) freeConnections.size() / currentAmountOfConnections;
+            if (currentPercentOfFreeConnections < 0.25 && currentAmountOfConnections < MAX_CONNECTIONS_AMOUNT) {
+                return false;
+            }
+            return true;
+        }
+    }
 }
