@@ -4,6 +4,7 @@ import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.WrappingRequestContext;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,23 +20,26 @@ public class ApplicationController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().println("Hello from servlet");
         doAction(req, resp);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.getWriter().println("Hello from servlet");
         doAction(req, resp);
 
     }
 
-    private void doAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void doAction(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final String commandName = request.getParameter(COMMAND_PARAMETER_NAME);
         final Command command = Command.of(commandName);
         final ResponseContext responseContext = command.execute(WrappingRequestContext.of(request));
         if (responseContext.isRedirect()) {
-            response.sendRedirect("/index.jsp");
+            response.sendRedirect("/WEB-INF/jsp/index.jsp");
         } else {
-            request.getRequestDispatcher(responseContext.getPage());
+            final RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseContext.getPage());
+            requestDispatcher.forward(request, response);
         }
 
 

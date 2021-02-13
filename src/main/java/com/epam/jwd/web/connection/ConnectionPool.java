@@ -1,11 +1,14 @@
 package com.epam.jwd.web.connection;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.locks.Condition;
@@ -37,6 +40,7 @@ public enum ConnectionPool {
     private int currentAmountOfConnections = 0;
 
     public void init() throws SQLException {
+        registerDrivers();
         for (int i = 0; i < INITIAL_CONNECTIONS_AMOUNT; i++) {
             addConnection();
         }
@@ -83,10 +87,11 @@ public enum ConnectionPool {
         ++currentAmountOfConnections;
     }
 
-    private void destroy() throws SQLException {
+    public void destroy() throws SQLException {
         for (ProxyConnection freeConnection : freeConnections) {
             freeConnection.closeConnection();
         }
+        deregisterDrivers();
     }
 
     private class AddConnectionThread extends Thread {
@@ -113,6 +118,27 @@ public enum ConnectionPool {
                 return false;
             }
             return true;
+        }
+    }
+
+    private static void registerDrivers() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            DriverManager.registerDriver(DriverManager.getDriver(DATABASE_URL));
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void deregisterDrivers() {
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            try {
+                DriverManager.deregisterDriver(drivers.nextElement());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

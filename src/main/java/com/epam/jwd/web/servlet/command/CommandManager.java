@@ -1,9 +1,15 @@
 package com.epam.jwd.web.servlet.command;
 
+import com.epam.jwd.web.servlet.command.page.ShowAllItemsCommand;
+import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
+import com.epam.jwd.web.servlet.command.user.LogInCommand;
+import com.epam.jwd.web.servlet.command.user.LogOutCommand;
+
 public enum CommandManager {
     LOG_IN(LogInCommand.INSTANCE),
     LOG_OUT(LogOutCommand.INSTANCE),
-    DEFAULT(DefaultCommand.INSTANCE);
+    DEFAULT(ShowMainPageCommand.INSTANCE),
+    SHOW_ITEMS(ShowAllItemsCommand.INSTANCE);
 
     private final Command command;
 

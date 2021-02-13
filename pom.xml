@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
+
     <build>
         <plugins>
             <plugin>
@@ -19,11 +20,10 @@
                     <target>8</target>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
-    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+
     <dependencies>
     <dependency>
         <groupId>mysql</groupId>
@@ -35,7 +35,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -58,11 +57,22 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>jstl-api</artifactId>
             <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jstl-impl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
         </dependency>
 
     </dependencies>

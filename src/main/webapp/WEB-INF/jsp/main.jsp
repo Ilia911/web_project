@@ -4,6 +4,6 @@
     <title>Main page</title>
 </head>
 <body>
-<a href="${pageContext.request.contextPath}/controller?command=show_items">go to books page</a>
+<a href="${pageContext.request.contextPath}/controller?command=show_items">go to item page</a>
 </body>
 </html>
