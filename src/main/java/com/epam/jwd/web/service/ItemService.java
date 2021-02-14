@@ -1,6 +1,7 @@
 package com.epam.jwd.web.service;
 
 import com.epam.jwd.web.dao.CommonDao;
+import com.epam.jwd.web.dao.impl.ItemDaoImpl;
 import com.epam.jwd.web.entity.Item;
 import com.epam.jwd.web.entity.ItemDto;
 
@@ -8,15 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ItemService implements CommonService<ItemDto> {
+public enum  ItemService implements CommonService<ItemDto> {
+    INSTANCE;
 
-    private final CommonDao<Item> itemDao;
-
-    public ItemService(CommonDao<Item> itemDao) {
-        this.itemDao = itemDao;
-    }
-
-
+    private static final CommonDao<Item> itemDao = new ItemDaoImpl();
 
     @Override
     public Optional<List<ItemDto>> findAll() {

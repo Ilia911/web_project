@@ -5,8 +5,8 @@
 <head>
 <body>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=login">
-    <input name="userName">
-    <input type="password" name="userPassword">
+    login: <input name="userLogin"><br/>
+    password: <input type="password" name="userPassword"><br/>
     <input type="submit">
 </form>
 </body>

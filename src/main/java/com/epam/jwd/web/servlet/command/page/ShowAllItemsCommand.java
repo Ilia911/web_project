@@ -1,10 +1,10 @@
 package com.epam.jwd.web.servlet.command.page;
 
-import com.epam.jwd.web.dao.impl.ItemDaoImpl;
 import com.epam.jwd.web.entity.ItemDto;
 import com.epam.jwd.web.service.CommonService;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.servlet.command.Command;
+import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContext;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 
@@ -17,7 +17,7 @@ public enum  ShowAllItemsCommand implements Command {
     private static final ResponseContext RESPONSE = new ResponseContext() {
         @Override
         public String getPage() {
-            return "/WEB-INF/jsp/items.jsp";
+            return Path.SHOW_ALL_ITEMS_PAGE;
         }
 
         @Override
@@ -27,16 +27,10 @@ public enum  ShowAllItemsCommand implements Command {
     };
 
     private static final String ITEMS_ATTRIBUTE_NAME = "items";
-    private final CommonService<ItemDto> itemService;
-
-    ShowAllItemsCommand() {
-        itemService = new ItemService(new ItemDaoImpl());
-    }
-
+    private final CommonService<ItemDto> itemService = ItemService.INSTANCE;
 
     @Override
     public ResponseContext execute(RequestContext req) {
-        //todo: imply service
         final List<ItemDto> items = itemService.findAll().orElse(Collections.emptyList());
         req.setAttribute(ITEMS_ATTRIBUTE_NAME, items);
         return RESPONSE;

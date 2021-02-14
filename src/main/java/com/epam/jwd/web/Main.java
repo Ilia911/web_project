@@ -16,21 +16,33 @@ import java.util.Optional;
 @WebServlet
 public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    private static final String TABLE_NAME = "auction_user";
+    private static final String ID_COLUMN_NAME = "id";
+    private static final String LOGIN_COLUMN_NAME = "user_login";
+    private static final String PASSWORD_COLUMN_NAME = "user_password";
+    private static final String NAME_COLUMN_NAME = "user_name";
+    private static final String ACCOUNT_COLUMN_NAME = "user_account";
+    private static final String MAIL_COLUMN_NAME = "user_mail";
+    private static final String ROLE_COLUMN_NAME = "user_role";
+    private static final String STATUS_COLUMN_NAME = "user_status";
+    private static final String FIND_ALL_USERS_SQL = "SELECT " + ID_COLUMN_NAME + ", " + LOGIN_COLUMN_NAME + ", "
+            + PASSWORD_COLUMN_NAME + ", " + NAME_COLUMN_NAME + ", " + ACCOUNT_COLUMN_NAME + ", "
+            + MAIL_COLUMN_NAME + ", " + ROLE_COLUMN_NAME + ", " + STATUS_COLUMN_NAME + " FROM " + TABLE_NAME;
+    private static final String FIND_USER_BY_LOGIN_SQL = "SELECT " + ID_COLUMN_NAME + ", " + LOGIN_COLUMN_NAME + ", "
+            + PASSWORD_COLUMN_NAME + ", " + NAME_COLUMN_NAME + ", " + ACCOUNT_COLUMN_NAME + ", "
+            + MAIL_COLUMN_NAME + ", " + ROLE_COLUMN_NAME + ", " + STATUS_COLUMN_NAME + " FROM " + TABLE_NAME
+            + " WHERE " + LOGIN_COLUMN_NAME + " = ?";
 
 
     public static void main(String[] args) throws SQLException {
+        System.out.println(FIND_ALL_USERS_SQL);
+        System.out.println(FIND_USER_BY_LOGIN_SQL);
+        System.out.println("INSERT INTO " + TABLE_NAME + " ( " + LOGIN_COLUMN_NAME +", " +  PASSWORD_COLUMN_NAME + ", " +  NAME_COLUMN_NAME + ", " + MAIL_COLUMN_NAME + ")  VALUES (?, ?, ?, ?)");
+
 
 //        Locale chinalocale = new Locale("zh", "TW");
 //        Locale germanyLocale = Locale.GERMAN;
 
-        ConnectionPool.INSTANCE.init();
-        ItemService service = new ItemService(new ItemDaoImpl());
-        final Optional<List<ItemDto>> all = service.findAll();
-        if (all.isPresent()) {
-            for (ItemDto itemDto : all.get()) {
-                System.out.println(itemDto);
-            }
-        }
 
 //        UserDAO userDAO = ProviderDao.getInstance().getUserDAO();
 //        final boolean isAuthorized = userDAO.authorization("Ivan Ivanov", "123");

@@ -63,7 +63,7 @@ public class ItemDaoImpl implements CommonDao<Item> {
                 resultSet.getBigDecimal(PRICE_COLUMN_NAME),
                 resultSet.getBigDecimal(BID_COLUMN_NAME),
                 Status.of(resultSet.getString(STATUS_COLUMN_NAME))
-                );
+        );
     }
 
     @Override

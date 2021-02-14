@@ -36,7 +36,7 @@ public class ApplicationController extends HttpServlet {
         final Command command = Command.of(commandName);
         final ResponseContext responseContext = command.execute(WrappingRequestContext.of(request));
         if (responseContext.isRedirect()) {
-            response.sendRedirect("/WEB-INF/jsp/index.jsp");
+            response.sendRedirect(responseContext.getPage());
         } else {
             final RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseContext.getPage());
             requestDispatcher.forward(request, response);

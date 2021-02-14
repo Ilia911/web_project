@@ -5,13 +5,13 @@ import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContext;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 
-public enum ShowMainPageCommand implements Command {
+public enum ShowUserLoginPageCommand implements Command {
     INSTANCE;
 
     private static final ResponseContext RESPONSE = new ResponseContext() {
         @Override
         public String getPage() {
-            return Path.SHOW_MAIN_PAGE;
+            return Path.SHOW_USER_LOGIN_PAGE;
         }
 
         @Override
@@ -19,7 +19,6 @@ public enum ShowMainPageCommand implements Command {
             return false;
         }
     };
-
     @Override
     public ResponseContext execute(RequestContext req) {
         return RESPONSE;
