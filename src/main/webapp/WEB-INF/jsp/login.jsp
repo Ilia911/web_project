@@ -5,9 +5,14 @@
 <head>
 <body>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=login">
-    login: <input name="userLogin"><br/>
-    password: <input type="password" name="userPassword"><br/>
+    <label for="userLogin">Login:</label><br>
+    <input name="userLogin"><br/>
+    <label for="userPassword">Login:</label><br>
+    <input type="password" name="userPassword"><br/>
+    <label for="language">Login:</label><br>
+    language: <input type=
     <input type="submit">
+    <input type="reset">
 </form>
 </body>
 </html>

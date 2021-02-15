@@ -4,6 +4,7 @@ import com.epam.jwd.web.connection.ConnectionPool;
 import com.epam.jwd.web.dao.impl.ItemDaoImpl;
 import com.epam.jwd.web.entity.ItemDto;
 import com.epam.jwd.web.service.ItemService;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,10 @@ public class Main {
         System.out.println(FIND_ALL_USERS_SQL);
         System.out.println(FIND_USER_BY_LOGIN_SQL);
         System.out.println("INSERT INTO " + TABLE_NAME + " ( " + LOGIN_COLUMN_NAME +", " +  PASSWORD_COLUMN_NAME + ", " +  NAME_COLUMN_NAME + ", " + MAIL_COLUMN_NAME + ")  VALUES (?, ?, ?, ?)");
+
+        final String password = BCrypt.hashpw("password", BCrypt.gensalt());
+        System.out.println(password);
+        System.out.println(BCrypt.checkpw("password", password));
 
 
 //        Locale chinalocale = new Locale("zh", "TW");
