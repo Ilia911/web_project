@@ -18,8 +18,8 @@ public enum LogInCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContext req) {
-        final String login = String.valueOf(req.getAttribute("userLogin"));
-        final String password = String.valueOf(req.getAttribute("userPassword"));
+        final String login = req.getParameter("userLogin");
+        final String password = req.getParameter("userPassword");
 
         final Optional<UserDto> optionalUserDto = userService.login(login, password);
 

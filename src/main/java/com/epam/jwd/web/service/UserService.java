@@ -47,7 +47,7 @@ public enum UserService implements CommonService<UserDto> {
     }
 
     public Optional<UserDto> register(String userLogin, String userPassword, String userName, String userEmail) {
-        Optional<User> user = userDao.register(userLogin, userPassword, userName, userEmail);
+        Optional<User> user = userDao.register(userLogin, BCrypt.hashpw(userPassword, BCrypt.gensalt()), userName, userEmail);
         return user.map(this::convertToDto);
     }
 }

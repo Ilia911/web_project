@@ -2,7 +2,8 @@ package com.epam.jwd.web.entity;
 
 public enum Role {
     CLIENT(1),
-    ADMIN(2);
+    ADMIN(2),
+    GUEST(3);
 
     private final int role;
 
@@ -16,6 +17,6 @@ public enum Role {
                 return value;
             }
         }
-        return CLIENT;
+        return GUEST;
     }
 }
