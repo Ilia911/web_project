@@ -4,7 +4,8 @@
     <title>Login</title>
 <head>
 <body>
-<form method="post" action="${pageContext.request.contextPath}/controller?command=login">
+<jsp:include page="common/header.jsp"/>
+<form method="post" action="${pageContext.request.contextPath}/controller?command=log_in">
     <label for="userLogin">Login:</label><br>
     <input name="userLogin"><br/>
     <label for="userPassword">Password:</label><br>

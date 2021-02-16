@@ -1,6 +1,5 @@
-package com.epam.jwd.web.listener;
+package com.epam.jwd.web.connection;
 
-import com.epam.jwd.web.connection.ConnectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -38,8 +38,7 @@ public class ApplicationController extends HttpServlet {
         if (responseContext.isRedirect()) {
             response.sendRedirect(responseContext.getPage());
         } else {
-            final RequestDispatcher requestDispatcher = request.getRequestDispatcher(responseContext.getPage());
-            requestDispatcher.forward(request, response);
+            request.getRequestDispatcher(responseContext.getPage()).forward(request, response);
         }
 
 

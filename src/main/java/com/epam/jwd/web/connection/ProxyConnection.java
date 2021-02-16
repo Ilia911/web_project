@@ -23,8 +23,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class ProxyConnection implements Connection{
-    private Connection realConnection;
+public final class ProxyConnection implements Connection{
+    private final Connection realConnection;
     private final Logger LOGGER = LoggerFactory.getLogger(ProxyConnection.class);
 
     public ProxyConnection(Connection realConnection) {
@@ -76,7 +76,7 @@ public class ProxyConnection implements Connection{
         ConnectionPool.INSTANCE.returnConnection(this);
     }
 
-    public void closeConnection() {
+    protected void closeConnection() {
         try {
             this.realConnection.close();
         } catch (SQLException e) {

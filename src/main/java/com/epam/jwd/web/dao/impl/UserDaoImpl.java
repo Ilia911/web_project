@@ -101,8 +101,23 @@ public class UserDaoImpl implements CommonDao<User> {
     }
 
     @Override
-    public Optional<User> save(User entity) {
+    public Optional<User> register(User entity) {
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findById(int id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> update(User entity) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean remove(int id) {
+        return false;
     }
 
 

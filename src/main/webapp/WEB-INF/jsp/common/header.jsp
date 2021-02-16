@@ -1,1 +1,1 @@
-<h3>Hello our awesome ${name}</h3>
+<h3>Hello our awesome ${sessionScope.name}!</h3>

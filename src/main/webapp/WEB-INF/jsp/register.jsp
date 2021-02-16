@@ -20,6 +20,7 @@
     <input type="radio" name="language" value="zh">
     <label for="zh">中國傳統的</label><br>
     <input type="submit">
+    <input type="reset">
 </form>
 </body>
 </html>

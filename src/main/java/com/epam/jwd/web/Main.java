@@ -46,8 +46,6 @@ public class Main {
         Role role = Role.of("3");
         System.out.println(role);
 
-ConnectionPool.INSTANCE.init();
-        System.out.println(UserService.INSTANCE.login("1111", "1111").isPresent());
 
 
 //        Locale chinalocale = new Locale("zh", "TW");

@@ -5,4 +5,5 @@ public class Path {
     public static final String SHOW_MAIN_PAGE = "/WEB-INF/jsp/main.jsp";
     public static final String SHOW_USER_LOGIN_PAGE = "/WEB-INF/jsp/login.jsp";
     public static final String SHOW_REGISTER_PAGE = "/WEB-INF/jsp/register.jsp";
+    public static final String SHOW_REGISTER_ITEM_PAGE = "/WEB-INF/jsp/register_item.jsp";
 }

@@ -8,6 +8,12 @@ public interface CommonDao<T> {
 
     Optional<List<T>> findAll();
 
-    Optional<T> save(T entity);
+    Optional<T> register(T entity);
+
+    Optional<T> findById(int id);
+
+    Optional<T> update(T entity);
+
+    boolean remove(int id);
 
 }

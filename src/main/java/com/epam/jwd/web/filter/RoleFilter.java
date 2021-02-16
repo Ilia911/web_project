@@ -32,7 +32,7 @@ public class RoleFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        if (request.getSession(false) == null) {
+        if (request.getSession(false) == null || request.getSession().getAttribute("name") == null) {
             final HttpSession session = request.getSession();
             session.setAttribute("name", "Guest");
             session.setAttribute("role", Role.of(role));

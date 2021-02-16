@@ -67,7 +67,22 @@ public class ItemDaoImpl implements CommonDao<Item> {
     }
 
     @Override
-    public Optional<Item> save(Item entity) {
+    public Optional<Item> register(Item entity) {
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Item> findById(int id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Item> update(Item entity) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean remove(int id) {
+        return false;
     }
 }

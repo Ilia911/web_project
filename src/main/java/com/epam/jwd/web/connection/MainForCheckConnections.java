@@ -1,6 +1,7 @@
 package com.epam.jwd.web.connection;
 
-
+import com.epam.jwd.web.connection.ConnectionPool;
+import com.epam.jwd.web.connection.ProxyConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +9,7 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 import java.util.Stack;
@@ -15,10 +17,10 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public enum ConnectionPool {
-    INSTANCE;
+public class MainForCheckConnections {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionPool.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(com.epam.jwd.web.connection.ConnectionPool.class);
 
     private static final ResourceBundle RESOURCE = ResourceBundle.getBundle("database");
     private static final String DATABASE_URL = RESOURCE.getString("databaseURL");
@@ -33,19 +35,31 @@ public enum ConnectionPool {
     private final Condition retrieveCondition = lock.newCondition();
     private final Condition enlargeCondition = lock.newCondition();
 
-    private final Thread thread = new AddConnectionThread();
-
     private final Stack<ProxyConnection> freeConnections = new Stack<ProxyConnection>();
     private Connection connection;
     private int currentAmountOfConnections = 0;
+
+    public static void main(String[] args) throws SQLException {
+        System.out.println("app started at " + LocalDateTime.now());
+        final Connection realConnection2 = DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD);
+        final ProxyConnection proxyConnection2 = new ProxyConnection(realConnection2);
+        System.out.println("first connection created at " + LocalDateTime.now());
+        final Connection realConnection1 = DriverManager.getConnection(DATABASE_URL, DATABASE_LOGIN, DATABASE_PASSWORD);
+        final ProxyConnection proxyConnection1 = new ProxyConnection(realConnection1);
+        System.out.println("second connection created at " + LocalDateTime.now());
+        System.out.println("Is this two connections equal? - " + proxyConnection2.equals(proxyConnection1));
+        proxyConnection1.closeConnection();
+        System.out.println("first connection closed at " + LocalDateTime.now());
+        proxyConnection2.closeConnection();
+        System.out.println("second connection closed at" + LocalDateTime.now());
+    }
 
     protected void init() throws SQLException {
         registerDrivers();
         for (int i = 0; i < INITIAL_CONNECTIONS_AMOUNT; i++) {
             addConnection();
         }
-        thread.setDaemon(true);
-        thread.start();
+
     }
 
     public Connection retrieveConnection() throws InterruptedException {
@@ -142,3 +156,6 @@ public enum ConnectionPool {
         }
     }
 }
+
+
+
