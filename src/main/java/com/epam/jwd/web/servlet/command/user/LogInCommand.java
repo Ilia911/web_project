@@ -30,7 +30,7 @@ public enum LogInCommand implements Command {
             session.setAttribute("status", optionalUserDto.get().getStatus());
             return ShowMainPageCommand.INSTANCE.execute(req);
         } else {
-            req.setAttribute("errorMessage", "Invalid credentials!");
+            req.setAttribute("errorLoginPassMessage", "Invalid credentials!");
             return new ResponseContext() {
                 @Override
                 public String getPage() {

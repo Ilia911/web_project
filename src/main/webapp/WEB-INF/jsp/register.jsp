@@ -4,6 +4,7 @@
     <title>Registration</title>
 <head>
 <body>
+<jsp:include page="common/header.jsp" />
 <form method="post" action="${pageContext.request.contextPath}/controller?command=register">
     <label for="userLogin">Login:</label><br>
     <input name="userLogin"><br/>
@@ -14,11 +15,11 @@
     <label for="userEmail">Email:</label><br>
     <input name="userEmail"><br/>
     <input type="radio" name="language" value="ru">
-    <label for="ru">русский</label><br>
+    <label for="ru">Russian</label><br>
     <input type="radio" name="language" value="en">
     <label for="en">English</label><br>
     <input type="radio" name="language" value="zh">
-    <label for="zh">中國傳統的</label><br>
+    <label for="zh">Traditional chinese</label><br>
     <input type="submit">
     <input type="reset">
 </form>

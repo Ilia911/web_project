@@ -6,6 +6,9 @@
 <body>
 <jsp:include page="common/header.jsp"/>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=log_in">
+<br/>
+<strong>${errorLoginPassMessage}</strong>
+<br/>
     <label for="userLogin">Login:</label><br>
     <input name="userLogin"><br/>
     <label for="userPassword">Password:</label><br>

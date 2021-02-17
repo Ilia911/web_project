@@ -5,13 +5,14 @@
     <title>Items</title>
 </head>
 <body>
+<jsp:include page="common/header.jsp" />
 <h2>Items list</h2>
     <c:if test="${not empty requestScope.items}">
         <h2>Columns</h2>
-        <ul>
+        <table>
             <c:forEach var="item" items="${requestScope.items}">
-                <li>${item.name}, price: ${item.price}</li>
+                <tr><td>${item.name}</td><td>price: ${item.price}</td></tr>
             </c:forEach>
-        </ul>
+        </table>
     </c:if>
 </body>
