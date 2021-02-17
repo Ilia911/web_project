@@ -9,6 +9,8 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.locks.Condition;
@@ -36,6 +38,7 @@ public enum ConnectionPool {
     private final Thread thread = new AddConnectionThread();
 
     private final Stack<ProxyConnection> freeConnections = new Stack<ProxyConnection>();
+    private final List<ProxyConnection> busyConnections = new LinkedList<>();
     private Connection connection;
     private int currentAmountOfConnections = 0;
 
@@ -56,6 +59,7 @@ public enum ConnectionPool {
                 retrieveCondition.await();
             }
             connection = freeConnections.pop();
+            busyConnections.add((ProxyConnection) connection);
             enlargeCondition.signal();
         } finally {
             lock.unlock();
@@ -64,20 +68,34 @@ public enum ConnectionPool {
     }
 
     public void returnConnection(Connection returnedConnection) {
+        if (returnedConnection == null) {
+            return;
+        }
         lock.lock();
         try {
-            if (returnedConnection != null && (returnedConnection.equals(connection))) {
-                if (((double) freeConnections.size() / currentAmountOfConnections) > 0.25
-                        && currentAmountOfConnections > INITIAL_CONNECTIONS_AMOUNT) {
-                    ((ProxyConnection) returnedConnection).closeConnection();
-                    --currentAmountOfConnections;
+            for (ProxyConnection busyConnection : busyConnections) {
+                if (returnedConnection.equals(busyConnection)) {
+                    busyConnections.remove(busyConnection);
+                    if (checkRedundancyOfCurrentAmountOfFreeConnections()) {
+                        ((ProxyConnection) returnedConnection).closeConnection();
+                        --currentAmountOfConnections;
+                    } else {
+                        freeConnections.push((ProxyConnection) returnedConnection);
+                        retrieveCondition.signal();
+                    }
                 }
-                freeConnections.push((ProxyConnection) returnedConnection);
-                retrieveCondition.signal();
             }
         } finally {
             lock.unlock();
         }
+    }
+
+    private boolean checkRedundancyOfCurrentAmountOfFreeConnections() {
+        final double currentPercentOfFreeConnections = (double) freeConnections.size() / currentAmountOfConnections;
+        if (currentPercentOfFreeConnections > 0.25 && currentAmountOfConnections > INITIAL_CONNECTIONS_AMOUNT) {
+            return true;
+        }
+        return false;
     }
 
     private void addConnection() throws SQLException {
@@ -87,7 +105,7 @@ public enum ConnectionPool {
         ++currentAmountOfConnections;
     }
 
-    public void destroy() throws SQLException {
+    public void destroy() {
         for (ProxyConnection freeConnection : freeConnections) {
             freeConnection.closeConnection();
         }
