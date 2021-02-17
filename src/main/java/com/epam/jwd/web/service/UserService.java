@@ -42,12 +42,12 @@ public enum UserService implements CommonService<UserDto> {
 
     private UserDto convertToDto(User user) {
         return new UserDto(user.getId(), user.getLogin(), user.getPassword(), user.getName(), user.getAccount(),
-                user.getMail(), user.getRole(), user.getStatus());
+                user.getRole(), user.getStatus());
 
     }
 
-    public Optional<UserDto> register(String userLogin, String userPassword, String userName, String userEmail) {
-        Optional<User> user = userDao.register(userLogin, BCrypt.hashpw(userPassword, BCrypt.gensalt()), userName, userEmail);
+    public Optional<UserDto> register(String userLogin, String userPassword, String userName) {
+        Optional<User> user = userDao.register(userLogin, BCrypt.hashpw(userPassword, BCrypt.gensalt()), userName);
         return user.map(this::convertToDto);
     }
 }

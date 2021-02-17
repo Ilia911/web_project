@@ -17,7 +17,7 @@ public enum RegisterCommand implements Command {
     @Override
     public ResponseContext execute(RequestContext req) {
         Optional<UserDto> optionalUserDto = UserService.INSTANCE.register(req.getParameter("userLogin"),
-                req.getParameter("userPassword"), req.getParameter("userName"), req.getParameter("userEmail"));
+                req.getParameter("userPassword"), req.getParameter("userName"));
         if (optionalUserDto.isPresent()) {
             final HttpSession session = req.getSession();
             session.setAttribute("name", optionalUserDto.get().getName());

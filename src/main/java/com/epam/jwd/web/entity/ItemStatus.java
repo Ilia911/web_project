@@ -1,17 +1,19 @@
 package com.epam.jwd.web.entity;
 
-public enum Status {
+public enum ItemStatus {
     VALID(1),
-    BLOCKED(2);
+    BLOCKED(2),
+    COMPLETED(3),
+    DELETED(4);
 
     private final int status;
 
-    Status(int status) {
+    ItemStatus(int status) {
         this.status = status;
     }
 
-    public static Status of(String status) {
-        for (Status value : Status.values()) {
+    public static ItemStatus of(String status) {
+        for (ItemStatus value : ItemStatus.values()) {
             if (value.status == Integer.parseInt(status)) {
                 return value;
             }

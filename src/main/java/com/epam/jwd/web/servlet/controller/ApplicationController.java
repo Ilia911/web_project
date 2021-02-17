@@ -30,7 +30,6 @@ public class ApplicationController extends HttpServlet {
         final String commandName = request.getParameter(COMMAND_PARAMETER_NAME);
         final Command command = Command.of(commandName);
         final ResponseContext responseContext = command.execute(WrappingRequestContext.of(request));
-
         if (responseContext.isRedirect()) {
             response.sendRedirect(responseContext.getPage());
         } else {

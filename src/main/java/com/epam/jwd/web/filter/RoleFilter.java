@@ -1,7 +1,7 @@
 package com.epam.jwd.web.filter;
 
 import com.epam.jwd.web.entity.Role;
-import com.epam.jwd.web.entity.Status;
+import com.epam.jwd.web.entity.UserStatus;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,7 +36,7 @@ public class RoleFilter implements Filter {
             final HttpSession session = request.getSession();
             session.setAttribute("name", "Guest");
             session.setAttribute("role", Role.of(role));
-            session.setAttribute("status", Status.VALID);
+            session.setAttribute("status", UserStatus.VALID);
         }
         filterChain.doFilter(request, servletResponse);
     }

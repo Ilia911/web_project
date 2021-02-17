@@ -8,20 +8,18 @@ public class UserDto {
     private final String password;
     private final String name;
     private final BigDecimal account;
-    private final String mail;
     private final Role role;
-    private final Status status;
+    private final UserStatus userStatus;
 
     public UserDto(Integer id, String login, String password, String name,
-                   BigDecimal account, String mail, Role role, Status status) {
+                   BigDecimal account, Role role, UserStatus userStatus) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.name = name;
         this.account = account;
-        this.mail = mail;
         this.role = role;
-        this.status = status;
+        this.userStatus = userStatus;
     }
 
     public Integer getId() {
@@ -44,16 +42,12 @@ public class UserDto {
         return account;
     }
 
-    public String getMail() {
-        return mail;
-    }
-
     public Role getRole() {
         return role;
     }
 
-    public Status getStatus() {
-        return status;
+    public UserStatus getStatus() {
+        return userStatus;
     }
 
     @Override
@@ -64,9 +58,8 @@ public class UserDto {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", account=" + account +
-                ", mail='" + mail + '\'' +
                 ", role=" + role +
-                ", status=" + status +
+                ", status=" + userStatus +
                 '}';
     }
 
@@ -82,9 +75,8 @@ public class UserDto {
         if (password != null ? !password.equals(userDto.password) : userDto.password != null) return false;
         if (name != null ? !name.equals(userDto.name) : userDto.name != null) return false;
         if (account != null ? !account.equals(userDto.account) : userDto.account != null) return false;
-        if (mail != null ? !mail.equals(userDto.mail) : userDto.mail != null) return false;
         if (role != userDto.role) return false;
-        return status == userDto.status;
+        return userStatus == userDto.userStatus;
     }
 
     @Override
@@ -94,9 +86,8 @@ public class UserDto {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (account != null ? account.hashCode() : 0);
-        result = 31 * result + (mail != null ? mail.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (userStatus != null ? userStatus.hashCode() : 0);
         return result;
     }
 }

@@ -12,8 +12,6 @@
     <input type="password" name="userPassword"><br/>
     <label for="userName">Name:</label><br>
     <input name="userName"><br/>
-    <label for="userEmail">Email:</label><br>
-    <input name="userEmail"><br/>
     <input type="radio" name="language" value="ru">
     <label for="ru">Russian</label><br>
     <input type="radio" name="language" value="en">

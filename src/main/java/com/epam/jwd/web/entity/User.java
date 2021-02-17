@@ -8,19 +8,17 @@ public class User {
     private final String password;
     private final String name;
     private final BigDecimal account;
-    private final String mail;
     private final Role role;
-    private final Status status;
+    private final UserStatus userStatus;
 
-    public User(Integer id, String login, String password, String name, BigDecimal account, String mail, Role role, Status status) {
+    public User(Integer id, String login, String password, String name, BigDecimal account, Role role, UserStatus userStatus) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.name = name;
         this.account = account;
-        this.mail = mail;
         this.role = role;
-        this.status = status;
+        this.userStatus = userStatus;
     }
 
     public String getName() {
@@ -31,16 +29,12 @@ public class User {
         return account;
     }
 
-    public String getMail() {
-        return mail;
-    }
-
     public Role getRole() {
         return role;
     }
 
-    public Status getStatus() {
-        return status;
+    public UserStatus getStatus() {
+        return userStatus;
     }
 
     public int getId() {
@@ -63,9 +57,8 @@ public class User {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", account=" + account +
-                ", mail='" + mail + '\'' +
                 ", role=" + role +
-                ", status=" + status +
+                ", status=" + userStatus +
                 '}';
     }
 
@@ -81,9 +74,8 @@ public class User {
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
         if (account != null ? !account.equals(user.account) : user.account != null) return false;
-        if (mail != null ? !mail.equals(user.mail) : user.mail != null) return false;
         if (role != user.role) return false;
-        return status == user.status;
+        return userStatus == user.userStatus;
     }
 
     @Override
@@ -93,9 +85,8 @@ public class User {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (account != null ? account.hashCode() : 0);
-        result = 31 * result + (mail != null ? mail.hashCode() : 0);
         result = 31 * result + (role != null ? role.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (userStatus != null ? userStatus.hashCode() : 0);
         return result;
     }
 }

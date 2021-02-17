@@ -1,5 +1,6 @@
 package com.epam.jwd.web.servlet.command;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
@@ -10,6 +11,7 @@ public class SessionRequestContent {
     private HashMap<String, Object> requestAttributes = new HashMap<>();
     private HashMap<String, String[]> requestParameters = new HashMap<>();
     private HashMap<String, Object> sessionAttributes = new HashMap<>();
+    private RequestDispatcher requestDispatcher;
 
     public SessionRequestContent(HttpServletRequest request) {
 
