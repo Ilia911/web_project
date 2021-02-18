@@ -1,6 +1,5 @@
 package com.epam.jwd.web.servlet.command.item;
 
-import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.impl.ItemServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
@@ -37,13 +36,13 @@ public enum RegisterItemCommand implements Command {
 
         final long timeInMillis = GregorianCalendar.getInstance().getTimeInMillis();
 
-        if (itemName == null || itemType == null) {
+        if (itemName == null) {
             req.setAttribute("errorMessage", "Not enough input data!");
             return ShowRegisterItemCommand.INSTANCE.execute(req);
         } else {
             service.register(itemName, itemDescribe, itemType, itemPrice, minBid, timeInMillis,
-                    (String) req.getSession().getAttribute("userLogin"));
+                    (String) req.getSession().getAttribute("id"));
         }
-        return null;
+        return RESPONSE;
     }
 }

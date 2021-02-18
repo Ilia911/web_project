@@ -25,6 +25,7 @@ public enum LogInCommand implements Command {
 
         if (optionalUserDto.isPresent()) {
             final HttpSession session = req.getSession();
+            session.setAttribute("id", optionalUserDto.get().getId());
             session.setAttribute("name", optionalUserDto.get().getName());
             session.setAttribute("role", optionalUserDto.get().getRole());
             session.setAttribute("status", optionalUserDto.get().getStatus());

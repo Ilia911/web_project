@@ -9,54 +9,48 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class ItemDaoImpl implements ItemDao {
 
-    private static final String TABLE_NAME = "item";
-    private static final String ID_COLUMN_NAME = "id";
-    private static final String NAME_COLUMN_NAME = "item_name";
-    private static final String DESCRIBE_COLUMN_NAME = "item_describe";
-    private static final String ID_OWNER_COLUMN_NAME = "owner_id";
-    private static final String TYPE_COLUMN_NAME = "item_type";
-    private static final String PRICE_COLUMN_NAME = "start_price";
-    private static final String BID_COLUMN_NAME = "minimum_bid";
-    private static final String STATUS_COLUMN_NAME = "item_status";
-    private static final String FIND_ALL_ITEMS_SQL = "SELECT " + ID_COLUMN_NAME + ", " + NAME_COLUMN_NAME + ", "
-            + DESCRIBE_COLUMN_NAME + ", " + ID_OWNER_COLUMN_NAME + ", " + TYPE_COLUMN_NAME + ", "
-            + PRICE_COLUMN_NAME + ", " + BID_COLUMN_NAME + ", " + STATUS_COLUMN_NAME + " FROM " + TABLE_NAME;
-    private static final String REGISTER_ITEM_SQL = "INSERT INTO " + TABLE_NAME + " ( " + NAME_COLUMN_NAME + ", "
-            + DESCRIBE_COLUMN_NAME + ", " + ID_OWNER_COLUMN_NAME + ", " + TYPE_COLUMN_NAME + ", " + PRICE_COLUMN_NAME + ", " + BID_COLUMN_NAME + ")  VALUES (?, ?, ?, ?, ?, ?)";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
 
     @Override
-    public boolean register(String itemName, String itemDescribe, ItemType itemType, long itemPrice,
-                            long minBid, long time, String userLogin) {
-        int userId =
+    public boolean register(String itemName, String itemDescribe, int itemType, long itemPrice,
+                            long minBid, long time, int ownerId) {
+        try(final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(ItemSQL.REGISTER_ITEM_SQL);
+            preparedStatement.setString(1, itemName);
+            preparedStatement.setString(2, itemDescribe);
+            preparedStatement.setInt(3, ownerId);
+            preparedStatement.setInt(4, itemType);
+            preparedStatement.setLong(5, itemPrice);
+            preparedStatement.setLong(6, minBid);
+            preparedStatement.setLong(7, time);
+            preparedStatement.executeUpdate();
+//            INSERT INTO item ( item_name, item_describe, owner_id, item_type, start_price, minimum_bid, end_time)  VALUES (?, ?, ?, ?, ?, ?, ?)
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
 
-
-        final LocalDateTime now = LocalDateTime.now();
-
+        }
         return false;
     }
-    private int getUserIdByLogin(String login) {
-        UserDaoImpl.FIND_USER_BY_LOGIN_SQL
-        return 0;
-    }
+
 
     @Override
     public Optional<List<Item>> findAll() {
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection();
              final Statement statement = connection.createStatement();
-             final ResultSet resultSet = statement.executeQuery(FIND_ALL_ITEMS_SQL)) {
+             final ResultSet resultSet = statement.executeQuery(ItemSQL.FIND_ALL_ITEMS_SQL)) {
             List<Item> items = new ArrayList<>();
             while (resultSet.next()) {
                 items.add(readItem(resultSet));
@@ -73,14 +67,14 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     private Item readItem(ResultSet resultSet) throws SQLException {
-        return new Item(resultSet.getInt(ID_COLUMN_NAME),
-                resultSet.getString(NAME_COLUMN_NAME),
-                resultSet.getString(DESCRIBE_COLUMN_NAME),
-                resultSet.getInt(ID_OWNER_COLUMN_NAME),
-                ItemType.of(resultSet.getString(TYPE_COLUMN_NAME)),
-                resultSet.getBigDecimal(PRICE_COLUMN_NAME),
-                resultSet.getBigDecimal(BID_COLUMN_NAME),
-                UserStatus.of(resultSet.getString(STATUS_COLUMN_NAME))
+        return new Item(resultSet.getInt(ItemSQL.ID_COLUMN_NAME),
+                resultSet.getString(ItemSQL.NAME_COLUMN_NAME),
+                resultSet.getString(ItemSQL.DESCRIBE_COLUMN_NAME),
+                resultSet.getInt(ItemSQL.ID_OWNER_COLUMN_NAME),
+                ItemType.of(resultSet.getString(ItemSQL.TYPE_COLUMN_NAME)),
+                resultSet.getBigDecimal(ItemSQL.PRICE_COLUMN_NAME),
+                resultSet.getBigDecimal(ItemSQL.BID_COLUMN_NAME),
+                UserStatus.of(resultSet.getString(ItemSQL.STATUS_COLUMN_NAME))
         );
     }
 

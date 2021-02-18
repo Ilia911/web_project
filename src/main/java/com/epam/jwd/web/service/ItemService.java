@@ -11,7 +11,7 @@ public interface ItemService {
     Optional<List<ItemDto>> findAll();
 
     Optional<ItemDto> register(String itemName, String itemDescribe, String itemType, String itemPrice, String minBid,
-                               long time, String userLogin);
+                               long time, String ownerId);
 
 
 }
