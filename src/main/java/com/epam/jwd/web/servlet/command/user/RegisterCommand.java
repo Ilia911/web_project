@@ -1,7 +1,7 @@
 package com.epam.jwd.web.servlet.command.user;
 
-import com.epam.jwd.web.entity.UserDto;
-import com.epam.jwd.web.service.UserService;
+import com.epam.jwd.web.model.UserDto;
+import com.epam.jwd.web.service.impl.UserServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.RequestContext;
 import com.epam.jwd.web.servlet.command.ResponseContext;
@@ -16,7 +16,7 @@ public enum RegisterCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContext req) {
-        Optional<UserDto> optionalUserDto = UserService.INSTANCE.register(req.getParameter("userLogin"),
+        Optional<UserDto> optionalUserDto = UserServiceImpl.INSTANCE.register(req.getParameter("userLogin"),
                 req.getParameter("userPassword"), req.getParameter("userName"));
         if (optionalUserDto.isPresent()) {
             final HttpSession session = req.getSession();

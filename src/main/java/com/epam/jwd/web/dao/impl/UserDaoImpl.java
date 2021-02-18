@@ -1,10 +1,10 @@
 package com.epam.jwd.web.dao.impl;
 
 import com.epam.jwd.web.connection.ConnectionPool;
-import com.epam.jwd.web.dao.CommonDao;
-import com.epam.jwd.web.entity.Role;
-import com.epam.jwd.web.entity.UserStatus;
-import com.epam.jwd.web.entity.User;
+import com.epam.jwd.web.dao.UserDao;
+import com.epam.jwd.web.model.Role;
+import com.epam.jwd.web.model.UserStatus;
+import com.epam.jwd.web.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDaoImpl implements CommonDao<User> {
+public class UserDaoImpl implements UserDao {
 
 
     private static final String TABLE_NAME = "auction_user";
@@ -31,7 +31,7 @@ public class UserDaoImpl implements CommonDao<User> {
     private static final String FIND_ALL_USERS_SQL = "SELECT " + ID_COLUMN_NAME + ", " + LOGIN_COLUMN_NAME + ", "
             + PASSWORD_COLUMN_NAME + ", " + NAME_COLUMN_NAME + ", " + ACCOUNT_COLUMN_NAME + ", "
             + ROLE_COLUMN_NAME + ", " + STATUS_COLUMN_NAME + " FROM " + TABLE_NAME;
-    private static final String FIND_USER_BY_LOGIN_SQL = "SELECT " + ID_COLUMN_NAME + ", " + LOGIN_COLUMN_NAME + ", "
+    protected static final String FIND_USER_BY_LOGIN_SQL = "SELECT " + ID_COLUMN_NAME + ", " + LOGIN_COLUMN_NAME + ", "
             + PASSWORD_COLUMN_NAME + ", " + NAME_COLUMN_NAME + ", " + ACCOUNT_COLUMN_NAME + ", "
             + ROLE_COLUMN_NAME + ", " + STATUS_COLUMN_NAME + " FROM " + TABLE_NAME
             + " WHERE " + LOGIN_COLUMN_NAME + " = ?";
@@ -57,6 +57,11 @@ public class UserDaoImpl implements CommonDao<User> {
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public boolean removeByLogin(String login) {
+        return false;
     }
 
     public Optional<User> register(String userLogin, String userPassword, String userName) {
@@ -86,23 +91,8 @@ public class UserDaoImpl implements CommonDao<User> {
         );
     }
 
-
-    public boolean registration(User newUser) {
-        return false;
-    }
-
     @Override
     public Optional<List<User>> findAll() {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> register(User entity) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> findById(int id) {
         return Optional.empty();
     }
 
@@ -110,11 +100,5 @@ public class UserDaoImpl implements CommonDao<User> {
     public Optional<User> update(User entity) {
         return Optional.empty();
     }
-
-    @Override
-    public boolean remove(int id) {
-        return false;
-    }
-
 
 }

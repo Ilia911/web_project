@@ -1,7 +1,7 @@
 package com.epam.jwd.web.servlet.command.user;
 
-import com.epam.jwd.web.entity.UserDto;
-import com.epam.jwd.web.service.UserService;
+import com.epam.jwd.web.model.UserDto;
+import com.epam.jwd.web.service.impl.UserServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContext;
@@ -14,7 +14,7 @@ import java.util.Optional;
 public enum LogInCommand implements Command {
     INSTANCE;
 
-    private final UserService userService = UserService.INSTANCE;
+    private final UserServiceImpl userService = UserServiceImpl.INSTANCE;
 
     @Override
     public ResponseContext execute(RequestContext req) {

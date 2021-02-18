@@ -1,37 +1,17 @@
 package com.epam.jwd.web.service;
 
-import com.epam.jwd.web.dao.CommonDao;
-import com.epam.jwd.web.dao.impl.ItemDaoImpl;
-import com.epam.jwd.web.entity.Item;
-import com.epam.jwd.web.entity.ItemDto;
+import com.epam.jwd.web.model.ItemDto;
+import com.epam.jwd.web.model.ItemType;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-public enum  ItemService implements CommonService<ItemDto> {
-    INSTANCE;
+public interface ItemService {
 
-    private static final CommonDao<Item> itemDao = new ItemDaoImpl();
+    Optional<List<ItemDto>> findAll();
 
-    @Override
-    public Optional<List<ItemDto>> findAll() {
-        return itemDao.findAll()
-                .map(
-                        items -> items.stream()
-                                .map(this::convertToDto)
-                                .collect(Collectors.toList()));
+    Optional<ItemDto> register(String itemName, String itemDescribe, String itemType, String itemPrice, String minBid,
+                               long time, String userLogin);
 
 
-    }
-
-    @Override
-    public Optional<ItemDto> save(ItemDto dto) {
-        return Optional.empty();
-    }
-
-    private ItemDto convertToDto(Item item) {
-        return new ItemDto(item.getId(), item.getName(), item.getDescribe(), item.getOwner(),
-                item.getType(), item.getPrice(), item.getBid(), item.getStatus());
-    }
 }

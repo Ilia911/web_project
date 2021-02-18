@@ -1,8 +1,8 @@
-package com.epam.jwd.web.entity;
+package com.epam.jwd.web.model;
 
 import java.math.BigDecimal;
 
-public class UserDto {
+public class User {
     private final Integer id;
     private final String login;
     private final String password;
@@ -11,8 +11,7 @@ public class UserDto {
     private final Role role;
     private final UserStatus userStatus;
 
-    public UserDto(Integer id, String login, String password, String name,
-                   BigDecimal account, Role role, UserStatus userStatus) {
+    public User(Integer id, String login, String password, String name, BigDecimal account, Role role, UserStatus userStatus) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -20,18 +19,6 @@ public class UserDto {
         this.account = account;
         this.role = role;
         this.userStatus = userStatus;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getName() {
@@ -50,9 +37,21 @@ public class UserDto {
         return userStatus;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
@@ -66,17 +65,17 @@ public class UserDto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserDto)) return false;
+        if (!(o instanceof User)) return false;
 
-        UserDto userDto = (UserDto) o;
+        User user = (User) o;
 
-        if (id != null ? !id.equals(userDto.id) : userDto.id != null) return false;
-        if (login != null ? !login.equals(userDto.login) : userDto.login != null) return false;
-        if (password != null ? !password.equals(userDto.password) : userDto.password != null) return false;
-        if (name != null ? !name.equals(userDto.name) : userDto.name != null) return false;
-        if (account != null ? !account.equals(userDto.account) : userDto.account != null) return false;
-        if (role != userDto.role) return false;
-        return userStatus == userDto.userStatus;
+        if (id != null ? !id.equals(user.id) : user.id != null) return false;
+        if (login != null ? !login.equals(user.login) : user.login != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        if (account != null ? !account.equals(user.account) : user.account != null) return false;
+        if (role != user.role) return false;
+        return userStatus == user.userStatus;
     }
 
     @Override

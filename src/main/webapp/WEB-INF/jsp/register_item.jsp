@@ -5,6 +5,7 @@
 <head>
 <body>
 <jsp:include page="common/header.jsp" />
+<h3>${pageContext.requestScope.errorMessage}</h3><br/>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=register_item">
     <label for="itemName">Item name:</label><br>
     <input name="itemName"><br/>
@@ -15,9 +16,8 @@
     <input type ="radio" name="itemType" value = "reverse">Reverse<br/>
     <label for="itemPrice">Start price:</label><br>
     <input name="itemPrice" type="number" min=1><br/>
-    <label for="itemBid">Minimum bid:</label><br>
-    <input name="itemBid" type="number" min=1>><br/>
-    <input type="hidden" name="time", value="${calendar.timeInMillis}"><br/>
+    <label for="minBid">Minimum bid:</label><br>
+    <input name="minBid" type="number" min=1>><br/>
     <input type="submit">
     <input type="reset">
 </form>

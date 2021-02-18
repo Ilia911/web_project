@@ -1,4 +1,4 @@
-package com.epam.jwd.web.entity;
+package com.epam.jwd.web.model;
 
 public enum UserStatus {
     VALID(1),

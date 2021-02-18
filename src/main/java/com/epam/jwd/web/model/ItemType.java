@@ -1,4 +1,4 @@
-package com.epam.jwd.web.entity;
+package com.epam.jwd.web.model;
 
 public enum ItemType {
     STRAIGHT(1),
@@ -17,6 +17,9 @@ public enum ItemType {
             }
          }
         return STRAIGHT;
+    }
+    public int getType() {
+        return this.type;
     }
 
 }

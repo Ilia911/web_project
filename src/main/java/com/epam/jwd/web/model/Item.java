@@ -1,9 +1,8 @@
-package com.epam.jwd.web.entity;
+package com.epam.jwd.web.model;
 
 import java.math.BigDecimal;
 
-public class ItemDto {
-
+public class Item {
     private final Integer id;
     private final String name;
     private final String describe;
@@ -13,8 +12,8 @@ public class ItemDto {
     private final BigDecimal bid;
     private final UserStatus status;
 
-    public ItemDto(Integer id, String name, String describe, Integer owner,
-                   ItemType type, BigDecimal price, BigDecimal bid, UserStatus status) {
+    public Item(Integer id, String name, String describe, Integer owner,
+                ItemType type, BigDecimal price, BigDecimal bid, UserStatus status) {
         this.id = id;
         this.name = name;
         this.describe = describe;
@@ -59,7 +58,7 @@ public class ItemDto {
 
     @Override
     public String toString() {
-        return "ItemDto{" +
+        return "Item{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", describe='" + describe + '\'' +
@@ -74,18 +73,18 @@ public class ItemDto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ItemDto)) return false;
+        if (!(o instanceof Item)) return false;
 
-        ItemDto itemDto = (ItemDto) o;
+        Item item = (Item) o;
 
-        if (id != null ? !id.equals(itemDto.id) : itemDto.id != null) return false;
-        if (name != null ? !name.equals(itemDto.name) : itemDto.name != null) return false;
-        if (describe != null ? !describe.equals(itemDto.describe) : itemDto.describe != null) return false;
-        if (owner != null ? !owner.equals(itemDto.owner) : itemDto.owner != null) return false;
-        if (type != itemDto.type) return false;
-        if (price != null ? !price.equals(itemDto.price) : itemDto.price != null) return false;
-        if (bid != null ? !bid.equals(itemDto.bid) : itemDto.bid != null) return false;
-        return status == itemDto.status;
+        if (id != null ? !id.equals(item.id) : item.id != null) return false;
+        if (name != null ? !name.equals(item.name) : item.name != null) return false;
+        if (describe != null ? !describe.equals(item.describe) : item.describe != null) return false;
+        if (owner != null ? !owner.equals(item.owner) : item.owner != null) return false;
+        if (type != item.type) return false;
+        if (price != null ? !price.equals(item.price) : item.price != null) return false;
+        if (bid != null ? !bid.equals(item.bid) : item.bid != null) return false;
+        return status == item.status;
     }
 
     @Override
@@ -100,4 +99,6 @@ public class ItemDto {
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
     }
+
+
 }

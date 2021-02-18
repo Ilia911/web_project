@@ -1,7 +1,7 @@
 package com.epam.jwd.web.filter;
 
-import com.epam.jwd.web.entity.Role;
-import com.epam.jwd.web.entity.UserStatus;
+import com.epam.jwd.web.model.Role;
+import com.epam.jwd.web.model.UserStatus;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

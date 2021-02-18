@@ -1,5 +1,6 @@
 package com.epam.jwd.web.servlet.command;
 
+import com.epam.jwd.web.servlet.command.item.RegisterItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowAllItemsCommand;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 import com.epam.jwd.web.servlet.command.page.ShowRegisterItemCommand;
@@ -14,6 +15,7 @@ public enum CommandManager {
     LOG_IN(LogInCommand.INSTANCE),
     LOG_OUT(LogOutCommand.INSTANCE),
     REGISTER(RegisterCommand.INSTANCE),
+    REGISTER_ITEM(RegisterItemCommand.INSTANCE),
     DEFAULT(ShowMainPageCommand.INSTANCE),
     SHOW_ITEMS(ShowAllItemsCommand.INSTANCE),
     SHOW_LOGIN(ShowUserLoginPageCommand.INSTANCE),

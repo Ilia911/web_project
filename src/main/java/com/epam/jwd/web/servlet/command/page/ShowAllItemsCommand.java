@@ -1,8 +1,9 @@
 package com.epam.jwd.web.servlet.command.page;
 
-import com.epam.jwd.web.entity.ItemDto;
+import com.epam.jwd.web.model.ItemDto;
 import com.epam.jwd.web.service.CommonService;
 import com.epam.jwd.web.service.ItemService;
+import com.epam.jwd.web.service.impl.ItemServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContext;
@@ -27,7 +28,7 @@ public enum  ShowAllItemsCommand implements Command {
     };
 
     private static final String ITEMS_ATTRIBUTE_NAME = "items";
-    private final CommonService<ItemDto> itemService = ItemService.INSTANCE;
+    private final ItemService itemService = ItemServiceImpl.INSTANCE;
 
     @Override
     public ResponseContext execute(RequestContext req) {

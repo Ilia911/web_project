@@ -1,10 +1,10 @@
 package com.epam.jwd.web.dao.impl;
 
 import com.epam.jwd.web.connection.ConnectionPool;
-import com.epam.jwd.web.dao.CommonDao;
-import com.epam.jwd.web.entity.Item;
-import com.epam.jwd.web.entity.ItemType;
-import com.epam.jwd.web.entity.UserStatus;
+import com.epam.jwd.web.dao.ItemDao;
+import com.epam.jwd.web.model.Item;
+import com.epam.jwd.web.model.ItemType;
+import com.epam.jwd.web.model.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,11 +12,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemDaoImpl implements CommonDao<Item> {
+public class ItemDaoImpl implements ItemDao {
 
     private static final String TABLE_NAME = "item";
     private static final String ID_COLUMN_NAME = "id";
@@ -30,8 +31,25 @@ public class ItemDaoImpl implements CommonDao<Item> {
     private static final String FIND_ALL_ITEMS_SQL = "SELECT " + ID_COLUMN_NAME + ", " + NAME_COLUMN_NAME + ", "
             + DESCRIBE_COLUMN_NAME + ", " + ID_OWNER_COLUMN_NAME + ", " + TYPE_COLUMN_NAME + ", "
             + PRICE_COLUMN_NAME + ", " + BID_COLUMN_NAME + ", " + STATUS_COLUMN_NAME + " FROM " + TABLE_NAME;
+    private static final String REGISTER_ITEM_SQL = "INSERT INTO " + TABLE_NAME + " ( " + NAME_COLUMN_NAME + ", "
+            + DESCRIBE_COLUMN_NAME + ", " + ID_OWNER_COLUMN_NAME + ", " + TYPE_COLUMN_NAME + ", " + PRICE_COLUMN_NAME + ", " + BID_COLUMN_NAME + ")  VALUES (?, ?, ?, ?, ?, ?)";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
+
+    @Override
+    public boolean register(String itemName, String itemDescribe, ItemType itemType, long itemPrice,
+                            long minBid, long time, String userLogin) {
+        int userId =
+
+
+        final LocalDateTime now = LocalDateTime.now();
+
+        return false;
+    }
+    private int getUserIdByLogin(String login) {
+        UserDaoImpl.FIND_USER_BY_LOGIN_SQL
+        return 0;
+    }
 
     @Override
     public Optional<List<Item>> findAll() {
@@ -64,11 +82,6 @@ public class ItemDaoImpl implements CommonDao<Item> {
                 resultSet.getBigDecimal(BID_COLUMN_NAME),
                 UserStatus.of(resultSet.getString(STATUS_COLUMN_NAME))
         );
-    }
-
-    @Override
-    public Optional<Item> register(Item entity) {
-        return Optional.empty();
     }
 
     @Override
