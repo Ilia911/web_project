@@ -1,8 +1,9 @@
 package com.epam.jwd.web.servlet.controller;
 
 import com.epam.jwd.web.servlet.command.Command;
+import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
-import com.epam.jwd.web.servlet.command.WrappingRequestContext;
+import com.epam.jwd.web.servlet.command.SessionRequestContentFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,7 +30,9 @@ public class ApplicationController extends HttpServlet {
     private void doAction(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final String commandName = request.getParameter(COMMAND_PARAMETER_NAME);
         final Command command = Command.of(commandName);
-        final ResponseContext responseContext = command.execute(WrappingRequestContext.of(request));
+        final RequestContent sessionRequestContent = SessionRequestContentFactory.defineContent(request);
+        final ResponseContext responseContext = command.execute(sessionRequestContent);
+        sessionRequestContent.insertAttributes(request);
         if (responseContext.isRedirect()) {
             response.sendRedirect(responseContext.getPage());
         } else {

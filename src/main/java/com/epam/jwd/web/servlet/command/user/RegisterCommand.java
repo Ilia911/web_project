@@ -3,7 +3,7 @@ package com.epam.jwd.web.servlet.command.user;
 import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.service.impl.UserServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
-import com.epam.jwd.web.servlet.command.RequestContext;
+import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 
@@ -15,14 +15,14 @@ public enum RegisterCommand implements Command {
 
 
     @Override
-    public ResponseContext execute(RequestContext req) {
-        Optional<UserDto> optionalUserDto = UserServiceImpl.INSTANCE.register(req.getParameter("userLogin"),
-                req.getParameter("userPassword"), req.getParameter("userName"));
+    public ResponseContext execute(RequestContent req) {
+        Optional<UserDto> optionalUserDto = UserServiceImpl.INSTANCE.register(req.getRequestParameter("userLogin")[0],
+                req.getRequestParameter("userPassword")[0], req.getRequestParameter("userName")[0]);
         if (optionalUserDto.isPresent()) {
-            final HttpSession session = req.getSession();
-            session.setAttribute("name", optionalUserDto.get().getName());
-            session.setAttribute("role", optionalUserDto.get().getRole());
-            session.setAttribute("status", optionalUserDto.get().getStatus());
+            req.setSessionAttribute("login", optionalUserDto.get().getLogin());
+            req.setSessionAttribute("name", optionalUserDto.get().getName());
+            req.setSessionAttribute("role", optionalUserDto.get().getRole());
+            req.setSessionAttribute("status", optionalUserDto.get().getStatus());
         }
 
         return ShowMainPageCommand.INSTANCE.execute(req);

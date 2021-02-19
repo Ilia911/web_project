@@ -2,7 +2,7 @@ package com.epam.jwd.web.servlet.command.page;
 
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
-import com.epam.jwd.web.servlet.command.RequestContext;
+import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 
 public enum ShowUserLoginPageCommand implements Command {
@@ -20,7 +20,7 @@ public enum ShowUserLoginPageCommand implements Command {
         }
     };
     @Override
-    public ResponseContext execute(RequestContext req) {
+    public ResponseContext execute(RequestContent req) {
         return RESPONSE;
     }
 }

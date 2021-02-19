@@ -1,7 +1,7 @@
 package com.epam.jwd.web.servlet.command.page;
 
 import com.epam.jwd.web.servlet.command.Command;
-import com.epam.jwd.web.servlet.command.RequestContext;
+import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 
 import java.util.GregorianCalendar;
@@ -22,7 +22,7 @@ public enum ShowTimeCommand implements Command {
     };
 
     @Override
-    public ResponseContext execute(RequestContext request) {
+    public ResponseContext execute(RequestContent request) {
 
         GregorianCalendar gc = new GregorianCalendar();
         String timeJsp = (String) request.getAttribute("time");

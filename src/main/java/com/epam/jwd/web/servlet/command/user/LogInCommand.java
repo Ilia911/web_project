@@ -4,11 +4,10 @@ import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.service.impl.UserServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
-import com.epam.jwd.web.servlet.command.RequestContext;
+import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 
-import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public enum LogInCommand implements Command {
@@ -17,21 +16,20 @@ public enum LogInCommand implements Command {
     private final UserServiceImpl userService = UserServiceImpl.INSTANCE;
 
     @Override
-    public ResponseContext execute(RequestContext req) {
-        final String login = req.getParameter("userLogin");
-        final String password = req.getParameter("userPassword");
+    public ResponseContext execute(RequestContent req) {
+        final String login = req.getRequestParameter("userLogin")[0];
+        final String password = req.getRequestParameter("userPassword")[0];
 
         final Optional<UserDto> optionalUserDto = userService.login(login, password);
 
         if (optionalUserDto.isPresent()) {
-            final HttpSession session = req.getSession();
-            session.setAttribute("id", optionalUserDto.get().getId());
-            session.setAttribute("name", optionalUserDto.get().getName());
-            session.setAttribute("role", optionalUserDto.get().getRole());
-            session.setAttribute("status", optionalUserDto.get().getStatus());
+            req.setSessionAttribute("login", login);
+            req.setSessionAttribute("name", optionalUserDto.get().getName());
+            req.setSessionAttribute("role", optionalUserDto.get().getRole());
+            req.setSessionAttribute("status", optionalUserDto.get().getStatus());
             return ShowMainPageCommand.INSTANCE.execute(req);
         } else {
-            req.setAttribute("errorLoginPassMessage", "Invalid credentials!");
+            req.setRequestAttribute("errorMessage", "Invalid credentials!");
             return new ResponseContext() {
                 @Override
                 public String getPage() {

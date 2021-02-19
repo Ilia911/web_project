@@ -4,7 +4,7 @@ import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.impl.ItemServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
-import com.epam.jwd.web.servlet.command.RequestContext;
+import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.page.ShowRegisterItemCommand;
 
@@ -26,7 +26,7 @@ public enum RegisterItemCommand implements Command {
     };
 
     @Override
-    public ResponseContext execute(RequestContext req) {
+    public ResponseContext execute(RequestContent req) {
 
         String itemName = req.getParameter("itemName");
         String itemDescribe = req.getParameter("itemDescribe");
