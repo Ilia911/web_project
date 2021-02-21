@@ -21,6 +21,10 @@ public enum  ShowUserRegisterPageCommand implements Command {
     };
     @Override
     public ResponseContext execute(RequestContent req) {
+        if (req.getSessionAttribute("login") != null) {
+            req.setRequestAttribute("errorMessage", "You've already registered!");
+            return ShowMainPageCommand.INSTANCE.execute(req);
+        }
         return RESPONSE;
     }
 }

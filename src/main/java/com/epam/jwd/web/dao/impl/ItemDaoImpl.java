@@ -3,6 +3,7 @@ package com.epam.jwd.web.dao.impl;
 import com.epam.jwd.web.connection.ConnectionPool;
 import com.epam.jwd.web.dao.ItemDao;
 import com.epam.jwd.web.model.Item;
+import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.model.UserStatus;
 import org.slf4j.Logger;
@@ -35,22 +36,20 @@ public class ItemDaoImpl implements ItemDao {
             preparedStatement.setLong(6, minBid);
             preparedStatement.setLong(7, time);
             preparedStatement.executeUpdate();
-//            INSERT INTO item ( item_name, item_describe, owner_id, item_type, start_price, minimum_bid, end_time)  VALUES (?, ?, ?, ?, ?, ?, ?)
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
 
         }
-        return false;
+        return true;
     }
-
 
     @Override
     public Optional<List<Item>> findAll() {
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection();
              final Statement statement = connection.createStatement();
-             final ResultSet resultSet = statement.executeQuery(ItemSQL.FIND_ALL_ITEMS_SQL)) {
+             final ResultSet resultSet = statement.executeQuery(ItemSQL.FIND_ALL_VALID_ITEMS_SQL)) {
             List<Item> items = new ArrayList<>();
             while (resultSet.next()) {
                 items.add(readItem(resultSet));
@@ -74,7 +73,7 @@ public class ItemDaoImpl implements ItemDao {
                 ItemType.of(resultSet.getString(ItemSQL.TYPE_COLUMN_NAME)),
                 resultSet.getBigDecimal(ItemSQL.PRICE_COLUMN_NAME),
                 resultSet.getBigDecimal(ItemSQL.BID_COLUMN_NAME),
-                UserStatus.of(resultSet.getString(ItemSQL.STATUS_COLUMN_NAME))
+                ItemStatus.of(resultSet.getString(ItemSQL.STATUS_COLUMN_NAME))
         );
     }
 

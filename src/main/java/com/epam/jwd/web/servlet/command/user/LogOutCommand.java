@@ -18,15 +18,12 @@ public enum  LogOutCommand implements Command {
 
         @Override
         public boolean isRedirect() {
-            return false;
+            return true;
         }
     };
     @Override
     public ResponseContext execute(RequestContent req) {
-        req.setSessionAttribute("login", null);
-        req.setSessionAttribute("name", null);
-        req.setSessionAttribute("role", null);
-        req.setSessionAttribute("status", null);
+        req.setInvalidateSession(true);
         return ShowMainPageCommand.INSTANCE.execute(req);
     }
 }

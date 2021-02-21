@@ -21,27 +21,27 @@ public enum RegisterItemCommand implements Command {
 
         @Override
         public boolean isRedirect() {
-            return true;
+            return false;
         }
     };
 
     @Override
     public ResponseContext execute(RequestContent req) {
 
-        String itemName = req.getParameter("itemName");
-        String itemDescribe = req.getParameter("itemDescribe");
-        String itemType = req.getParameter("itemType");
-        String itemPrice = req.getParameter("itemPrice");
-        String minBid = req.getParameter("minBid");
+        String itemName = req.getRequestParameter("itemName")[0];
+        String itemDescribe = req.getRequestParameter("itemDescribe")[0];
+        String itemType = req.getRequestParameter("itemType")[0];
+        String itemPrice = req.getRequestParameter("itemPrice")[0];
+        String minBid = req.getRequestParameter("minBid")[0];
 
         final long timeInMillis = GregorianCalendar.getInstance().getTimeInMillis();
 
-        if (itemName == null) {
-            req.setAttribute("errorMessage", "Not enough input data!");
+        if (itemName == null || Integer.parseInt(itemPrice) <= 0 || Integer.parseInt(minBid) <= 0) {
+            req.setRequestAttribute("errorMessage", "Invalid input data!");
             return ShowRegisterItemCommand.INSTANCE.execute(req);
         } else {
             service.register(itemName, itemDescribe, itemType, itemPrice, minBid, timeInMillis,
-                    (String) req.getSession().getAttribute("id"));
+                    req.getSessionAttribute("id"));
         }
         return RESPONSE;
     }

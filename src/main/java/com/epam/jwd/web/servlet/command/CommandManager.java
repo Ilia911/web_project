@@ -4,7 +4,6 @@ import com.epam.jwd.web.servlet.command.item.RegisterItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowAllItemsCommand;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 import com.epam.jwd.web.servlet.command.page.ShowRegisterItemCommand;
-import com.epam.jwd.web.servlet.command.page.ShowTimeCommand;
 import com.epam.jwd.web.servlet.command.page.ShowUserLoginPageCommand;
 import com.epam.jwd.web.servlet.command.page.ShowUserRegisterPageCommand;
 import com.epam.jwd.web.servlet.command.user.LogInCommand;
@@ -20,8 +19,7 @@ public enum CommandManager {
     SHOW_ITEMS(ShowAllItemsCommand.INSTANCE),
     SHOW_LOGIN(ShowUserLoginPageCommand.INSTANCE),
     SHOW_REGISTER(ShowUserRegisterPageCommand.INSTANCE),
-    SHOW_REGISTER_ITEM(ShowRegisterItemCommand.INSTANCE),
-    SHOW_TIME(ShowTimeCommand.INSTANCE);
+    SHOW_REGISTER_ITEM(ShowRegisterItemCommand.INSTANCE);
 
 
     private final Command command;

@@ -23,6 +23,7 @@ public enum LogInCommand implements Command {
         final Optional<UserDto> optionalUserDto = userService.login(login, password);
 
         if (optionalUserDto.isPresent()) {
+            req.setSessionAttribute("id", optionalUserDto.get().getId());
             req.setSessionAttribute("login", login);
             req.setSessionAttribute("name", optionalUserDto.get().getName());
             req.setSessionAttribute("role", optionalUserDto.get().getRole());

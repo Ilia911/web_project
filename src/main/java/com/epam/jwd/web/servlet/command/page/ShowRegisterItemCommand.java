@@ -22,8 +22,8 @@ public enum  ShowRegisterItemCommand implements Command {
     };
     @Override
     public ResponseContext execute(RequestContent req) {
-        Role userRole = (Role) req.getSession().getAttribute("role");
-        if (userRole.equals(Role.CLIENT) || userRole.equals(Role.ADMIN)) {
+        Role userRole = (Role) req.getSessionAttribute("role");
+        if (Role.CLIENT.equals(userRole) || Role.ADMIN.equals(userRole) ) {
             return RESPONSE;
         }
         return ShowMainPageCommand.INSTANCE.execute(req);

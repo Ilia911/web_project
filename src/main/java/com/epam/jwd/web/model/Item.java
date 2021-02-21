@@ -10,10 +10,11 @@ public class Item {
     private final ItemType type;
     private final BigDecimal price;
     private final BigDecimal bid;
-    private final UserStatus status;
+    private final ItemStatus status;
+
 
     public Item(Integer id, String name, String describe, Integer owner,
-                ItemType type, BigDecimal price, BigDecimal bid, UserStatus status) {
+                ItemType type, BigDecimal price, BigDecimal bid, ItemStatus status) {
         this.id = id;
         this.name = name;
         this.describe = describe;
@@ -52,7 +53,7 @@ public class Item {
         return bid;
     }
 
-    public UserStatus getStatus() {
+    public ItemStatus getStatus() {
         return status;
     }
 

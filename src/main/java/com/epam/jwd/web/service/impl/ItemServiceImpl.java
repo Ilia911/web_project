@@ -28,9 +28,9 @@ public enum ItemServiceImpl implements ItemService {
 
     @Override
     public Optional<ItemDto> register(String itemName, String itemDescribe, String itemType, String itemPrice,
-                                      String minBid, long time, String ownerId) {
+                                      String minBid, long time, Object ownerId) {
         itemDao.register(itemName, itemDescribe, Integer.parseInt(itemType), Long.parseLong(itemPrice),
-                Long.parseLong(minBid), time, Integer.parseInt(ownerId));
+                Long.parseLong(minBid), time, (Integer) ownerId);
 
         return Optional.empty();
     }
@@ -40,4 +40,3 @@ public enum ItemServiceImpl implements ItemService {
                 item.getType(), item.getPrice(), item.getBid(), item.getStatus());
     }
 }
-// + Long.parseLong(ApplicationManager.getProperty("item.show.time"))

@@ -5,6 +5,10 @@ import javax.servlet.http.HttpSession;
 
 public interface RequestContent {
 
+    boolean isInvalidateSession();
+
+    void setInvalidateSession(boolean invalidateSession);
+
     void extractValues(HttpServletRequest request);
 
     void insertAttributes(HttpServletRequest request);
@@ -18,4 +22,5 @@ public interface RequestContent {
     void setRequestAttribute(String key, Object attribute);
 
     void setSessionAttribute(String key, Object attribute);
+
 }

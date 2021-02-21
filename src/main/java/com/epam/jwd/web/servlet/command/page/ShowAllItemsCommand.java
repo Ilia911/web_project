@@ -32,7 +32,7 @@ public enum  ShowAllItemsCommand implements Command {
     @Override
     public ResponseContext execute(RequestContent req) {
         final List<ItemDto> items = itemService.findAll().orElse(Collections.emptyList());
-        req.setAttribute(ITEMS_ATTRIBUTE_NAME, items);
+        req.setRequestAttribute(ITEMS_ATTRIBUTE_NAME, items);
         return RESPONSE;
     }
 }

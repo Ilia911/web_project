@@ -6,13 +6,26 @@ import java.util.Enumeration;
 import java.util.HashMap;
 
 public class SessionRequestContent implements RequestContent{
-    private HashMap<String, Object> requestAttributes = new HashMap<>();
-    private HashMap<String, String[]> requestParameters = new HashMap<>();
-    private HashMap<String, Object> sessionAttributes = new HashMap<>();
+
+    private final HashMap<String, Object> requestAttributes = new HashMap<>();
+    private final HashMap<String, String[]> requestParameters = new HashMap<>();
+    private final HashMap<String, Object> sessionAttributes = new HashMap<>();
+    private boolean invalidateSession = false;
+
+    @Override
+    public boolean isInvalidateSession() {
+        return invalidateSession;
+    }
+
+    @Override
+    public void setInvalidateSession(boolean invalidateSession) {
+        this.invalidateSession = invalidateSession;
+    }
 
     SessionRequestContent() {
     }
 
+    @Override
     public void extractValues(HttpServletRequest request) {
 
         request.getParameterMap().forEach(requestParameters::put);
@@ -31,30 +44,42 @@ public class SessionRequestContent implements RequestContent{
         }
     }
 
+    @Override
     public void insertAttributes(HttpServletRequest request) {
+
+        if (isInvalidateSession()) {
+            request.getSession().invalidate();
+            return;
+        }
 
         HttpSession session = request.getSession();
         requestAttributes.forEach(request::setAttribute);
         sessionAttributes.forEach(session::setAttribute);
     }
 
+    @Override
     public String[] getRequestParameter(String key) {
         return requestParameters.get(key);
     }
 
+    @Override
     public Object getRequestAttribute(String key) {
         return requestAttributes.get(key);
     }
 
+    @Override
     public Object getSessionAttribute(String key) {
         return sessionAttributes.get(key);
     }
 
+    @Override
     public void setRequestAttribute(String key, Object attribute) {
         requestAttributes.put(key, attribute);
     }
 
+    @Override
     public void setSessionAttribute(String key, Object attribute) {
         sessionAttributes.put(key, attribute);
     }
+
 }

@@ -19,6 +19,7 @@ public enum RegisterCommand implements Command {
         Optional<UserDto> optionalUserDto = UserServiceImpl.INSTANCE.register(req.getRequestParameter("userLogin")[0],
                 req.getRequestParameter("userPassword")[0], req.getRequestParameter("userName")[0]);
         if (optionalUserDto.isPresent()) {
+            req.setSessionAttribute("id", optionalUserDto.get().getId());
             req.setSessionAttribute("login", optionalUserDto.get().getLogin());
             req.setSessionAttribute("name", optionalUserDto.get().getName());
             req.setSessionAttribute("role", optionalUserDto.get().getRole());
