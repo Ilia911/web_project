@@ -1,7 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="locale" uri="customtags"%>
 <html>
 <head>
-    <title>Login</title>
+    <title><locale:loc value ="page.login"/></title>
 <head>
 <body>
 <jsp:include page="common/header.jsp"/>

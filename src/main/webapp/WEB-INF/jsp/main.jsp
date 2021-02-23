@@ -1,14 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="locale" uri="customtags"%>
 <html>
 <head>
-    <title>Main page</title>
+    <title><locale:loc value="page.main"/></title>
 </head>
 <body>
-<jsp:include page="common/header.jsp"/>
-<a href="${pageContext.request.contextPath}/controller?command=show_login">go to login page</a><br/>
-<a href="${pageContext.request.contextPath}/controller?command=show_register">go to register page</a><br/>
-<a href="${pageContext.request.contextPath}/controller?command=show_items">go to item page</a><br/>
-<a href="${pageContext.request.contextPath}/controller?command=log_out">log out</a><br/>
-<a href="${pageContext.request.contextPath}/controller?command=show_register_item">register item</a><br/>
+<h3><locale:loc value ="main.greeting"/> ${sessionScope.name}!</h3>
+<a href="${pageContext.request.contextPath}/controller?command=show_login"><locale:loc value="page.login"/></a><br/>
+<a href="${pageContext.request.contextPath}/controller?command=show_register"><locale:loc value="page.register.user"/></a><br/>
+<a href="${pageContext.request.contextPath}/controller?command=show_items"><locale:loc value="page.items"/></a><br/>
+<a href="${pageContext.request.contextPath}/controller?command=log_out"><locale:loc value="page.logout"/></a><br/>
+<a href="${pageContext.request.contextPath}/controller?command=show_register_item"><locale:loc value="page.register.item"/></a><br/>
 </body>
 </html>

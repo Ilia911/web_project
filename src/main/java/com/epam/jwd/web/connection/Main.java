@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 public class Main {
@@ -25,7 +26,11 @@ public class Main {
         final Calendar instance2 = GregorianCalendar.getInstance(germanyLocale);
       instance2.setTimeInMillis(timeInMillis -200000);
         System.out.println(instance2.getTime());
+        Calendar cal = new GregorianCalendar();
+        final Locale english = new Locale("en", "US");
 
+        final ResourceBundle bundle = ResourceBundle.getBundle("generalKeys", Locale.CANADA);
+        System.out.println(bundle.getString("main.greeting"));
 
 
     }
@@ -36,12 +41,10 @@ public class Main {
 
 //
 //        System.out.println(Locale.getDefault());
-//        Locale.setDefault(Locale.CANADA);
+//
 //        System.out.println(Locale.getDefault());
-//        final Locale current = new Locale("be", "BY");
 //        Locale.setDefault(chinalocale);
 //        System.out.println(chinalocale.getDisplayLanguage());
-//        final ResourceBundle bundle = ResourceBundle.getBundle("generalKeys", chinalocale);
 //        System.out.println(bundle.getString("main.greeting"));
 //
 //        NumberFormat numberFormat = NumberFormat.getInstance(germanyLocale);

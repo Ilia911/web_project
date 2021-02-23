@@ -7,6 +7,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.sql.SQLException;
+import java.util.Locale;
 
 @WebListener
 public class ApplicationListener implements ServletContextListener {
@@ -21,6 +22,7 @@ public class ApplicationListener implements ServletContextListener {
             e.printStackTrace();
             throw new IllegalStateException(e);
         }
+        Locale.setDefault(Locale.US);
         LOGGER.info("Connection pool was successfully initialized");
     }
 

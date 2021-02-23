@@ -1,9 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="locale" uri="customtags"%>
 <html>
 <head>
     <title>Registration Item</title>
 <head>
 <body>
+<%@ include file="/WEB-INF/jspf/header.jspf"%>
 <jsp:include page="common/header.jsp" />
 <form method="post" action="${pageContext.request.contextPath}/controller?command=register_item">
     <label for="itemName">Item name:</label><br>
@@ -16,7 +18,7 @@
     <label for="itemPrice">Start price:</label><br>
     <input name="itemPrice" type="number" min=1><br/>
     <label for="minBid">Minimum bid:</label><br>
-    <input name="minBid" type="number" min=1>><br/>
+    <input name="minBid" type="number" min=1><br/>
     <input type="submit">
     <input type="reset">
 </form>
