@@ -8,7 +8,9 @@ import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 
 import javax.servlet.http.HttpSession;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public enum RegisterCommand implements Command {
     INSTANCE;
@@ -16,16 +18,28 @@ public enum RegisterCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        Optional<UserDto> optionalUserDto = UserServiceImpl.INSTANCE.register(req.getRequestParameter("userLogin")[0],
-                req.getRequestParameter("userPassword")[0], req.getRequestParameter("userName")[0]);
-        if (optionalUserDto.isPresent()) {
-            req.setSessionAttribute("id", optionalUserDto.get().getId());
-            req.setSessionAttribute("login", optionalUserDto.get().getLogin());
-            req.setSessionAttribute("name", optionalUserDto.get().getName());
-            req.setSessionAttribute("role", optionalUserDto.get().getRole());
-            req.setSessionAttribute("status", optionalUserDto.get().getStatus());
-        }
+        final ResourceBundle bundle
+                = ResourceBundle.getBundle("generalKeys", (Locale) req.getSessionAttribute("locale"));
 
+        Optional<UserDto> optionalUserDto = UserServiceImpl.INSTANCE.register(req.getRequestParameter("login")[0],
+                req.getRequestParameter("password")[0], req.getRequestParameter("name")[0]);
+        if (optionalUserDto.isPresent()) {
+            req.setRequestAttribute("successfulMessage", bundle.getString("message.register.success"));
+        } else {
+            req.setSessionAttribute("failedRegisterMessage", bundle.getString("message.register.failed"));
+            req.setInvalidateSession(true);
+            return new ResponseContext() {
+                @Override
+                public String getPage() {
+                    return "/controller?command=show_register";
+                }
+
+                @Override
+                public boolean isRedirect() {
+                    return true;
+                }
+            };
+        }
         return ShowMainPageCommand.INSTANCE.execute(req);
     }
 }

@@ -1,13 +1,14 @@
 <%@ page isErrorPage="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="locale" uri="customtags"%>
-<html><head><title>Error Page</title></head>
+<html><head><title><locale:loc value="error.title"/></title></head>
 <br/>
 <body>
-Request from ${pageContext.errorData.requestURI} is failed
+<%@ include file="/WEB-INF/jsp/common/header.jsp"%>
+<locale:loc value="error.request.failed"/> ${pageContext.errorData.requestURI}
 <br/>
-Servlet name or type: ${pageContext.errorData.servletName}
+<locale:loc value="error.servlet.name"/> ${pageContext.errorData.servletName}
 <br/>
-Status code: ${pageContext.errorData.statusCode}
+<locale:loc value="error.status.code"/> ${pageContext.errorData.statusCode}
 <br/>
-Exception: ${pageContext.errorData.throwable}
+<locale:loc value="error.exception"/> ${pageContext.errorData.throwable}
 </body></html>

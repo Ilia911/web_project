@@ -23,7 +23,7 @@ public class ApplicationListener implements ServletContextListener {
             throw new IllegalStateException(e);
         }
         Locale.setDefault(Locale.US);
-        LOGGER.info("Connection pool was successfully initialized");
+        LOGGER.error("Connection pool was successfully initialized");
     }
 
     @Override

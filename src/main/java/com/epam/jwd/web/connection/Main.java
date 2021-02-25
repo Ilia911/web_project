@@ -1,15 +1,11 @@
 package com.epam.jwd.web.connection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 public class Main {
 
@@ -30,8 +26,10 @@ public class Main {
         final Locale english = new Locale("en", "US");
 
         final ResourceBundle bundle = ResourceBundle.getBundle("generalKeys", Locale.CANADA);
-        System.out.println(bundle.getString("main.greeting"));
+        System.out.println(bundle.getString("page.main.greeting"));
 
+        final LocalDateTime now = LocalDateTime.now();
+        System.out.println(now.getYear());
 
     }
 

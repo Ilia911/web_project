@@ -14,17 +14,18 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Locale;
 
 @WebFilter(urlPatterns = {"/*"},
-        initParams = {@WebInitParam(name = "baseRole", value = "3")
+        initParams = {@WebInitParam(name = "locale", value = "en_US")
         })
-public class RoleFilter implements Filter {
+public class LocaleFilter implements Filter {
 
-    private String role;
+    private String locale;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        role = filterConfig.getInitParameter("baseRole");
+        locale = filterConfig.getInitParameter("locale");
 
     }
 
@@ -32,11 +33,10 @@ public class RoleFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
-        if (request.getSession(false) == null || request.getSession().getAttribute("name") == null) {
+        if (request.getSession(false) == null || request.getSession().getAttribute("locale") == null) {
+            final String[] localeParameters = locale.split("_");
             final HttpSession session = request.getSession();
-            session.setAttribute("name", "Guest");
-            session.setAttribute("role", Role.of(role));
-            session.setAttribute("status", UserStatus.VALID);
+            session.setAttribute("locale", new Locale(localeParameters[0], localeParameters[1]));
         }
         filterChain.doFilter(request, servletResponse);
     }

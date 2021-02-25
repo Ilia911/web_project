@@ -11,10 +11,11 @@ public class Item {
     private final BigDecimal price;
     private final BigDecimal bid;
     private final ItemStatus status;
+    private final long time;
 
 
     public Item(Integer id, String name, String describe, Integer owner,
-                ItemType type, BigDecimal price, BigDecimal bid, ItemStatus status) {
+                ItemType type, BigDecimal price, BigDecimal bid, ItemStatus status, long time) {
         this.id = id;
         this.name = name;
         this.describe = describe;
@@ -23,6 +24,7 @@ public class Item {
         this.price = price;
         this.bid = bid;
         this.status = status;
+        this.time = time;
     }
 
     public Integer getId() {
@@ -57,6 +59,10 @@ public class Item {
         return status;
     }
 
+    public long getTime() {
+        return this.time;
+    }
+
     @Override
     public String toString() {
         return "Item{" +
@@ -68,6 +74,7 @@ public class Item {
                 ", price=" + price +
                 ", bid=" + bid +
                 ", status=" + status +
+                ", time=" + time +
                 '}';
     }
 
@@ -78,6 +85,7 @@ public class Item {
 
         Item item = (Item) o;
 
+        if (time != item.time) return false;
         if (id != null ? !id.equals(item.id) : item.id != null) return false;
         if (name != null ? !name.equals(item.name) : item.name != null) return false;
         if (describe != null ? !describe.equals(item.describe) : item.describe != null) return false;
@@ -98,8 +106,7 @@ public class Item {
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (bid != null ? bid.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (int) (time ^ (time >>> 32));
         return result;
     }
-
-
 }

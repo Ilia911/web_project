@@ -1,8 +1,6 @@
-package com.epam.jwd.web.dao.impl;
+package com.epam.jwd.web.servlet;
 
-class ItemSQL {
-    private ItemSQL() {}
-
+public class Main {
     static final String TABLE_NAME = "item";
     static final String ID_COLUMN_NAME = "id";
     static final String NAME_COLUMN_NAME = "item_name";
@@ -17,15 +15,7 @@ class ItemSQL {
             + TYPE_COLUMN_NAME + ", " + PRICE_COLUMN_NAME + ", " + BID_COLUMN_NAME + " FROM " + TABLE_NAME
             + " WHERE (" + STATUS_COLUMN_NAME + " = ?)";
 
-    static final String REGISTER_ITEM_SQL = "INSERT INTO " + TABLE_NAME + " ( " + NAME_COLUMN_NAME + ", "
-            + DESCRIBE_COLUMN_NAME + ", " + ID_OWNER_COLUMN_NAME + ", " + TYPE_COLUMN_NAME + ", " + PRICE_COLUMN_NAME
-            + ", " + BID_COLUMN_NAME + ")  VALUES (?, ?, ?, ?, ?, ?)";
-
-    static final String UPDATE_ITEM_SQL = "UPDATE " + TABLE_NAME + " SET " + NAME_COLUMN_NAME + " = ?, "
-            + DESCRIBE_COLUMN_NAME + " = ?, " + TYPE_COLUMN_NAME + " = ?, " + PRICE_COLUMN_NAME
-            + " = ?, " + BID_COLUMN_NAME  + " = ? WHERE (" + ID_COLUMN_NAME + " = ?)";
-
-
-
-
+    public static void main(String[] args) {
+        System.out.println(FIND_ALL_ITEMS_SQL);
+    }
 }

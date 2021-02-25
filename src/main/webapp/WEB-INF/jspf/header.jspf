@@ -1,6 +1,0 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="locale" uri="customtags"%>
-
-<head></head>
-
-<nav><a href="/controller"><locale:loc value="page.main"/></a> |<a href="contact.html"><locale:loc value="page.contact"/></a> |<a href="about.html"><locale:loc value="page.about"/></a></nav>

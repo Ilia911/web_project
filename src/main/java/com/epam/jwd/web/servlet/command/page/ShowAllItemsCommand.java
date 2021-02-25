@@ -1,6 +1,7 @@
 package com.epam.jwd.web.servlet.command.page;
 
-import com.epam.jwd.web.model.ItemDto;
+import com.epam.jwd.web.model.ItemDtoForList;
+import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.impl.ItemServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
@@ -31,7 +32,7 @@ public enum  ShowAllItemsCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        final List<ItemDto> items = itemService.findAll().orElse(Collections.emptyList());
+        final List<ItemDtoForList> items = itemService.findAll(ItemStatus.VALID).orElse(Collections.emptyList());
         req.setRequestAttribute(ITEMS_ATTRIBUTE_NAME, items);
         return RESPONSE;
     }

@@ -20,4 +20,8 @@ public enum ItemStatus {
         }
         return BLOCKED;
     }
+
+    public int getInt() {
+        return this.status;
+    }
 }

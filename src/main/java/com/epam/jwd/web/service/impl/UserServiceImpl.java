@@ -32,7 +32,7 @@ public enum UserServiceImpl implements UserService {
 
         final Optional<User> user = userDao.findByLogin(login);
         if (!user.isPresent()) {
-            BCrypt.checkpw(password, DUMMY_PASSWORD);
+            BCrypt.checkpw(password, BCrypt.hashpw(DUMMY_PASSWORD, BCrypt.gensalt()));
             return Optional.empty();
         }
         final String realPassword = user.get().getPassword();

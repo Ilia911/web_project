@@ -1,26 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="locale" uri="customtags"%>
 <html>
 <head>
-    <title>Registration</title>
+    <title><locale:loc value="register.title"/></title>
 <head>
 <body>
-<jsp:include page="common/header.jsp" />
+<%@ include file="/WEB-INF/jsp/common/header.jsp"%>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=register">
-    <label for="userLogin">Login:</label><br>
-    <input name="userLogin"><br/>
-    <label for="userPassword">Password:</label><br>
-    <input type="password" name="userPassword"><br/>
-    <label for="userName">Name:</label><br>
-    <input name="userName"><br/>
-    <input type="radio" name="language" value="ru">
-    <label for="ru">Russian</label><br>
-    <input type="radio" name="language" value="en">
-    <label for="en">English</label><br>
-    <input type="radio" name="language" value="zh">
-    <label for="zh">Traditional chinese</label><br>
-    <input type="submit">
-    <input type="reset">
+<strong>${failedRegisterMessage}</strong><br/>
+    <label for="login"><locale:loc value="login.login"/></label><br>
+    <input name="login"><br/>
+    <label for="password"><locale:loc value="login.password"/></label><br>
+    <input type="password" name="password"><br/>
+    <label for="name"><locale:loc value="register.name"/>Name:</label><br>
+    <input name="name"><br/>
+    <input type="submit" value=<locale:loc value="login.submit"/>>
+    <input type="reset" value=<locale:loc value="login.reset"/>>
 </form>
 </body>
 </html>

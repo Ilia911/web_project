@@ -23,16 +23,10 @@ public class LocaleTag extends TagSupport {
     @Override
     public int doStartTag() throws JspException {
         HttpSession session = pageContext.getSession();
-        String language = String.valueOf(session.getAttribute("language"));
-        String region = String.valueOf(session.getAttribute("region"));
+        Locale locale = (Locale) session.getAttribute("locale");
 
-        if (language.isEmpty() || region.isEmpty()){
-            language = "en";
-            region = "US";
-        }
 
         if (value!=null){
-            Locale locale = new Locale(language, region);
             ResourceBundle rb = ResourceBundle.getBundle("generalKeys", locale);
             JspWriter out = pageContext.getOut();
             try {

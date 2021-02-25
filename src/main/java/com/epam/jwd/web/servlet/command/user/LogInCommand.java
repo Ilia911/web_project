@@ -1,6 +1,7 @@
 package com.epam.jwd.web.servlet.command.user;
 
 import com.epam.jwd.web.model.UserDto;
+import com.epam.jwd.web.service.UserService;
 import com.epam.jwd.web.service.impl.UserServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
@@ -8,17 +9,19 @@ import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public enum LogInCommand implements Command {
     INSTANCE;
 
-    private final UserServiceImpl userService = UserServiceImpl.INSTANCE;
+    private final UserService userService = UserServiceImpl.INSTANCE;
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        final String login = req.getRequestParameter("userLogin")[0];
-        final String password = req.getRequestParameter("userPassword")[0];
+        final String login = req.getRequestParameter("login")[0];
+        final String password = req.getRequestParameter("password")[0];
 
         final Optional<UserDto> optionalUserDto = userService.login(login, password);
 
@@ -28,13 +31,17 @@ public enum LogInCommand implements Command {
             req.setSessionAttribute("name", optionalUserDto.get().getName());
             req.setSessionAttribute("role", optionalUserDto.get().getRole());
             req.setSessionAttribute("status", optionalUserDto.get().getStatus());
+            req.setSessionAttribute("errorLoginMessage", null);
             return ShowMainPageCommand.INSTANCE.execute(req);
         } else {
-            req.setRequestAttribute("errorMessage", "Invalid credentials!");
+            req.setSessionAttribute("name", "Guest");
+            final ResourceBundle generalKeys = ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale"));
+            req.setSessionAttribute("errorLoginMessage", generalKeys.getString("message.login.error"));
             return new ResponseContext() {
                 @Override
                 public String getPage() {
-                    return Path.SHOW_USER_LOGIN_PAGE;
+                    return "/controller?command=show_login";
                 }
 
                 @Override

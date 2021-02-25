@@ -13,7 +13,7 @@ public enum  LogOutCommand implements Command {
 
         @Override
         public String getPage() {
-            return Path.SHOW_MAIN_PAGE;
+            return "/controller";
         }
 
         @Override
@@ -24,6 +24,6 @@ public enum  LogOutCommand implements Command {
     @Override
     public ResponseContext execute(RequestContent req) {
         req.setInvalidateSession(true);
-        return ShowMainPageCommand.INSTANCE.execute(req);
+        return RESPONSE;
     }
 }

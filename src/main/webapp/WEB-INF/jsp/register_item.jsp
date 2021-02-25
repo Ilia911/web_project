@@ -5,8 +5,7 @@
     <title>Registration Item</title>
 <head>
 <body>
-<%@ include file="/WEB-INF/jspf/header.jspf"%>
-<jsp:include page="common/header.jsp" />
+<%@ include file="/WEB-INF/jsp/common/header.jsp"%>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=register_item">
     <label for="itemName">Item name:</label><br>
     <input name="itemName"><br/>
@@ -19,8 +18,8 @@
     <input name="itemPrice" type="number" min=1><br/>
     <label for="minBid">Minimum bid:</label><br>
     <input name="minBid" type="number" min=1><br/>
-    <input type="submit">
-    <input type="reset">
+    <input type="submit" value=<locale:loc value="login.submit"/>>
+    <input type="reset" value=<locale:loc value="login.reset"/>>
 </form>
 </body>
 </html>
