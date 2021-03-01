@@ -1,4 +1,5 @@
 <%@ page isErrorPage="true" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="locale" uri="customtags"%>
 <html><head><title><locale:loc value="error.title"/></title></head>
 <br/>

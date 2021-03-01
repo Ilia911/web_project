@@ -13,7 +13,7 @@
     <input name="login"><br/>
     <label for="password"><locale:loc value="login.password"/></label><br>
     <input type="password" name="password"><br/>
-    <label for="name"><locale:loc value="register.name"/>Name:</label><br>
+    <label for="name"><locale:loc value="register.name"/></label><br>
     <input name="name"><br/>
     <input type="submit" value=<locale:loc value="login.submit"/>>
     <input type="reset" value=<locale:loc value="login.reset"/>>

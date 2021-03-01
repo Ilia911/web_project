@@ -8,6 +8,8 @@ import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 import java.util.Optional;
@@ -15,6 +17,7 @@ import java.util.ResourceBundle;
 
 public enum LogInCommand implements Command {
     INSTANCE;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogInCommand.class);
 
     private final UserService userService = UserServiceImpl.INSTANCE;
 
@@ -32,6 +35,7 @@ public enum LogInCommand implements Command {
             req.setSessionAttribute("role", optionalUserDto.get().getRole());
             req.setSessionAttribute("status", optionalUserDto.get().getStatus());
             req.setSessionAttribute("errorLoginMessage", null);
+            LOGGER.info("User successfully logged in");
             return ShowMainPageCommand.INSTANCE.execute(req);
         } else {
             req.setSessionAttribute("name", "Guest");

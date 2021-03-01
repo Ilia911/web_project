@@ -49,6 +49,7 @@ public enum ConnectionPool {
         }
         thread.setDaemon(true);
         thread.start();
+        LOGGER.error("Connection pool was successfully initialized");
     }
 
     public Connection retrieveConnection() throws InterruptedException {

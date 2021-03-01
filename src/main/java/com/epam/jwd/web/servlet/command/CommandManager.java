@@ -2,6 +2,7 @@ package com.epam.jwd.web.servlet.command;
 
 import com.epam.jwd.web.servlet.command.item.RegisterItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowAllItemsCommand;
+import com.epam.jwd.web.servlet.command.page.ShowBlockedItems;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 import com.epam.jwd.web.servlet.command.page.ShowRegisterItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowUserLoginPageCommand;
@@ -19,6 +20,7 @@ public enum CommandManager {
     CHOOSE_LOCALE(ChooseLocaleCommand.INSTANCE),
     DEFAULT(ShowMainPageCommand.INSTANCE),
     SHOW_ITEMS(ShowAllItemsCommand.INSTANCE),
+    SHOW_BLOCKED_ITEMS(ShowBlockedItems.INSTANCE),
     SHOW_LOGIN(ShowUserLoginPageCommand.INSTANCE),
     SHOW_REGISTER(ShowUserRegisterPageCommand.INSTANCE),
     SHOW_REGISTER_ITEM(ShowRegisterItemCommand.INSTANCE);

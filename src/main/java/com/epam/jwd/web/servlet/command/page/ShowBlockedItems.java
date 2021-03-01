@@ -1,18 +1,18 @@
 package com.epam.jwd.web.servlet.command.page;
 
-import com.epam.jwd.web.model.Role;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 
-public enum  ShowRegisterItemCommand implements Command {
+public enum ShowBlockedItems implements Command {
     INSTANCE;
 
-    private static final ResponseContext RESPONSE = new ResponseContext() {
+    ResponseContext RESPONSE = new ResponseContext() {
+
         @Override
         public String getPage() {
-            return Path.SHOW_REGISTER_ITEM_PAGE;
+            return Path.SHOW_BLOCKED_ITEMS_PAGE;
         }
 
         @Override
@@ -20,13 +20,9 @@ public enum  ShowRegisterItemCommand implements Command {
             return false;
         }
     };
+
     @Override
     public ResponseContext execute(RequestContent req) {
-
-        if (req.getSessionAttribute("login") != null ) {
-            return RESPONSE;
-        }
-        return ShowMainPageCommand.INSTANCE.execute(req);
-
+        return RESPONSE;
     }
 }

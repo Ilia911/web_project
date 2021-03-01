@@ -13,12 +13,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class ItemDaoImpl implements ItemDao {
+    private static final String FIND_ALL_ITEMS_SQL = "select item.id, item.item_name, item.item_type, max(lh.current_price), " +
+            "item.minimum_bid, max(lh.bid_time) max_time, lh.bid_owner_id from lot_history lh join item on lh.item_id " +
+            "= item.id where item.item_status = 1 group by item.id";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
 
@@ -47,10 +51,9 @@ public class ItemDaoImpl implements ItemDao {
         List<ItemDtoForList> list = new ArrayList<>();
 
         try(final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(ItemSQL.FIND_ALL_ITEMS_SQL);
-            preparedStatement.setInt(1, status.getInt());
-            final ResultSet resultSet = preparedStatement.executeQuery();
-
+            final Statement statement = connection.createStatement();
+            statement.execute(FIND_ALL_ITEMS_SQL);
+            final ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
                 list.add(this.readItemForList(resultSet));
             }
@@ -62,11 +65,11 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     private ItemDtoForList readItemForList(ResultSet resultSet) throws SQLException {
-        return new ItemDtoForList(resultSet.getInt(ItemSQL.ID_COLUMN_NAME),
-                resultSet.getString(ItemSQL.NAME_COLUMN_NAME),
-                ItemType.of(resultSet.getString(ItemSQL.TYPE_COLUMN_NAME)),
-                resultSet.getBigDecimal(ItemSQL.PRICE_COLUMN_NAME),
-                resultSet.getInt(ItemSQL.BID_COLUMN_NAME));
+        return new ItemDtoForList(resultSet.getInt(1),
+                resultSet.getString(2),
+                ItemType.of(resultSet.getString(3)),
+                resultSet.getBigDecimal(4),
+                resultSet.getInt(5));
     }
 
     @Override

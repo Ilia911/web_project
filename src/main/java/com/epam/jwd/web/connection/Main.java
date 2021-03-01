@@ -1,5 +1,8 @@
 package com.epam.jwd.web.connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
@@ -8,10 +11,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Main {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
 
     public static void main(String[] args) throws SQLException, InterruptedException {
 
+        ConnectionPool.INSTANCE.init();
+        LOGGER.info("Hello from main!");
         Locale chinalocale = new Locale("zh", "TW");
         Locale germanyLocale = Locale.GERMAN;
 
@@ -26,7 +32,7 @@ public class Main {
         final Locale english = new Locale("en", "US");
 
         final ResourceBundle bundle = ResourceBundle.getBundle("generalKeys", Locale.CANADA);
-        System.out.println(bundle.getString("page.main.greeting"));
+        System.out.println(bundle.getString("main.greeting"));
 
         final LocalDateTime now = LocalDateTime.now();
         System.out.println(now.getYear());
