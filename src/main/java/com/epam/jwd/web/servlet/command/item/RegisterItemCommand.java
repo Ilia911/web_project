@@ -32,17 +32,9 @@ public enum RegisterItemCommand implements Command {
         String itemDescribe = req.getRequestParameter("itemDescribe")[0];
         String itemType = req.getRequestParameter("itemType")[0];
         String itemPrice = req.getRequestParameter("itemPrice")[0];
-        String minBid = req.getRequestParameter("minBid")[0];
 
-        final long timeInMillis = GregorianCalendar.getInstance().getTimeInMillis();
+        service.register(itemName, itemDescribe, req.getSessionAttribute("id"), itemType, itemPrice);
 
-        if (itemName == null || Integer.parseInt(itemPrice) <= 0 || Integer.parseInt(minBid) <= 0) {
-            req.setRequestAttribute("errorMessage", "Invalid input data!");
-            return ShowRegisterItemCommand.INSTANCE.execute(req);
-        } else {
-            service.register(itemName, itemDescribe, itemType, itemPrice, minBid, timeInMillis,
-                    req.getSessionAttribute("id"));
-        }
         return RESPONSE;
     }
 }

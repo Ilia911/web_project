@@ -17,4 +17,16 @@
         </attribute>
 
     </tag>
+
+    <tag>
+        <name>time</name>
+        <tag-class>com.epam.jwd.web.tag.TimeTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+    </tag>
 </taglib>

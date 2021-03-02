@@ -20,23 +20,28 @@ import java.util.List;
 import java.util.Optional;
 
 public class ItemDaoImpl implements ItemDao {
-    private static final String FIND_ALL_ITEMS_SQL = "select item.id, item.item_name, item.item_type, max(lh.current_price), " +
-            "item.minimum_bid, max(lh.bid_time) max_time, lh.bid_owner_id from lot_history lh join item on lh.item_id " +
-            "= item.id where item.item_status = 1 group by item.id";
+    private static final String FIND_ALL_VALID_ITEMS_SQL = "SELECT i.id, i.item_name, i.item_describe, i.owner_id, " +
+            "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join " +
+            "(select max(bid_time) max_bid_time, item_id from lot_history group by item_id) m on lh.item_id " +
+            "= m.item_id and lh.bid_time = m.max_bid_time left join item i on lh.item_id = i.id";
+
+    private static final String FIND_ALL_ITEMS_BY_STATUS_SQL = "SELECT * FROM auction.item where item_status = ?";
+
+    private static final String REGISTER_ITEM_SQL = "INSERT INTO item " +
+            "(item_name, item_describe, owner_id, item_type, start_price) VALUES (?, ?, ?, ?, ?)";
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
 
     @Override
-    public boolean register(String itemName, String itemDescribe, int itemType, long itemPrice,
-                            long minBid, long time, int ownerId) {
+    public boolean register(String itemName, String itemDescribe, int ownerId, int itemType, long itemPrice) {
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(ItemSQL.REGISTER_ITEM_SQL);
+            final PreparedStatement preparedStatement = connection.prepareStatement(REGISTER_ITEM_SQL);
             preparedStatement.setString(1, itemName);
             preparedStatement.setString(2, itemDescribe);
             preparedStatement.setInt(3, ownerId);
             preparedStatement.setInt(4, itemType);
             preparedStatement.setLong(5, itemPrice);
-            preparedStatement.setLong(6, minBid);
             preparedStatement.executeUpdate();
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
@@ -48,14 +53,55 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public Optional<List<ItemDtoForList>> findAll(ItemStatus status) {
+        if (status == null) {
+            LOGGER.error("Item status equals null. Reading item failed");
+            return Optional.empty();
+        }
+        if (ItemStatus.VALID.equals(status)) {
+            return findValidItems();
+        } else {
+            return findItemsByStatus(status);
+        }
+    }
+
+    private Optional<List<ItemDtoForList>> findItemsByStatus(ItemStatus status) {
+
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_ITEMS_BY_STATUS_SQL);
+            preparedStatement.setInt(1, status.getInt());
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            List<ItemDtoForList> list = new ArrayList<>();
+            while (resultSet.next()) {
+                list.add(this.readItemsByStatus(resultSet));
+            }
+            return Optional.of(list);
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return Optional.empty();
+    }
+
+    private ItemDtoForList readItemsByStatus(ResultSet resultSet) throws SQLException {
+        return new ItemDtoForList(resultSet.getInt(1),
+                resultSet.getString(2),
+                resultSet.getString(3),
+                resultSet.getInt(4),
+                ItemType.of(resultSet.getString(5)),
+                resultSet.getBigDecimal(6),
+                0,
+                0);
+    }
+
+    private Optional<List<ItemDtoForList>> findValidItems() {
         List<ItemDtoForList> list = new ArrayList<>();
 
         try(final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
             final Statement statement = connection.createStatement();
-            statement.execute(FIND_ALL_ITEMS_SQL);
+            statement.execute(FIND_ALL_VALID_ITEMS_SQL);
             final ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
-                list.add(this.readItemForList(resultSet));
+                list.add(this.readValidItem(resultSet));
             }
             return Optional.of(list);
         } catch (InterruptedException | SQLException e) {
@@ -64,12 +110,15 @@ public class ItemDaoImpl implements ItemDao {
         return Optional.empty();
     }
 
-    private ItemDtoForList readItemForList(ResultSet resultSet) throws SQLException {
+    private ItemDtoForList readValidItem(ResultSet resultSet) throws SQLException {
         return new ItemDtoForList(resultSet.getInt(1),
                 resultSet.getString(2),
-                ItemType.of(resultSet.getString(3)),
-                resultSet.getBigDecimal(4),
-                resultSet.getInt(5));
+                resultSet.getString(3),
+                resultSet.getInt(4),
+                ItemType.of(resultSet.getString(5)),
+                resultSet.getBigDecimal(6),
+                resultSet.getLong(7),
+                resultSet.getInt(8));
     }
 
     @Override

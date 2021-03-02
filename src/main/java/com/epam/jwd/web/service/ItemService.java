@@ -10,8 +10,8 @@ public interface ItemService {
 
     Optional<List<ItemDtoForList>> findAll(ItemStatus status);
 
-    Optional<ItemDtoForList> register(String itemName, String itemDescribe, String itemType, String itemPrice, String minBid,
-                                      long time, Object ownerId);
+    Optional<ItemDtoForList> register(String itemName, String itemDescribe, Object ownerId, String itemType,
+                                      String itemPrice);
 
 
 }

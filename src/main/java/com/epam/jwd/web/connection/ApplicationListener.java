@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 @WebListener
 public class ApplicationListener implements ServletContextListener {
@@ -23,6 +26,8 @@ public class ApplicationListener implements ServletContextListener {
             throw new IllegalStateException(e);
         }
         Locale.setDefault(Locale.US);
+        sce.getServletContext().setAttribute("sessionMap", new HashMap<String, HttpSession>());
+
     }
 
     @Override

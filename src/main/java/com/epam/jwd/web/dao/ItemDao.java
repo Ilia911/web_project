@@ -9,8 +9,7 @@ import java.util.Optional;
 
 public interface ItemDao {
 
-    boolean register(String itemName, String itemDescribe, int itemType, long itemPrice,
-                     long minBid, long time, int ownerId);
+    boolean register(String itemName, String itemDescribe, int ownerId, int itemType, long itemPrice);
 
     Optional<List<ItemDtoForList>> findAll(ItemStatus status);
 

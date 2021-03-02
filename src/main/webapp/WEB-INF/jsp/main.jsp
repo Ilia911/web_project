@@ -14,7 +14,7 @@
 <%@ include file="/WEB-INF/jsp/common/header.jsp"%><br/><br/>
 <h3>${successfulMessage}</h3>
 <h3>${failedMessage}</h3><br/>
-<a href="${pageContext.request.contextPath}/controller?command=show_items"><locale:loc value="main.items"/></a><br/>
+<a href="${pageContext.request.contextPath}/controller?command=show_lots"><locale:loc value="main.items"/></a><br/>
 <a href="${pageContext.request.contextPath}/controller?command=show_register_item"><locale:loc value="main.register.item"/></a><br/>
 <br/><br/>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=choose_locale">

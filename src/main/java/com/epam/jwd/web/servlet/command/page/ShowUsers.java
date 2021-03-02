@@ -5,14 +5,13 @@ import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 
-public enum ShowBlockedItems implements Command {
+public enum ShowUsers implements Command {
     INSTANCE;
 
     ResponseContext RESPONSE = new ResponseContext() {
-
         @Override
         public String getPage() {
-            return Path.SHOW_BLOCKED_ITEMS_PAGE;
+            return Path.SHOW_USERS_PAGE;
         }
 
         @Override

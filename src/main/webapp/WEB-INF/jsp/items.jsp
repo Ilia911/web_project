@@ -17,14 +17,27 @@
 <h2><locale:loc value="items.title"/></h2>
     <c:if test="${not empty requestScope.items}">
         <table style="width:100%">
-            <tr><th><locale:loc value="items.name"/></th><th><locale:loc value="items.type"/></th>
-            <th><locale:loc value="items.price"/></th><th><locale:loc value="items.time"/></th>
+            <tr>
+                <th><locale:loc value="items.name"/></th>
+                <th><locale:loc value="items.describe"/></th>
+                <th><locale:loc value="items.owner.id"/></th>
+                <th><locale:loc value="items.type"/></th>
+                <th><locale:loc value="items.price"/></th>
+                <th><locale:loc value="items.time"/></th>
+                <th><locale:loc value="items.bid.owner.id"/>
+                </th><th><locale:loc value="items.do.bid"/></th>
             </tr>
             <c:forEach var="item" items="${requestScope.items}">
-                <tr><td>
+                <tr>
+                <td>
                 <a href="${pageContext.request.contextPath}/controller?command=show_item&id=${item.id}">${item.name}</a>
                 </td>
-                <td>${item.type}</td><td>${item.price}</td><td>${item.time}</td>
+                <td>${item.describe}</td>
+                <td>${item.ownerId}</td>
+                <td>${item.type}</td>
+                <td>${item.price}</td>
+                <td><locale:time value="${item.time}"/></td>
+                <td>${item.bidOwnerId}</td>
                 </tr>
             </c:forEach>
         </table>

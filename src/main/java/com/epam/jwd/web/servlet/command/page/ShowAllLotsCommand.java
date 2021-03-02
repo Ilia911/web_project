@@ -12,7 +12,7 @@ import com.epam.jwd.web.servlet.command.ResponseContext;
 import java.util.Collections;
 import java.util.List;
 
-public enum  ShowAllItemsCommand implements Command {
+public enum ShowAllLotsCommand implements Command {
     INSTANCE;
 
     private static final ResponseContext RESPONSE = new ResponseContext() {

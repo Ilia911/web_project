@@ -9,7 +9,6 @@ import com.epam.jwd.web.service.ItemService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public enum ItemServiceImpl implements ItemService {
     INSTANCE;
@@ -26,15 +25,14 @@ public enum ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Optional<ItemDtoForList> register(String itemName, String itemDescribe, String itemType, String itemPrice,
-                                             String minBid, long time, Object ownerId) {
-        itemDao.register(itemName, itemDescribe, Integer.parseInt(itemType), Long.parseLong(itemPrice),
-                Long.parseLong(minBid), time, (Integer) ownerId);
+    public Optional<ItemDtoForList> register(String itemName, String itemDescribe, Object ownerId, String itemType,
+                                             String itemPrice) {
+        itemDao.register(itemName, itemDescribe, Integer.parseInt(ownerId.toString()), Integer.parseInt(itemType),Integer.parseInt(itemPrice));
 
         return Optional.empty();
     }
 
-    private ItemDtoForList convertToDtoForList(Item item) {
-        return new ItemDtoForList(item.getId(), item.getName(), item.getType(), item.getPrice(), item.getTime());
-    }
+//    private ItemDtoForList convertToDtoForList(Item item) {
+//        return new ItemDtoForList(item.getId(), item.getName(), describe, ownerId, item.getType(), item.getPrice(), item.getTime(), bidOwnerId);
+//    }
 }

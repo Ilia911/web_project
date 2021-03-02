@@ -34,7 +34,6 @@ public class ApplicationController extends HttpServlet {
         final ResponseContext responseContext = command.execute(sessionRequestContent);
         sessionRequestContent.insertAttributes(request);
         if (responseContext.isRedirect()) {
-            //todo: learn how to insert correct path for redirect
             response.sendRedirect(request.getContextPath() + responseContext.getPage());
         } else {
             request.getRequestDispatcher(responseContext.getPage()).forward(request, response);
