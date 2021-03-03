@@ -17,8 +17,6 @@
     <input type ="radio" name="itemType" value = "2">Reverse<br/>
     <label for="itemPrice">Start price:</label><br>
     <input name="itemPrice" type="number" min=1><br/>
-    <label for="minBid">Minimum bid:</label><br>
-    <input name="minBid" type="number" min=1><br/>
     <input type="submit" value=<locale:loc value="login.submit"/>>
     <input type="reset" value=<locale:loc value="login.reset"/>>
 </form>

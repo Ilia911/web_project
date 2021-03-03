@@ -1,5 +1,6 @@
 package com.epam.jwd.web.servlet.command;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
@@ -10,6 +11,7 @@ public class SessionRequestContent implements RequestContent{
     private final HashMap<String, Object> requestAttributes = new HashMap<>();
     private final HashMap<String, String[]> requestParameters = new HashMap<>();
     private final HashMap<String, Object> sessionAttributes = new HashMap<>();
+    private final HashMap<String, String> servletContextParameters = new HashMap<>();
     private boolean invalidateSession = false;
 
     @Override
@@ -42,7 +44,14 @@ public class SessionRequestContent implements RequestContent{
             String key = requestAttributeNames.nextElement();
             requestAttributes.put(key, request.getAttribute(key));
         }
-    }
+
+        final ServletContext servletContext = request.getServletContext();
+        final Enumeration<String> initParameterNames = servletContext.getInitParameterNames();
+        while (initParameterNames.hasMoreElements()) {
+            String key = initParameterNames.nextElement();
+            servletContextParameters.put(key, servletContext.getInitParameter(key));
+        }
+     }
 
     @Override
     public void insertAttributes(HttpServletRequest request) {
@@ -68,9 +77,15 @@ public class SessionRequestContent implements RequestContent{
     }
 
     @Override
+    public String getContextParameter(String key) {
+        return servletContextParameters.get(key);
+    }
+
+    @Override
     public Object getSessionAttribute(String key) {
         return sessionAttributes.get(key);
     }
+
 
     @Override
     public void setRequestAttribute(String key, Object attribute) {

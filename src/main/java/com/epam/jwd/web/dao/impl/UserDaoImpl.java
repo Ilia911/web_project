@@ -9,6 +9,7 @@ import com.epam.jwd.web.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,10 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
+
+    private static final String FIND_USER_BY_ID_SQL = "SELECT * FROM auction_user where id = ?";
+
+    private static final String UPDATE_USER_ACCOUNT_SQL = "UPDATE auction_user SET user_account = ? WHERE (id = ?)";
 
     public Optional<User> findByLogin(String login) {
 
@@ -45,6 +50,37 @@ public class UserDaoImpl implements UserDao {
         return false;
     }
 
+    @Override
+    public Optional<User> findById(int id) {
+        try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_ID_SQL);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = readUser(resultSet);
+                return Optional.of(user);
+            }
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public void updateAccount(Integer id, BigDecimal newUserAccount) {
+        try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ACCOUNT_SQL);
+            preparedStatement.setBigDecimal(1, newUserAccount);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+            LOGGER.info("Account was successfully updated!");
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+    }
+
     public Optional<User> register(String userLogin, String userPassword, String userName) {
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
@@ -52,9 +88,8 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, userLogin);
             preparedStatement.setString(2, userPassword);
             preparedStatement.setString(3, userName);
-
             preparedStatement.executeUpdate();
-
+            LOGGER.info("User was successfully registered!");
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));

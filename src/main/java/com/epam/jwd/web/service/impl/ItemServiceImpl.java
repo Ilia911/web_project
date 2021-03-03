@@ -7,6 +7,7 @@ import com.epam.jwd.web.model.ItemDtoForList;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.service.ItemService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,21 @@ public enum ItemServiceImpl implements ItemService {
         itemDao.register(itemName, itemDescribe, Integer.parseInt(ownerId.toString()), Integer.parseInt(itemType),Integer.parseInt(itemPrice));
 
         return Optional.empty();
+    }
+
+    @Override
+    public void unblock(Item item) {
+        itemDao.unblock(item);
+    }
+
+    @Override
+    public Optional<ItemDtoForList> findValidItemById(long id) {
+        return itemDao.findValidItemById(id);
+    }
+
+    @Override
+    public void doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice) {
+        itemDao.doBid(itemId, bidTime, bidOwnerId, currentPrice);
     }
 
 //    private ItemDtoForList convertToDtoForList(Item item) {

@@ -17,6 +17,8 @@ public interface RequestContent {
 
     Object getRequestAttribute(String key);
 
+    String getContextParameter(String key);
+
     Object getSessionAttribute(String key);
 
     void setRequestAttribute(String key, Object attribute);

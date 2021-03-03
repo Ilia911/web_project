@@ -15,6 +15,7 @@
 <body>
 <%@ include file="/WEB-INF/jsp/common/header.jsp"%>
 <h2><locale:loc value="items.title"/></h2>
+<h3>${requestScope.errorDoBidMessage}</h3>
     <c:if test="${not empty requestScope.items}">
         <table style="width:100%">
             <tr>
@@ -38,6 +39,17 @@
                 <td>${item.price}</td>
                 <td><locale:time value="${item.time}"/></td>
                 <td>${item.bidOwnerId}</td>
+                <td>
+                <form method="post" action="${pageContext.request.contextPath}/controller?command=do_bid">
+                    <input name="itemId" type="hidden" value="${item.id}"/>
+                    <input name="previousBidOwnerId" type="hidden" value="${item.bidOwnerId}"/>
+                    <input name="previousPrice" type="hidden" value="${item.price}"/>
+                    <input name="previousTime" type="hidden" value="${item.time}"/>
+                    <input name="newBidOwnerId" type="hidden" value="${sessionScope.id}"/>
+                    <input name="bid" type="number" min=1/>
+                    <input type="submit" value=<locale:loc value="items.do.bid"/>/>
+                </form>
+                </td>
                 </tr>
             </c:forEach>
         </table>

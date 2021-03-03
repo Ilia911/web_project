@@ -7,6 +7,7 @@ import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.service.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,17 @@ public enum UserServiceImpl implements UserService {
     public Optional<UserDto> register(String userLogin, String userPassword, String userName) {
         Optional<User> user = userDao.register(userLogin, BCrypt.hashpw(userPassword, BCrypt.gensalt()), userName);
         return user.map(this::convertToDto);
+    }
+
+    @Override
+    public Optional<UserDto> findById(int id) {
+        final Optional<User> optionalUser = userDao.findById(id);
+        return optionalUser.map(this::convertToDto);
+    }
+
+    @Override
+    public void updateAccount(Integer id, BigDecimal newUserAccount) {
+        userDao.updateAccount(id, newUserAccount);
     }
 
     private UserDto convertToDto(User user) {

@@ -1,9 +1,10 @@
 package com.epam.jwd.web.servlet.command;
 
+import com.epam.jwd.web.servlet.command.item.DoBidCommand;
 import com.epam.jwd.web.servlet.command.item.RegisterItemCommand;
+import com.epam.jwd.web.servlet.command.item.UnblockItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowAllLotsCommand;
-import com.epam.jwd.web.servlet.command.page.ShowBlockedItems;
-import com.epam.jwd.web.servlet.command.page.ShowCompletedItems;
+import com.epam.jwd.web.servlet.command.page.ShowBlockedItemsCommand;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 import com.epam.jwd.web.servlet.command.page.ShowProfile;
 import com.epam.jwd.web.servlet.command.page.ShowRegisterItemCommand;
@@ -20,11 +21,12 @@ public enum CommandManager {
     LOG_OUT(LogOutCommand.INSTANCE),
     REGISTER(RegisterCommand.INSTANCE),
     REGISTER_ITEM(RegisterItemCommand.INSTANCE),
+    UNBLOCK_ITEM(UnblockItemCommand.INSTANCE),
+    DO_BID(DoBidCommand.INSTANCE),
     CHOOSE_LOCALE(ChooseLocaleCommand.INSTANCE),
     DEFAULT(ShowMainPageCommand.INSTANCE),
     SHOW_LOTS(ShowAllLotsCommand.INSTANCE),
-    SHOW_BLOCKED_ITEMS(ShowBlockedItems.INSTANCE),
-    SHOW_COMPLETED_ITEMS(ShowCompletedItems.INSTANCE),
+    SHOW_BLOCKED_ITEMS(ShowBlockedItemsCommand.INSTANCE),
     SHOW_USERS(ShowUsers.INSTANCE),
     SHOW_PROFILE(ShowProfile.INSTANCE),
     SHOW_LOGIN(ShowUserLoginPageCommand.INSTANCE),
