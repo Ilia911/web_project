@@ -22,9 +22,10 @@ import java.util.Optional;
 
 public class ItemDaoImpl implements ItemDao {
     private static final String FIND_ALL_VALID_ITEMS_SQL = "SELECT i.id, i.item_name, i.item_describe, i.owner_id, " +
-            "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join " +
-            "(select max(bid_time) max_bid_time, item_id from lot_history group by item_id) m on lh.item_id " +
-            "= m.item_id and lh.bid_time = m.max_bid_time left join item i on lh.item_id = i.id where i.item_status = 1";
+            "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join (select item_id, " +
+            "max(bid_time) max_bid_time, max(current_price) current_price from lot_history group by item_id) m on " +
+            "lh.item_id = m.item_id and lh.bid_time = m.max_bid_time and lh.current_price = m.current_price " +
+            "left join item i on lh.item_id = i.id where i.item_status = 1";
 
     private static final String FIND_ALL_ITEMS_BY_STATUS_SQL = "SELECT * FROM auction.item where item_status = ?";
 
@@ -37,13 +38,13 @@ public class ItemDaoImpl implements ItemDao {
             "(item_id, bid_time, bid_owner_id, current_price) VALUES (?, ?, ?, ?)";
 
     private static final String FIND_VALID_ITEM_BY_ID_SQL = "SELECT i.id, i.item_name, i.item_describe, i.owner_id, " +
-            "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join " +
-            "(select max(bid_time) max_bid_time, item_id from lot_history group by item_id) m on lh.item_id " +
-            "= m.item_id and lh.bid_time = m.max_bid_time left join item i on lh.item_id = i.id " +
-            "where i.item_status = 1 and i.id = ?";
+            "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join (select item_id, " +
+            "max(bid_time) max_bid_time, max(current_price) current_price from lot_history group by item_id) m on " +
+            "lh.item_id = m.item_id and lh.bid_time = m.max_bid_time and lh.current_price = m.current_price " +
+            "left join item i on lh.item_id = i.id where i.item_status = 1 and i.id = ?";
 
-    private static final String UPDATE_LOT_HISTORY_SQL = "INSERT INTO lot_history (item_id, bid_time, bid_owner_id, current_price) VALUES (?, ?, ?, ?)";
-
+    private static final String UPDATE_LOT_HISTORY_SQL = "INSERT INTO lot_history (item_id, bid_time, bid_owner_id, " +
+            "current_price) VALUES (?, ?, ?, ?)";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
 
@@ -86,7 +87,7 @@ public class ItemDaoImpl implements ItemDao {
             final ResultSet resultSet = preparedStatement.executeQuery();
             ItemDtoForList itemDtoForList = null;
             if (resultSet.next()) {
-               itemDtoForList = readValidItem(resultSet);
+                itemDtoForList = readValidItem(resultSet);
                 return Optional.of(itemDtoForList);
             }
         } catch (SQLException | InterruptedException e) {

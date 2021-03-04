@@ -18,5 +18,5 @@ public interface UserService {
 
     Optional<UserDto> findById(int id);
 
-    void updateAccount(Integer id, BigDecimal newUserAccount);
+    void updateAccount(int id, BigDecimal newUserAccount);
 }

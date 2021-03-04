@@ -68,10 +68,19 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateAccount(Integer id, BigDecimal newUserAccount) {
+    public void updateAccount(int id, BigDecimal newPrice) {
+
+        final Optional<User> optionalUser = this.findById(id);
+        if (!optionalUser.isPresent()) {
+            return;
+        }
+        BigDecimal oldAccount = optionalUser.get().getAccount();
+        BigDecimal newAccount = oldAccount.subtract(newPrice);
+
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ACCOUNT_SQL);
-            preparedStatement.setBigDecimal(1, newUserAccount);
+            preparedStatement.setBigDecimal(1, newAccount);
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
             LOGGER.info("Account was successfully updated!");

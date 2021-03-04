@@ -17,13 +17,13 @@ import java.util.GregorianCalendar;
 public enum UnblockItemCommand implements Command {
     INSTANCE;
 
-    ItemService itemService = ItemServiceImpl.INSTANCE;
+    private static final ItemService itemService = ItemServiceImpl.INSTANCE;
 
     @Override
     public ResponseContext execute(RequestContent req) {
         final long currentTime = GregorianCalendar.getInstance().getTimeInMillis();
         final String item_show_time = req.getContextParameter("item_show_time");
-        long bid_time = currentTime + Long.parseLong(item_show_time);
+        final long bid_time = currentTime + Long.parseLong(item_show_time);
 
         Item updatedItem = ItemFactory.INSTANCE.createItem(Long.parseLong(req.getRequestParameter("id")[0]),
                 req.getRequestParameter("name")[0],

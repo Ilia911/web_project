@@ -57,7 +57,7 @@ public enum UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAccount(Integer id, BigDecimal newUserAccount) {
+    public void updateAccount(int id, BigDecimal newUserAccount) {
         userDao.updateAccount(id, newUserAccount);
     }
 

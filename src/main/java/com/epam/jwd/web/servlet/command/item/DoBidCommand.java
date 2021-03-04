@@ -25,47 +25,81 @@ public enum DoBidCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        // actualize data:
+
+        return chain(req);
+    }
+
+    private ResponseContext chain(RequestContent req) {
+        return checkLogIn(req);
+    }
+
+    private ResponseContext checkLogIn(RequestContent req) {
+        if (req.getSessionAttribute("login") == null) {
+            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.logged.in"));
+            return ShowAllLotsCommand.INSTANCE.execute(req);
+        }
+        return checkValidityOfItem(req);
+    }
+
+    private ResponseContext checkValidityOfItem(RequestContent req) {
+
         final Optional<ItemDtoForList> optionalItem
                 = ITEM_SERVICE.findValidItemById(Long.parseLong(req.getRequestParameter("itemId")[0]));
         if (!optionalItem.isPresent()) {
+            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.actualize.data"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
-        ItemDtoForList item = optionalItem.get();
-        if (item.getTime() > Long.parseLong(req.getRequestParameter("previousTime")[0])) {
-            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle
-                    ("message.do.bid.not.actual", (Locale) req.getSessionAttribute("locale")));
+        return checkDataActuality(req, optionalItem.get());
+    }
+
+    private ResponseContext checkDataActuality(RequestContent req, ItemDtoForList item) {
+        if (item.getPrice().compareTo(BigDecimal.valueOf(Double.parseDouble(req.getRequestParameter
+                ("previousPrice")[0]))) > 0) {
+            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.actual"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
 
-        // check sufficiency of available sum of money:
+        return checkValidityOfNewBidder(req, item);
+    }
 
-        final Optional<UserDto> newBidOwner
-                = USER_SERVICE.findById(Integer.parseInt(req.getRequestParameter("newBidOwnerId")[0]));
+    private ResponseContext checkValidityOfNewBidder(RequestContent req, ItemDtoForList item) {
+
+        final Optional<UserDto> newBidOwner = USER_SERVICE.findById((Integer) req.getSessionAttribute("id"));
         if (!newBidOwner.isPresent()) {
+            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.actualize.data"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
+        return checkSumOfMoneyOnBidderAccount(req, item, newBidOwner.get());
+    }
+
+    private ResponseContext checkSumOfMoneyOnBidderAccount(RequestContent req, ItemDtoForList item, UserDto bidder) {
         final BigDecimal newPrice
                 = item.getPrice().add(BigDecimal.valueOf(Long.parseLong(req.getRequestParameter("bid")[0])));
-        final BigDecimal availableMoney = newBidOwner.get().getAccount();
+        final BigDecimal availableMoney = bidder.getAccount();
         final BigDecimal allowableSum
                 = BigDecimal.valueOf(Long.parseLong(req.getContextParameter("allowable_debt"))).add(availableMoney);
-        if (newPrice.subtract(allowableSum).doubleValue() > 0) {
-            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle
-                    ("message.do.bid.not.enough.money", (Locale) req.getSessionAttribute("locale")));
+        if (allowableSum.compareTo(newPrice) < 0) {
+            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.enough.money"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
-        final BigDecimal newUserAccount = availableMoney.subtract(newPrice);
+        return doBid(req, item, bidder, newPrice);
+    }
 
-        // do bid and return money previous bidder
+    private ResponseContext doBid(RequestContent req, ItemDtoForList item, UserDto bidder, BigDecimal newPrice) {
+
         final long possibleEndTime = GregorianCalendar.getInstance().getTimeInMillis()
                 + Long.parseLong(req.getContextParameter("item_additional_show_time"));
         final long endTime = Math.max(item.getTime(), possibleEndTime);
-        ITEM_SERVICE.doBid(item.getId(), endTime, newBidOwner.get().getId(), newPrice);
-        USER_SERVICE.updateAccount(newBidOwner.get().getId(), newUserAccount);
-
-        //todo: add previous bid to previous bidder account
-
+        ITEM_SERVICE.doBid(item.getId(), endTime, bidder.getId(), newPrice);
+        USER_SERVICE.updateAccount(bidder.getId(), newPrice);
+        USER_SERVICE.updateAccount(Integer.parseInt(req.getRequestParameter
+                ("previousBidOwnerId")[0]), item.getPrice().negate());
         return ShowAllLotsCommand.INSTANCE.execute(req);
     }
+
 }

@@ -45,7 +45,6 @@
                     <input name="previousBidOwnerId" type="hidden" value="${item.bidOwnerId}"/>
                     <input name="previousPrice" type="hidden" value="${item.price}"/>
                     <input name="previousTime" type="hidden" value="${item.time}"/>
-                    <input name="newBidOwnerId" type="hidden" value="${sessionScope.id}"/>
                     <input name="bid" type="number" min=1/>
                     <input type="submit" value=<locale:loc value="items.do.bid"/>/>
                 </form>
