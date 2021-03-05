@@ -19,5 +19,7 @@ public interface UserDao {
 
     Optional<User> findById(int id);
 
+    Optional<User> save(int id, String newName, String newPassword);
+
     void updateAccount(int id, BigDecimal newUserAccount);
 }

@@ -10,6 +10,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public enum UserServiceImpl implements UserService {
     INSTANCE;
@@ -20,11 +21,18 @@ public enum UserServiceImpl implements UserService {
 
     @Override
     public Optional<List<UserDto>> findAll() {
-        return Optional.empty();
+        final Optional<List<User>> optionalUserList = userDao.findAll();
+        return optionalUserList.map(users -> users.stream().map(this::convertToDto).collect(Collectors.toList()));
     }
 
     @Override
-    public Optional<UserDto> save(UserDto dto) {
+    public Optional<UserDto> save(int id, String newName, String newPassword) {
+
+        final Optional<User> optionalUser = userDao.save(id, newName, BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+
+        if (optionalUser.isPresent()) {
+            return optionalUser.map(this::convertToDto);
+        }
         return Optional.empty();
     }
 
@@ -65,5 +73,4 @@ public enum UserServiceImpl implements UserService {
         return new UserDto(user.getId(), user.getLogin(), user.getPassword(), user.getName(), user.getAccount(),
                 user.getRole(), user.getStatus());
     }
-
 }

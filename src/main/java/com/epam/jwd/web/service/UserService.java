@@ -10,7 +10,7 @@ public interface UserService {
 
     Optional<List<UserDto>> findAll();
 
-    Optional<UserDto> save(UserDto userDto);
+    Optional<UserDto> save(int id, String newName, String newPassword);
 
     Optional<UserDto> login(String login, String password);
 

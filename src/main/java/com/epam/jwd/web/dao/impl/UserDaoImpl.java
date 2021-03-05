@@ -28,6 +28,10 @@ public class UserDaoImpl implements UserDao {
 
     private static final String UPDATE_USER_ACCOUNT_SQL = "UPDATE auction_user SET user_account = ? WHERE (id = ?)";
 
+    private static final String FIND_ALL_USERS_SQL = "SELECT * FROM auction_user";
+
+    private static final String UPDATE_USER_SQL = "UPDATE auction_user SET user_name = ?, user_password = ? WHERE (id = ?)";
+
     public Optional<User> findByLogin(String login) {
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
@@ -65,6 +69,23 @@ public class UserDaoImpl implements UserDao {
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> save(int id, String newName, String newPassword) {
+
+        try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_SQL);
+            preparedStatement.setString(1, newName);
+            preparedStatement.setString(2, newPassword);
+            preparedStatement.setInt(3, id);
+            preparedStatement.executeUpdate();
+            LOGGER.info("Profile was successfully updated!");
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return findById(id);
     }
 
     @Override
@@ -106,36 +127,34 @@ public class UserDaoImpl implements UserDao {
         return findByLogin(userLogin);
     }
 
-    private User readUser(ResultSet resultSet) throws SQLException {
-        return new User(resultSet.getInt(UserSQL.ID_COLUMN_NAME),
-                resultSet.getString(UserSQL.LOGIN_COLUMN_NAME),
-                resultSet.getString(UserSQL.PASSWORD_COLUMN_NAME),
-                resultSet.getString(UserSQL.NAME_COLUMN_NAME),
-                resultSet.getBigDecimal(UserSQL.ACCOUNT_COLUMN_NAME),
-                Role.of(resultSet.getString(UserSQL.ROLE_COLUMN_NAME)),
-                UserStatus.of(resultSet.getString(UserSQL.STATUS_COLUMN_NAME))
-        );
-    }
-
     @Override
     public Optional<List<User>> findAll() {
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection();
              final Statement statement = connection.createStatement();
-             final ResultSet resultSet = statement.executeQuery(UserSQL.FIND_ALL_USERS_SQL)) {
-            List<User> items = new ArrayList<>();
+             final ResultSet resultSet = statement.executeQuery(FIND_ALL_USERS_SQL)) {
+            List<User> users = new ArrayList<>();
             while (resultSet.next()) {
-                items.add(readUser(resultSet));
+                users.add(readUser(resultSet));
             }
-            return Optional.of(items);
-        } catch (InterruptedException e) {
+            LOGGER.info("Users were successfully read from database");
+            return Optional.of(users);
+        } catch (InterruptedException | SQLException e) {
             e.printStackTrace();
-            LOGGER.error("InterruptedException in Connection Pool!");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            LOGGER.error("SQLException in Connection Pool!");
+            LOGGER.error("Reading users in database failed!");
         }
         return Optional.empty();
+    }
+
+    private User readUser(ResultSet resultSet) throws SQLException {
+        return new User(resultSet.getInt(1),
+                resultSet.getString(2),
+                resultSet.getString(3),
+                resultSet.getString(4),
+                resultSet.getBigDecimal(5),
+                Role.of(resultSet.getString(6)),
+                UserStatus.of(resultSet.getString(7))
+        );
     }
 
     @Override
