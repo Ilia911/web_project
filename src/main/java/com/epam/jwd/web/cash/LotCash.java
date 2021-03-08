@@ -40,7 +40,7 @@ public enum LotCash implements Subscriber<LotDto> {
     }
 
     @Override
-    public void update() {
+    public void update(LotDto item) {
 
         final Optional<List<LotDto>> optionalLotDto = ITEM_DAO.findAll(ItemStatus.VALID);
         optionalLotDto.ifPresent(lotDtos -> lots = lotDtos);

@@ -55,6 +55,12 @@ public enum UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> register(String userLogin, String userPassword, String userName) {
+
+        final Optional<User> optionalUser = USER_DAO.findByLogin(userLogin);
+        if (optionalUser.isPresent()) {
+            return Optional.empty();
+        }
+
         Optional<User> user = USER_DAO.register(userLogin, BCrypt.hashpw(userPassword, BCrypt.gensalt()), userName);
         return user.map(this::convertToDto);
     }

@@ -1,6 +1,5 @@
 package com.epam.jwd.web.servlet.command.page;
 
-import com.epam.jwd.web.model.Role;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContent;

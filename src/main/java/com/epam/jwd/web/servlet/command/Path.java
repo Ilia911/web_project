@@ -13,6 +13,8 @@ public class Path {
     public static final String SHOW_REGISTER_ITEM_PAGE = "/WEB-INF/jsp/register_item.jsp";
     public static final String SHOW_CLIENT_MAIN_PAGE = "/WEB-INF/jsp/main_client.jsp";
     public static final String SHOW_ADMIN_MAIN_PAGE = "/WEB-INF/jsp/main_admin.jsp";
+    public static final String SHOW_USER_LOGIN_AGAIN_PAGE = "/controller?command=show_login";
+    public static final String SHOW_USER_REGISTER_AGAIN_PAGE ="/controller?command=show_register";
 
 
 }

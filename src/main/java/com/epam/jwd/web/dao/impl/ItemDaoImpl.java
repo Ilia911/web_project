@@ -190,7 +190,7 @@ public enum ItemDaoImpl implements ItemDao {
             preparedStatement.setBigDecimal(4, currentPrice);
             preparedStatement.executeUpdate();
             LOGGER.info("Lot history was successfully updated");
-            updateCash();
+            updateCash(itemId);
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
@@ -205,16 +205,11 @@ public enum ItemDaoImpl implements ItemDao {
             preparedStatement.setLong(1, lotDto.getItemId());
             preparedStatement.executeUpdate();
             LOGGER.info("Lot # " + lotDto.getItemId() + " was successfully completed");
-            updateCash();
+            updateCash(lotDto.getItemId());
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
-    }
-
-    @Override
-    public void subscribe(Subscriber<LotDto> subscriber) {
-        subscribers.add(subscriber);
     }
 
     private void updateItemStatusInItemTable(Item item) {
@@ -224,7 +219,7 @@ public enum ItemDaoImpl implements ItemDao {
             preparedStatement.setLong(2, item.getId());
             preparedStatement.executeUpdate();
             LOGGER.info("Item was successfully unblocked");
-            updateCash();
+            updateCash(item.getId());
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
@@ -245,11 +240,18 @@ public enum ItemDaoImpl implements ItemDao {
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
     }
-    private void updateCash() {
-
-        for (Subscriber subscriber : subscribers) {
-            subscriber.update();
+    private void updateCash(long id) {
+        final Optional<LotDto> validItemById = findValidItemById(id);
+        if (validItemById.isPresent()) {
+            for (Subscriber subscriber : subscribers) {
+                subscriber.update(validItemById.get());
+            }
         }
     }
 
+
+    @Override
+    public void subscribe(Subscriber<? super LotDto> subscriber) {
+        subscribers.add(subscriber);
+    }
 }
