@@ -30,21 +30,21 @@
             </tr>
             <c:forEach var="item" items="${requestScope.items}">
                 <tr>
-                <td>
-                <a href="${pageContext.request.contextPath}/controller?command=show_item&id=${item.id}">${item.name}</a>
-                </td>
+                <td>${item.name}</td>
                 <td>${item.describe}</td>
                 <td>${item.ownerId}</td>
                 <td>${item.type}</td>
                 <td>${item.price}</td>
-                <td><locale:time value="${item.time}"/></td>
+                <td><locale:time value="${item.endTime}"/></td>
                 <td>${item.bidOwnerId}</td>
                 <td>
                 <form method="post" action="${pageContext.request.contextPath}/controller?command=do_bid">
-                    <input name="itemId" type="hidden" value="${item.id}"/>
+                    <input name="id" type="hidden" value="${item.id}"/>
+                    <input name="itemId" type="hidden" value="${item.itemId}"/>
                     <input name="previousBidOwnerId" type="hidden" value="${item.bidOwnerId}"/>
+                    <input name="type" type="hidden" value="${item.type}"/>
                     <input name="previousPrice" type="hidden" value="${item.price}"/>
-                    <input name="previousTime" type="hidden" value="${item.time}"/>
+                    <input name="previousTime" type="hidden" value="${item.endTime}"/>
                     <input name="bid" type="number" min=1/>
                     <input type="submit" value=<locale:loc value="items.do.bid"/>/>
                 </form>

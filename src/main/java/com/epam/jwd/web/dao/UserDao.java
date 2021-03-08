@@ -1,6 +1,7 @@
 package com.epam.jwd.web.dao;
 
 import com.epam.jwd.web.model.User;
+import com.epam.jwd.web.model.UserStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,4 +23,6 @@ public interface UserDao {
     Optional<User> save(int id, String newName, String newPassword);
 
     void updateAccount(int id, BigDecimal newUserAccount);
+
+    void changeStatus(int id, UserStatus status);
 }

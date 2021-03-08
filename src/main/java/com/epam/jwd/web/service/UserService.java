@@ -1,6 +1,7 @@
 package com.epam.jwd.web.service;
 
 import com.epam.jwd.web.model.UserDto;
+import com.epam.jwd.web.model.UserStatus;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface UserService {
     Optional<UserDto> findById(int id);
 
     void updateAccount(int id, BigDecimal newUserAccount);
+
+    void changeStatus(int id, UserStatus status);
 }

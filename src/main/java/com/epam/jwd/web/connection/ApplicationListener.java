@@ -1,5 +1,11 @@
 package com.epam.jwd.web.connection;
 
+import com.epam.jwd.web.cash.LotCash;
+import com.epam.jwd.web.cash.LotManager;
+import com.epam.jwd.web.dao.ItemDao;
+import com.epam.jwd.web.dao.impl.ItemDaoImpl;
+import com.epam.jwd.web.model.LotDto;
+import com.epam.jwd.web.observer.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +22,9 @@ import java.util.Map;
 public class ApplicationListener implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationListener.class);
+    private static final Thread lotManager = new LotManager();
+    private static final ItemDao ITEM_DAO = ItemDaoImpl.INSTANCE;
+    private static final Subscriber<LotDto> subscriber = LotCash.INSTANCE;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -26,7 +35,11 @@ public class ApplicationListener implements ServletContextListener {
             throw new IllegalStateException(e);
         }
         Locale.setDefault(Locale.US);
-        sce.getServletContext().setAttribute("sessionMap", new HashMap<String, HttpSession>());
+        lotManager.start();
+
+        ITEM_DAO.subscribe(subscriber);
+
+        //sce.getServletContext().setAttribute("sessionMap", new HashMap<String, HttpSession>());
 
     }
 

@@ -20,7 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDaoImpl implements UserDao {
+public enum UserDaoImpl implements UserDao {
+    INSTANCE;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
@@ -31,6 +32,8 @@ public class UserDaoImpl implements UserDao {
     private static final String FIND_ALL_USERS_SQL = "SELECT * FROM auction_user";
 
     private static final String UPDATE_USER_SQL = "UPDATE auction_user SET user_name = ?, user_password = ? WHERE (id = ?)";
+
+    private static final String CHANGE_STATUS_SQL = "UPDATE auction_user SET user_status = ? WHERE (id = ?)";
 
     public Optional<User> findByLogin(String login) {
 
@@ -105,6 +108,22 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
             LOGGER.info("Account was successfully updated!");
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    @Override
+    public void changeStatus(int id, UserStatus status) {
+
+        try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(CHANGE_STATUS_SQL);
+            preparedStatement.setInt(1, status.getInt());
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+            LOGGER.info("Status was successfully updated!");
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));

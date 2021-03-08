@@ -12,6 +12,7 @@ import com.epam.jwd.web.servlet.command.page.ShowRegisterItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowUserLoginPageCommand;
 import com.epam.jwd.web.servlet.command.page.ShowUserRegisterPageCommand;
 import com.epam.jwd.web.servlet.command.page.ShowUsersCommand;
+import com.epam.jwd.web.servlet.command.user.ChangeStatusCommand;
 import com.epam.jwd.web.servlet.command.user.ChooseLocaleCommand;
 import com.epam.jwd.web.servlet.command.user.LogInCommand;
 import com.epam.jwd.web.servlet.command.user.LogOutCommand;
@@ -22,6 +23,7 @@ public enum CommandManager {
     LOG_IN(LogInCommand.INSTANCE),
     LOG_OUT(LogOutCommand.INSTANCE),
     REGISTER(RegisterCommand.INSTANCE),
+    CHANGE_USER_STATUS(ChangeStatusCommand.INSTANCE),
     REGISTER_ITEM(RegisterItemCommand.INSTANCE),
     SAVE_EDITED_USER(SaveEditedUserCommand.INSTANCE),
     UNBLOCK_ITEM(UnblockItemCommand.INSTANCE),

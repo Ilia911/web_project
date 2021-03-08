@@ -25,7 +25,7 @@ public enum SaveEditedUserCommand implements Command {
             req.setSessionAttribute("name", optionalUserDto.get().getName());
             req.setRequestAttribute("user", optionalUserDto.get());
         }
-        //todo: think about what you should return here:
+        //todo: validate input data!
         return ShowProfileCommand.INSTANCE.execute(req);
     }
 }

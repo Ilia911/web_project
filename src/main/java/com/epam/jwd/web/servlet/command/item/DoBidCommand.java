@@ -1,6 +1,7 @@
 package com.epam.jwd.web.servlet.command.item;
 
-import com.epam.jwd.web.model.ItemDtoForList;
+import com.epam.jwd.web.model.ItemType;
+import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.UserService;
@@ -25,7 +26,6 @@ public enum DoBidCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
-
         return chain(req);
     }
 
@@ -44,7 +44,7 @@ public enum DoBidCommand implements Command {
 
     private ResponseContext checkValidityOfItem(RequestContent req) {
 
-        final Optional<ItemDtoForList> optionalItem
+        final Optional<LotDto> optionalItem
                 = ITEM_SERVICE.findValidItemById(Long.parseLong(req.getRequestParameter("itemId")[0]));
         if (!optionalItem.isPresent()) {
             req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
@@ -54,18 +54,16 @@ public enum DoBidCommand implements Command {
         return checkDataActuality(req, optionalItem.get());
     }
 
-    private ResponseContext checkDataActuality(RequestContent req, ItemDtoForList item) {
-        if (item.getPrice().compareTo(BigDecimal.valueOf(Double.parseDouble(req.getRequestParameter
-                ("previousPrice")[0]))) > 0) {
+    private ResponseContext checkDataActuality(RequestContent req, LotDto item) {
+        if (item.getId() > Long.parseLong(req.getRequestParameter("id")[0])) {
             req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
                     (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.actual"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
-
         return checkValidityOfNewBidder(req, item);
     }
 
-    private ResponseContext checkValidityOfNewBidder(RequestContent req, ItemDtoForList item) {
+    private ResponseContext checkValidityOfNewBidder(RequestContent req, LotDto item) {
 
         final Optional<UserDto> newBidOwner = USER_SERVICE.findById((Integer) req.getSessionAttribute("id"));
         if (!newBidOwner.isPresent()) {
@@ -73,10 +71,14 @@ public enum DoBidCommand implements Command {
                     (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.actualize.data"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
-        return checkSumOfMoneyOnBidderAccount(req, item, newBidOwner.get());
+        if (req.getRequestParameter("type")[0].equals(ItemType.STRAIGHT.toString())) {
+            return checkSumOfMoneyOnBidderAccount(req, item, newBidOwner.get());
+        } else {
+            return doReverseBid(req, item, newBidOwner.get());
+        }
     }
 
-    private ResponseContext checkSumOfMoneyOnBidderAccount(RequestContent req, ItemDtoForList item, UserDto bidder) {
+    private ResponseContext checkSumOfMoneyOnBidderAccount(RequestContent req, LotDto item, UserDto bidder) {
         final BigDecimal newPrice
                 = item.getPrice().add(BigDecimal.valueOf(Long.parseLong(req.getRequestParameter("bid")[0])));
         final BigDecimal availableMoney = bidder.getAccount();
@@ -87,19 +89,28 @@ public enum DoBidCommand implements Command {
                     (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.enough.money"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
-        return doBid(req, item, bidder, newPrice);
+        return doStraightBid(req, item, bidder, newPrice);
     }
 
-    private ResponseContext doBid(RequestContent req, ItemDtoForList item, UserDto bidder, BigDecimal newPrice) {
+    private ResponseContext doStraightBid(RequestContent req, LotDto item, UserDto bidder, BigDecimal newPrice) {
 
         final long possibleEndTime = GregorianCalendar.getInstance().getTimeInMillis()
                 + Long.parseLong(req.getContextParameter("item_additional_show_time"));
-        final long endTime = Math.max(item.getTime(), possibleEndTime);
-        ITEM_SERVICE.doBid(item.getId(), endTime, bidder.getId(), newPrice);
+        final long endTime = Math.max(item.getEndTime(), possibleEndTime);
+        ITEM_SERVICE.doBid(item.getItemId(), endTime, bidder.getId(), newPrice);
         USER_SERVICE.updateAccount(bidder.getId(), newPrice);
         USER_SERVICE.updateAccount(Integer.parseInt(req.getRequestParameter
                 ("previousBidOwnerId")[0]), item.getPrice().negate());
         return ShowAllLotsCommand.INSTANCE.execute(req);
     }
 
+    private ResponseContext doReverseBid(RequestContent req, LotDto item, UserDto bidder) {
+        final BigDecimal newPrice
+                = item.getPrice().subtract(BigDecimal.valueOf(Long.parseLong(req.getRequestParameter("bid")[0])));
+        final long possibleEndTime = GregorianCalendar.getInstance().getTimeInMillis()
+                + Long.parseLong(req.getContextParameter("item_additional_show_time"));
+        final long endTime = Math.max(item.getEndTime(), possibleEndTime);
+        ITEM_SERVICE.doBid(item.getItemId(), endTime, bidder.getId(), newPrice);
+        return ShowAllLotsCommand.INSTANCE.execute(req);
+    }
 }

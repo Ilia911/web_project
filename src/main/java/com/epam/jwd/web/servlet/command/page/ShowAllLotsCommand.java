@@ -1,6 +1,7 @@
 package com.epam.jwd.web.servlet.command.page;
 
-import com.epam.jwd.web.model.ItemDtoForList;
+import com.epam.jwd.web.cash.LotCash;
+import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.impl.ItemServiceImpl;
@@ -28,12 +29,11 @@ public enum ShowAllLotsCommand implements Command {
     };
 
     private static final String ITEMS_ATTRIBUTE_NAME = "items";
-    private final ItemService itemService = ItemServiceImpl.INSTANCE;
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        final List<ItemDtoForList> items = itemService.findAll(ItemStatus.VALID).orElse(Collections.emptyList());
-        req.setRequestAttribute(ITEMS_ATTRIBUTE_NAME, items);
+        final List<LotDto> lots = LotCash.INSTANCE.getLots();
+        req.setRequestAttribute(ITEMS_ATTRIBUTE_NAME, lots);
         return RESPONSE;
     }
 }

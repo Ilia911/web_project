@@ -18,4 +18,12 @@ public enum UserStatus {
         }
         return BLOCKED;
     }
+
+    public UserStatus reverse() {
+        return this == VALID ? BLOCKED : VALID;
+    }
+
+    public int getInt() {
+        return status;
+    }
 }

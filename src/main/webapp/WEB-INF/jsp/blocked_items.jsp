@@ -36,13 +36,12 @@
                 <td>${item.price}</td>
                 <td>
                 <form method="post" action="${pageContext.request.contextPath}/controller?command=unblock_item">
-                    <input name="id" type="hidden" value="${item.id}"/>
+                    <input name="id" type="hidden" value="${item.itemId}"/>
                     <input name="name" type="hidden" value="${item.name}"/>
                     <input name="describe" type="hidden" value="${item.describe}"/>
                     <input name="ownerId" type="hidden" value="${item.ownerId}"/>
                     <input name="type" type="hidden" value="${item.type}"/>
                     <input name="price" type="hidden" value="${item.price}"/>
-                    <input name="status" type="hidden" value="valid"/>
                     <input type="submit" value=<locale:loc value="blocked.items.unblock"/>/>
                 </form>
                 </td>

@@ -1,6 +1,6 @@
 package com.epam.jwd.web.servlet.command.page;
 
-import com.epam.jwd.web.model.ItemDtoForList;
+import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.impl.ItemServiceImpl;
@@ -34,7 +34,7 @@ public enum ShowBlockedItemsCommand implements Command {
     @Override
     public ResponseContext execute(RequestContent req) {
 
-        final List<ItemDtoForList> items = itemService.findAll(ItemStatus.BLOCKED).orElse(Collections.emptyList());
+        final List<LotDto> items = itemService.findAll(ItemStatus.BLOCKED).orElse(Collections.emptyList());
         req.setRequestAttribute(ITEMS_ATTRIBUTE_NAME, items);
         return RESPONSE;
     }

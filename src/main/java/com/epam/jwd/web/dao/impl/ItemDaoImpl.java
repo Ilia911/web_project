@@ -3,9 +3,10 @@ package com.epam.jwd.web.dao.impl;
 import com.epam.jwd.web.connection.ConnectionPool;
 import com.epam.jwd.web.dao.ItemDao;
 import com.epam.jwd.web.model.Item;
-import com.epam.jwd.web.model.ItemDtoForList;
+import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.model.ItemType;
+import com.epam.jwd.web.observer.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,11 +21,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class ItemDaoImpl implements ItemDao {
-    private static final String FIND_ALL_VALID_ITEMS_SQL = "SELECT i.id, i.item_name, i.item_describe, i.owner_id, " +
+public enum ItemDaoImpl implements ItemDao {
+    INSTANCE;
+
+    private static final List<Subscriber> subscribers = new ArrayList<>();
+
+    private static final String FIND_ALL_VALID_ITEMS_SQL = "SELECT lh.id, i.id, i.item_name, i.item_describe, i.owner_id, " +
             "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join (select item_id, " +
-            "max(bid_time) max_bid_time, max(current_price) current_price from lot_history group by item_id) m on " +
-            "lh.item_id = m.item_id and lh.bid_time = m.max_bid_time and lh.current_price = m.current_price " +
+            "max(id) max_id from lot_history group by item_id) m on lh.item_id = m.item_id and lh.id = m.max_id " +
             "left join item i on lh.item_id = i.id where i.item_status = 1";
 
     private static final String FIND_ALL_ITEMS_BY_STATUS_SQL = "SELECT * FROM auction.item where item_status = ?";
@@ -37,14 +41,15 @@ public class ItemDaoImpl implements ItemDao {
     private final static String INSERT_ITEM_INTO_LOT_HISTORY_SQL = "INSERT INTO lot_history " +
             "(item_id, bid_time, bid_owner_id, current_price) VALUES (?, ?, ?, ?)";
 
-    private static final String FIND_VALID_ITEM_BY_ID_SQL = "SELECT i.id, i.item_name, i.item_describe, i.owner_id, " +
+    private static final String FIND_VALID_ITEM_BY_ID_SQL = "SELECT lh.id, i.id, i.item_name, i.item_describe, i.owner_id, " +
             "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join (select item_id, " +
-            "max(bid_time) max_bid_time, max(current_price) current_price from lot_history group by item_id) m on " +
-            "lh.item_id = m.item_id and lh.bid_time = m.max_bid_time and lh.current_price = m.current_price " +
+            "max(id) max_id from lot_history group by item_id) m on lh.item_id = m.item_id and lh.id = m.max_id " +
             "left join item i on lh.item_id = i.id where i.item_status = 1 and i.id = ?";
 
     private static final String UPDATE_LOT_HISTORY_SQL = "INSERT INTO lot_history (item_id, bid_time, bid_owner_id, " +
             "current_price) VALUES (?, ?, ?, ?)";
+
+    private static final String COMPLETE_LOT_SQL = "UPDATE item SET item_status = '3' WHERE (`id` = ?)";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
 
@@ -58,6 +63,7 @@ public class ItemDaoImpl implements ItemDao {
             preparedStatement.setInt(4, itemType);
             preparedStatement.setLong(5, itemPrice);
             preparedStatement.executeUpdate();
+            LOGGER.info("Item '" + itemName + "' was successfully registered");
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
@@ -66,7 +72,7 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public Optional<List<ItemDtoForList>> findAll(ItemStatus status) {
+    public Optional<List<LotDto>> findAll(ItemStatus status) {
         if (status == null) {
             LOGGER.error("Item status equals null. Reading item failed");
             return Optional.empty();
@@ -79,16 +85,16 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public Optional<ItemDtoForList> findValidItemById(long id) {
+    public Optional<LotDto> findValidItemById(long id) {
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
             final PreparedStatement preparedStatement = connection.prepareStatement(FIND_VALID_ITEM_BY_ID_SQL);
             preparedStatement.setLong(1, id);
             final ResultSet resultSet = preparedStatement.executeQuery();
-            ItemDtoForList itemDtoForList = null;
+            LotDto lotDto;
             if (resultSet.next()) {
-                itemDtoForList = readValidItem(resultSet);
-                return Optional.of(itemDtoForList);
+                lotDto = readValidItem(resultSet);
+                return Optional.of(lotDto);
             }
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
@@ -97,13 +103,13 @@ public class ItemDaoImpl implements ItemDao {
         return Optional.empty();
     }
 
-    private Optional<List<ItemDtoForList>> findItemsByStatus(ItemStatus status) {
+    private Optional<List<LotDto>> findItemsByStatus(ItemStatus status) {
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
             final PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_ITEMS_BY_STATUS_SQL);
             preparedStatement.setInt(1, status.getInt());
             final ResultSet resultSet = preparedStatement.executeQuery();
-            List<ItemDtoForList> list = new ArrayList<>();
+            List<LotDto> list = new ArrayList<>();
             while (resultSet.next()) {
                 list.add(this.readItemsByStatus(resultSet));
             }
@@ -115,8 +121,9 @@ public class ItemDaoImpl implements ItemDao {
         return Optional.empty();
     }
 
-    private ItemDtoForList readItemsByStatus(ResultSet resultSet) throws SQLException {
-        return new ItemDtoForList(resultSet.getInt(1),
+    private LotDto readItemsByStatus(ResultSet resultSet) throws SQLException {
+        return new LotDto(0,
+                resultSet.getInt(1),
                 resultSet.getString(2),
                 resultSet.getString(3),
                 resultSet.getInt(4),
@@ -126,8 +133,8 @@ public class ItemDaoImpl implements ItemDao {
                 0);
     }
 
-    private Optional<List<ItemDtoForList>> findValidItems() {
-        List<ItemDtoForList> list = new ArrayList<>();
+    private Optional<List<LotDto>> findValidItems() {
+        List<LotDto> list = new ArrayList<>();
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
             final Statement statement = connection.createStatement();
@@ -143,15 +150,16 @@ public class ItemDaoImpl implements ItemDao {
         return Optional.empty();
     }
 
-    private ItemDtoForList readValidItem(ResultSet resultSet) throws SQLException {
-        return new ItemDtoForList(resultSet.getInt(1),
-                resultSet.getString(2),
+    private LotDto readValidItem(ResultSet resultSet) throws SQLException {
+        return new LotDto(resultSet.getLong(1),
+                resultSet.getInt(2),
                 resultSet.getString(3),
-                resultSet.getInt(4),
-                ItemType.of(resultSet.getString(5)),
-                resultSet.getBigDecimal(6),
-                resultSet.getLong(7),
-                resultSet.getInt(8));
+                resultSet.getString(4),
+                resultSet.getInt(5),
+                ItemType.of(resultSet.getString(6)),
+                resultSet.getBigDecimal(7),
+                resultSet.getLong(8),
+                resultSet.getInt(9));
     }
 
 
@@ -167,8 +175,8 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public void unblock(Item item) {
-        updateItemStatusInItemTable(item);
         insertItemIntoLotHistory(item);
+        updateItemStatusInItemTable(item);
     }
 
     @Override
@@ -182,10 +190,31 @@ public class ItemDaoImpl implements ItemDao {
             preparedStatement.setBigDecimal(4, currentPrice);
             preparedStatement.executeUpdate();
             LOGGER.info("Lot history was successfully updated");
+            updateCash();
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
+    }
+
+    @Override
+    public void complete(LotDto lotDto) {
+
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(COMPLETE_LOT_SQL);
+            preparedStatement.setLong(1, lotDto.getItemId());
+            preparedStatement.executeUpdate();
+            LOGGER.info("Lot # " + lotDto.getItemId() + " was successfully completed");
+            updateCash();
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    @Override
+    public void subscribe(Subscriber<LotDto> subscriber) {
+        subscribers.add(subscriber);
     }
 
     private void updateItemStatusInItemTable(Item item) {
@@ -195,6 +224,7 @@ public class ItemDaoImpl implements ItemDao {
             preparedStatement.setLong(2, item.getId());
             preparedStatement.executeUpdate();
             LOGGER.info("Item was successfully unblocked");
+            updateCash();
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
@@ -215,4 +245,11 @@ public class ItemDaoImpl implements ItemDao {
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
     }
+    private void updateCash() {
+
+        for (Subscriber subscriber : subscribers) {
+            subscriber.update();
+        }
+    }
+
 }
