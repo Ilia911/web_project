@@ -82,7 +82,7 @@ public enum UserServiceImpl implements UserService {
     }
 
     private UserDto convertToDto(User user) {
-        return new UserDto(user.getId(), user.getLogin(), user.getPassword(), user.getName(), user.getAccount(),
+        return new UserDto(user.getId(), user.getLogin(), null, user.getName(), user.getAccount(),
                 user.getRole(), user.getStatus());
     }
 }

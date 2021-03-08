@@ -28,4 +28,10 @@ public interface ItemDao extends Publisher<LotDto> {
 
     void complete(LotDto lotDto);
 
+    Optional<List<LotDto>> findItemsByUserId(int userId);
+
+    Optional<LotDto> findItemById(long id);
+
+    void saveEditedItem(Item item);
+
 }

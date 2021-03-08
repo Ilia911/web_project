@@ -22,4 +22,10 @@ public interface ItemService {
     void doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice);
 
     void complete(LotDto lotDto);
+
+    Optional<List<LotDto>> findItemsByUserId(int userId);
+
+    Optional<LotDto> findItemById(long id);
+
+    void saveEditedItem(Item item);
 }

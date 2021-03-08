@@ -51,6 +51,10 @@ public enum ItemDaoImpl implements ItemDao {
 
     private static final String COMPLETE_LOT_SQL = "UPDATE item SET item_status = '3' WHERE (`id` = ?)";
 
+    private static final String FIND_ITEMS_BY_USER_ID_SQL = "SELECT * FROM item where owner_id = ?";
+
+    private static final String FIND_ITEM_BY_ID_SQL = "SELECT * FROM item where id = ?";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
 
     @Override
@@ -93,7 +97,7 @@ public enum ItemDaoImpl implements ItemDao {
             final ResultSet resultSet = preparedStatement.executeQuery();
             LotDto lotDto;
             if (resultSet.next()) {
-                lotDto = readValidItem(resultSet);
+                lotDto = readLot(resultSet);
                 return Optional.of(lotDto);
             }
         } catch (SQLException | InterruptedException e) {
@@ -111,7 +115,7 @@ public enum ItemDaoImpl implements ItemDao {
             final ResultSet resultSet = preparedStatement.executeQuery();
             List<LotDto> list = new ArrayList<>();
             while (resultSet.next()) {
-                list.add(this.readItemsByStatus(resultSet));
+                list.add(this.readItem(resultSet));
             }
             return Optional.of(list);
         } catch (SQLException | InterruptedException e) {
@@ -121,7 +125,7 @@ public enum ItemDaoImpl implements ItemDao {
         return Optional.empty();
     }
 
-    private LotDto readItemsByStatus(ResultSet resultSet) throws SQLException {
+    private LotDto readItem(ResultSet resultSet) throws SQLException {
         return new LotDto(0,
                 resultSet.getInt(1),
                 resultSet.getString(2),
@@ -141,7 +145,7 @@ public enum ItemDaoImpl implements ItemDao {
             statement.execute(FIND_ALL_VALID_ITEMS_SQL);
             final ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
-                list.add(this.readValidItem(resultSet));
+                list.add(this.readLot(resultSet));
             }
             return Optional.of(list);
         } catch (InterruptedException | SQLException e) {
@@ -150,7 +154,7 @@ public enum ItemDaoImpl implements ItemDao {
         return Optional.empty();
     }
 
-    private LotDto readValidItem(ResultSet resultSet) throws SQLException {
+    private LotDto readLot(ResultSet resultSet) throws SQLException {
         return new LotDto(resultSet.getLong(1),
                 resultSet.getInt(2),
                 resultSet.getString(3),
@@ -210,6 +214,35 @@ public enum ItemDaoImpl implements ItemDao {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
+    }
+
+    @Override
+    public Optional<List<LotDto>> findItemsByUserId(int userId) {
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(FIND_ITEMS_BY_USER_ID_SQL);
+            preparedStatement.setInt(1, userId);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            List<LotDto> list = new ArrayList<>();
+            while (resultSet.next()) {
+                list.add(this.readItem(resultSet));
+            }
+            return Optional.of(list);
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return Optional.empty();
+
+    }
+
+    @Override
+    public Optional<LotDto> findItemById(long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void saveEditedItem(Item item) {
+
     }
 
     private void updateItemStatusInItemTable(Item item) {

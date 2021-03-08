@@ -53,6 +53,21 @@ public enum ItemServiceImpl implements ItemService {
         ITEM_DAO.complete(lotDto);
     }
 
+    @Override
+    public Optional<List<LotDto>> findItemsByUserId(int id) {
+        return ITEM_DAO.findItemsByUserId(id);
+    }
+
+    @Override
+    public Optional<LotDto> findItemById(long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void saveEditedItem(Item item) {
+
+    }
+
 //    private ItemDtoForList convertToDtoForList(Item item) {
 //        return new ItemDtoForList(item.getId(), item.getName(), describe, ownerId, item.getType(), item.getPrice(), item.getTime(), bidOwnerId);
 //    }

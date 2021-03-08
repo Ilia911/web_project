@@ -1,5 +1,6 @@
 package com.epam.jwd.web.servlet.command.user;
 
+import com.epam.jwd.web.cash.UserCash;
 import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.service.UserService;
 import com.epam.jwd.web.service.impl.UserServiceImpl;
@@ -19,7 +20,8 @@ public enum LogInCommand implements Command {
     INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(LogInCommand.class);
 
-    private static final UserService userService = UserServiceImpl.INSTANCE;
+    private static final UserService USER_SERVICE = UserServiceImpl.INSTANCE;
+    private static final UserCash USER_CASH = UserCash.INSTANCE;
 
     private static final ResponseContext RESPONSE = new ResponseContext() {
         @Override
@@ -35,12 +37,13 @@ public enum LogInCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        final String login = req.getRequestParameter("login")[0];
-        final String password = req.getRequestParameter("password")[0];
-        final Optional<UserDto> optionalUserDto = userService.login(login, password);
+
+        final Optional<UserDto> optionalUserDto = USER_SERVICE
+                .login(req.getRequestParameter("login")[0], req.getRequestParameter("password")[0]);
 
         if (optionalUserDto.isPresent()) {
             setLoginAttributesIntoSession(req, optionalUserDto.get());
+            USER_CASH.addUserDto(optionalUserDto.get());
             return ShowMainPageCommand.INSTANCE.execute(req);
         } else {
             req.setSessionAttribute("name", "Guest");

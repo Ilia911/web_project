@@ -42,7 +42,6 @@ public enum RegisterCommand implements Command {
             req.setRequestAttribute("successfulMessage", bundle.getString("message.register.success"));
         } else {
             req.setSessionAttribute("failedRegisterMessage", bundle.getString("message.register.failed"));
-            req.setInvalidateSession(true);
             return RESPONSE;
         }
         return ShowMainPageCommand.INSTANCE.execute(req);

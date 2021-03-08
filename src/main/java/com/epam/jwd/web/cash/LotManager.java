@@ -16,13 +16,14 @@ public class LotManager extends Thread {
     public void run() {
         LOT_CASH.init();
 
-        final List<LotDto> lots = LOT_CASH.getLots();
 
         while (true) {
+            final List<LotDto> lots = LOT_CASH.getLots();
             long currentTime = GregorianCalendar.getInstance().getTimeInMillis();
             for (LotDto lot : lots) {
                 if (currentTime > lot.getEndTime()) {
                     ITEM_SERVICE.complete(lot);
+                    break;
                 }
 
             }
