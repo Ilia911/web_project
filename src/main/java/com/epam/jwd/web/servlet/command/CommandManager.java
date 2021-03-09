@@ -6,6 +6,7 @@ import com.epam.jwd.web.servlet.command.item.SaveEditedItemCommand;
 import com.epam.jwd.web.servlet.command.item.UnblockItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowAllLotsCommand;
 import com.epam.jwd.web.servlet.command.page.ShowBlockedItemsCommand;
+import com.epam.jwd.web.servlet.command.page.ShowUserEditItemCommand;
 import com.epam.jwd.web.servlet.command.page.ShowUserItemsCommand;
 import com.epam.jwd.web.servlet.command.page.ShowEditProfileCommand;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
@@ -36,7 +37,7 @@ public enum CommandManager {
     SHOW_LOTS(ShowAllLotsCommand.INSTANCE),
     SHOW_BLOCKED_ITEMS(ShowBlockedItemsCommand.INSTANCE),
     SHOW_USER_ITEMS(ShowUserItemsCommand.INSTANCE),
-    SHOW_USER_EDIT_ITEM(ShowUserItemsCommand.INSTANCE),
+    SHOW_USER_EDIT_ITEM(ShowUserEditItemCommand.INSTANCE),
     SHOW_USERS(ShowUsersCommand.INSTANCE),
     SHOW_PROFILE(ShowProfileCommand.INSTANCE),
     SHOW_EDIT_PROFILE(ShowEditProfileCommand.INSTANCE),

@@ -1,5 +1,6 @@
 package com.epam.jwd.web.servlet.command.page;
 
+import com.epam.jwd.web.model.Item;
 import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.impl.ItemServiceImpl;
@@ -32,7 +33,7 @@ public enum ShowUserItemsCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        final Optional<List<LotDto>> optionalUserItems = ITEM_SERVICE
+        final Optional<List<Item>> optionalUserItems = ITEM_SERVICE
                 .findItemsByUserId((Integer) req.getSessionAttribute("id"));
         if (optionalUserItems.isPresent()) {
             req.setRequestAttribute("items", optionalUserItems.get());

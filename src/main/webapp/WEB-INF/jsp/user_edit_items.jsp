@@ -23,6 +23,7 @@
                 <th><locale:loc value="items.describe"/></th>
                 <th><locale:loc value="items.type"/></th>
                 <th><locale:loc value="items.price"/></th>
+                <th><locale:loc value="items.status"/></th>
                 </th><th><locale:loc value="user.items.edit"/></th>
             </tr>
                 <tr>
@@ -31,6 +32,7 @@
                 <td><input name="name" value="${item.describe}"/></td>
                 <td><input name="name" value="${item.type}"/></td>
                 <td><input name="name" value="${item.price}"/></td>
+                <td>${item.status}</td>
                 <td>
                     <input name="id" type="hidden" value="${item.itemId}"/>
                     <input type="submit" value=<locale:loc value="user.edit.item.save"/>/>

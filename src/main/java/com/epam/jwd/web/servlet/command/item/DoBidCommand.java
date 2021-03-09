@@ -4,9 +4,9 @@ import com.epam.jwd.web.cash.LotCash;
 import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.UserDto;
-import com.epam.jwd.web.service.ItemService;
+import com.epam.jwd.web.service.LotService;
 import com.epam.jwd.web.service.UserService;
-import com.epam.jwd.web.service.impl.ItemServiceImpl;
+import com.epam.jwd.web.service.impl.LotServiceImpl;
 import com.epam.jwd.web.service.impl.UserServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.RequestContent;
@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 public enum DoBidCommand implements Command {
     INSTANCE;
 
-    private final static ItemService ITEM_SERVICE = ItemServiceImpl.INSTANCE;
+    private final static LotService LOT_SERVICE = LotServiceImpl.INSTANCE;
     private final static UserService USER_SERVICE = UserServiceImpl.INSTANCE;
 
     @Override
@@ -98,7 +98,7 @@ public enum DoBidCommand implements Command {
         final long possibleEndTime = GregorianCalendar.getInstance().getTimeInMillis()
                 + Long.parseLong(req.getContextParameter("item_additional_show_time"));
         final long endTime = Math.max(lot.getEndTime(), possibleEndTime);
-        ITEM_SERVICE.doBid(lot.getItemId(), endTime, bidder.getId(), newPrice);
+        LOT_SERVICE.doBid(lot.getItemId(), endTime, bidder.getId(), newPrice);
         USER_SERVICE.updateAccount(bidder.getId(), newPrice);
         USER_SERVICE.updateAccount(Integer.parseInt(req.getRequestParameter
                 ("previousBidOwnerId")[0]), lot.getPrice().negate());
@@ -111,7 +111,7 @@ public enum DoBidCommand implements Command {
         final long possibleEndTime = GregorianCalendar.getInstance().getTimeInMillis()
                 + Long.parseLong(req.getContextParameter("item_additional_show_time"));
         final long endTime = Math.max(item.getEndTime(), possibleEndTime);
-        ITEM_SERVICE.doBid(item.getItemId(), endTime, bidder.getId(), newPrice);
+        LOT_SERVICE.doBid(item.getItemId(), endTime, bidder.getId(), newPrice);
         return ShowAllLotsCommand.INSTANCE.execute(req);
     }
 }

@@ -22,7 +22,7 @@ public class LotManager extends Thread {
             long currentTime = GregorianCalendar.getInstance().getTimeInMillis();
             for (LotDto lot : lots) {
                 if (currentTime > lot.getEndTime()) {
-                    ITEM_SERVICE.complete(lot);
+                    ITEM_SERVICE.complete(lot.getItemId());
                     break;
                 }
 

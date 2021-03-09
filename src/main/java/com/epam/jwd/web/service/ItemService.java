@@ -10,22 +10,18 @@ import java.util.Optional;
 
 public interface ItemService {
 
-    Optional<List<LotDto>> findAll(ItemStatus status);
+    Optional<List<Item>> findAll(ItemStatus status);
 
     Optional<LotDto> register(String itemName, String itemDescribe, Object ownerId, String itemType,
                               String itemPrice);
 
-    void unblock(Item item);
+    void update(Item item);
 
-    Optional<LotDto> findValidItemById(long id);
 
-    void doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice);
+    void complete(long itemId);
 
-    void complete(LotDto lotDto);
+    Optional<List<Item>> findItemsByUserId(int userId);
 
-    Optional<List<LotDto>> findItemsByUserId(int userId);
+    Optional<Item> findItemById(long id);
 
-    Optional<LotDto> findItemById(long id);
-
-    void saveEditedItem(Item item);
 }

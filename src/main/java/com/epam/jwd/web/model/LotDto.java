@@ -4,15 +4,16 @@ import java.math.BigDecimal;
 
 public class LotDto {
 
-    private final long id;
+
+    private long id;
     private final long itemId;
     private final String name;
     private final String describe;
     private final int ownerId;
     private final ItemType type;
-    private final BigDecimal price;
-    private final long endTime;
-    private final int bidOwnerId;
+    private BigDecimal price;
+    private long endTime;
+    private int bidOwnerId;
 
     @Override
     public String toString() {
@@ -27,6 +28,21 @@ public class LotDto {
                 ", endTime=" + endTime +
                 ", bidOwnerId=" + bidOwnerId +
                 '}';
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setBidOwnerId(int bidOwnerId) {
+        this.bidOwnerId = bidOwnerId;
     }
 
     public long getId() {

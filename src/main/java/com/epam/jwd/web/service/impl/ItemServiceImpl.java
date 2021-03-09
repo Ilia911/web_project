@@ -17,8 +17,8 @@ public enum ItemServiceImpl implements ItemService {
     private static final ItemDao ITEM_DAO = ItemDaoImpl.INSTANCE;
 
     @Override
-    public Optional<List<LotDto>> findAll(ItemStatus status) {
-        return ITEM_DAO.findAll(status);
+    public Optional<List<Item>> findAll(ItemStatus status) {
+        return ITEM_DAO.findItemsByStatus(status);
 //                .map(
 //                        items -> items.stream()
 //                                .map(this::convertToDtoForList)
@@ -34,41 +34,23 @@ public enum ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void unblock(Item item) {
-        ITEM_DAO.unblock(item);
+    public void update(Item item) {
+        ITEM_DAO.update(item);
     }
 
     @Override
-    public Optional<LotDto> findValidItemById(long id) {
-        return ITEM_DAO.findValidItemById(id);
+    public void complete(long itemId) {
+        ITEM_DAO.complete(itemId);
     }
 
     @Override
-    public void doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice) {
-        ITEM_DAO.doBid(itemId, bidTime, bidOwnerId, currentPrice);
-    }
-
-    @Override
-    public void complete(LotDto lotDto) {
-        ITEM_DAO.complete(lotDto);
-    }
-
-    @Override
-    public Optional<List<LotDto>> findItemsByUserId(int id) {
+    public Optional<List<Item>> findItemsByUserId(int id) {
         return ITEM_DAO.findItemsByUserId(id);
     }
 
     @Override
-    public Optional<LotDto> findItemById(long id) {
+    public Optional<Item> findItemById(long id) {
         return Optional.empty();
     }
 
-    @Override
-    public void saveEditedItem(Item item) {
-
-    }
-
-//    private ItemDtoForList convertToDtoForList(Item item) {
-//        return new ItemDtoForList(item.getId(), item.getName(), describe, ownerId, item.getType(), item.getPrice(), item.getTime(), bidOwnerId);
-//    }
 }

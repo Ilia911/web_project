@@ -5,7 +5,9 @@ import com.epam.jwd.web.model.ItemFactory;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.service.ItemService;
+import com.epam.jwd.web.service.LotService;
 import com.epam.jwd.web.service.impl.ItemServiceImpl;
+import com.epam.jwd.web.service.impl.LotServiceImpl;
 import com.epam.jwd.web.servlet.command.Command;
 import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
@@ -19,7 +21,8 @@ import java.util.GregorianCalendar;
 public enum UnblockItemCommand implements Command {
     INSTANCE;
 
-    private static final ItemService itemService = ItemServiceImpl.INSTANCE;
+    private static final ItemService ITEM_SERVICE = ItemServiceImpl.INSTANCE;
+    private static final LotService LOT_SERVICE = LotServiceImpl.INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(UnblockItemCommand.class);
 
     @Override
@@ -37,7 +40,9 @@ public enum UnblockItemCommand implements Command {
                 ItemStatus.VALID,
                 bid_time);
         LOGGER.info(updatedItem.toString());
-        itemService.unblock(updatedItem);
+
+        ITEM_SERVICE.update(updatedItem);
+        LOT_SERVICE.insertItemIntoLotHistory(updatedItem);
 
         return ShowBlockedItemsCommand.INSTANCE.execute(req);
     }
