@@ -17,12 +17,12 @@ public enum LotCash implements Subscriber<Long> {
     private static final LotService LOT_SERVICE = LotServiceImpl.INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(LotCash.class);
 
-    private List<LotDto> lots = new LinkedList<>();
+    private final List<LotDto> lots = new LinkedList<>();
 
     public void init() {
 
         final Optional<List<LotDto>> optionalLotDto = LOT_SERVICE.findAll();
-        optionalLotDto.ifPresent(lotDtos -> lots = lotDtos);
+        optionalLotDto.ifPresent(lots::addAll);
         LOGGER.info("Lot cash was successfully initialized");
     }
 
@@ -42,7 +42,8 @@ public enum LotCash implements Subscriber<Long> {
     @Override
     public void update(Long itemId) {
 
-        final Optional<LotDto> optionalUpdatedLot = LOT_SERVICE.findLotById(itemId);
+        final Optional<LotDto> optionalUpdatedLot = LOT_SERVICE.findLotByItemId(itemId);
+
         if (!optionalUpdatedLot.isPresent()) {
             removeLot(itemId);
             return;
@@ -56,8 +57,6 @@ public enum LotCash implements Subscriber<Long> {
         }
 
         lots.add(optionalUpdatedLot.get());
-
-        LOGGER.info("Lot cash was successfully updated");
     }
 
     private void updateLots(LotDto originLot, LotDto updatedLot) {

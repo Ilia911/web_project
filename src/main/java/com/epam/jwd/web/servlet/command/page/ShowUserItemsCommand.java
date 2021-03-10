@@ -33,6 +33,7 @@ public enum ShowUserItemsCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
+
         final Optional<List<Item>> optionalUserItems = ITEM_SERVICE
                 .findItemsByUserId((Integer) req.getSessionAttribute("id"));
         if (optionalUserItems.isPresent()) {

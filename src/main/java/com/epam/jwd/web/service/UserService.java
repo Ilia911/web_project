@@ -1,5 +1,6 @@
 package com.epam.jwd.web.service;
 
+import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.model.UserStatus;
 
@@ -22,4 +23,6 @@ public interface UserService {
     void updateAccount(int id, BigDecimal newUserAccount);
 
     void changeStatus(int id, UserStatus status);
+
+    void complete(LotDto lot);
 }

@@ -39,7 +39,6 @@ public enum UnblockItemCommand implements Command {
                 BigDecimal.valueOf(Double.parseDouble(req.getRequestParameter("price")[0])),
                 ItemStatus.VALID,
                 bid_time);
-        LOGGER.info(updatedItem.toString());
 
         ITEM_SERVICE.update(updatedItem);
         LOT_SERVICE.insertItemIntoLotHistory(updatedItem);

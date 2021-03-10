@@ -6,28 +6,23 @@ import com.epam.jwd.web.dao.ItemDao;
 import com.epam.jwd.web.dao.LotDao;
 import com.epam.jwd.web.dao.impl.ItemDaoImpl;
 import com.epam.jwd.web.dao.impl.LotDaoImpl;
-import com.epam.jwd.web.model.LotDto;
-import com.epam.jwd.web.observer.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 @WebListener
 public class ApplicationListener implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationListener.class);
-    private static final Thread lotManager = new LotManager();
+    private static final Thread LOT_MANAGER = new LotManager();
     private static final LotDao LOT_DAO = LotDaoImpl.INSTANCE;
     private static final ItemDao ITEM_DAO = ItemDaoImpl.INSTANCE;
-    private static final Subscriber<Long> subscriber = LotCash.INSTANCE;
+    private static final LotCash LOT_CASH = LotCash.INSTANCE;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -38,11 +33,12 @@ public class ApplicationListener implements ServletContextListener {
             throw new IllegalStateException(e);
         }
         Locale.setDefault(Locale.US);
-        lotManager.start();
 
-        LOT_DAO.subscribe(subscriber);
-        ITEM_DAO.subscribe(subscriber);
+        LOT_CASH.init();
+        LOT_DAO.subscribe(LOT_CASH);
+        ITEM_DAO.subscribe(LOT_CASH);
 
+        LOT_MANAGER.start();
     }
 
     @Override

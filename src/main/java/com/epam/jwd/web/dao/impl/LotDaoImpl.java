@@ -32,7 +32,7 @@ public enum LotDaoImpl implements LotDao {
             "max(id) max_id from lot_history group by item_id) m on lh.item_id = m.item_id and lh.id = m.max_id " +
             "left join item i on lh.item_id = i.id where i.item_status = 1";
 
-    private static final String FIND_VALID_LOT_BY_ID_SQL = "SELECT lh.id, i.id, i.item_name, i.item_describe, i.owner_id, " +
+    private static final String FIND_LOT_BY_ITEM_ID_SQL = "SELECT lh.id, i.id, i.item_name, i.item_describe, i.owner_id, " +
             "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join (select item_id, " +
             "max(id) max_id from lot_history group by item_id) m on lh.item_id = m.item_id and lh.id = m.max_id " +
             "left join item i on lh.item_id = i.id where i.item_status = 1 and i.id = ?";
@@ -54,7 +54,7 @@ public enum LotDaoImpl implements LotDao {
             statement.execute(FIND_ALL_LOTS_SQL);
             final ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
-                list.add(this.readLot(resultSet));
+                list.add(readLot(resultSet));
             }
             return Optional.of(list);
         } catch (InterruptedException | SQLException e) {
@@ -64,15 +64,15 @@ public enum LotDaoImpl implements LotDao {
     }
 
     @Override
-    public Optional<LotDto> findLotById(long id) {
+    public Optional<LotDto> findLotByItemId(long id) {
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(FIND_VALID_LOT_BY_ID_SQL);
+            final PreparedStatement preparedStatement = connection.prepareStatement(FIND_LOT_BY_ITEM_ID_SQL);
             preparedStatement.setLong(1, id);
             final ResultSet resultSet = preparedStatement.executeQuery();
-            LotDto lotDto;
+
             if (resultSet.next()) {
-                lotDto = readLot(resultSet);
+                final LotDto lotDto = readLot(resultSet);
                 return Optional.of(lotDto);
             }
         } catch (SQLException | InterruptedException e) {
@@ -84,7 +84,7 @@ public enum LotDaoImpl implements LotDao {
 
     private LotDto readLot(ResultSet resultSet) throws SQLException {
         return new LotDto(resultSet.getLong(1),
-                resultSet.getInt(2),
+                resultSet.getLong(2),
                 resultSet.getString(3),
                 resultSet.getString(4),
                 resultSet.getInt(5),

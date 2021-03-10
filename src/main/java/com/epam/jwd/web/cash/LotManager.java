@@ -1,34 +1,31 @@
 package com.epam.jwd.web.cash;
 
 import com.epam.jwd.web.model.LotDto;
-import com.epam.jwd.web.service.ItemService;
-import com.epam.jwd.web.service.impl.ItemServiceImpl;
+import com.epam.jwd.web.service.LotService;
+import com.epam.jwd.web.service.impl.LotServiceImpl;
 
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LotManager extends Thread {
 
     private static final LotCash LOT_CASH = LotCash.INSTANCE;
-    private static final ItemService ITEM_SERVICE = ItemServiceImpl.INSTANCE;
+    private static final LotService LOT_SERVICE = LotServiceImpl.INSTANCE;
 
     @Override
     public void run() {
-        LOT_CASH.init();
-
 
         while (true) {
-            final List<LotDto> lots = LOT_CASH.getLots();
-            long currentTime = GregorianCalendar.getInstance().getTimeInMillis();
-            for (LotDto lot : lots) {
+            final List<LotDto> lotDtoList = LOT_CASH.getLots().stream().collect(Collectors.toList());
+            final long currentTime = GregorianCalendar.getInstance().getTimeInMillis();
+            for (LotDto lot : lotDtoList) {
                 if (currentTime > lot.getEndTime()) {
-                    ITEM_SERVICE.complete(lot.getItemId());
-                    break;
+                    LOT_SERVICE.complete(lot);
                 }
-
             }
             try {
-                sleep(1000);
+                sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

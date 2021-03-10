@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 public enum ItemDaoImpl implements ItemDao {
-    INSTANCE;
+          INSTANCE;
 
     private static final List<Subscriber> subscribers = new ArrayList<>();
 
@@ -128,6 +128,7 @@ public enum ItemDaoImpl implements ItemDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
             LOGGER.info("Lot # " + id + " was successfully completed");
+            updateCash(id);
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
@@ -145,7 +146,6 @@ public enum ItemDaoImpl implements ItemDao {
                 ItemStatus.of(resultSet.getString(7)),
                 0);
     }
-
 
     private void updateCash(long id) {
 

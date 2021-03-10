@@ -2,6 +2,7 @@ package com.epam.jwd.web.service.impl;
 
 import com.epam.jwd.web.dao.UserDao;
 import com.epam.jwd.web.dao.impl.UserDaoImpl;
+import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.User;
 import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.model.UserStatus;
@@ -79,6 +80,14 @@ public enum UserServiceImpl implements UserService {
     @Override
     public void changeStatus(int id, UserStatus status) {
         USER_DAO.changeStatus(id, status);
+    }
+
+    @Override
+    public void complete(LotDto lot) {
+        if (lot.getOwnerId() != lot.getBidOwnerId()) {
+            final Optional<UserDto> optionalItemOwner = findById(lot.getOwnerId());
+            updateAccount(lot.getOwnerId(), optionalItemOwner.get().getAccount().add(lot.getPrice()));
+        }
     }
 
     private UserDto convertToDto(User user) {

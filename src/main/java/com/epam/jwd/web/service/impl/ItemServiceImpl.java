@@ -7,7 +7,6 @@ import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.service.ItemService;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
