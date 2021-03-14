@@ -23,15 +23,25 @@ public enum UnblockItemCommand implements Command {
 
     private static final ItemService ITEM_SERVICE = ItemServiceImpl.INSTANCE;
     private static final LotService LOT_SERVICE = LotServiceImpl.INSTANCE;
-    private static final Logger LOGGER = LoggerFactory.getLogger(UnblockItemCommand.class);
 
     @Override
     public ResponseContext execute(RequestContent req) {
+
+        Item updatedItem = createUnblockedItem(req);
+
+        ITEM_SERVICE.update(updatedItem);
+        LOT_SERVICE.insertItemIntoLotHistory(updatedItem);
+
+        return ShowBlockedItemsCommand.INSTANCE.execute(req);
+    }
+
+    private Item createUnblockedItem(RequestContent req) {
+
         final long currentTime = GregorianCalendar.getInstance().getTimeInMillis();
         final String item_show_time = req.getContextParameter("item_show_time");
         final long bid_time = currentTime + Long.parseLong(item_show_time);
 
-        Item updatedItem = ItemFactory.INSTANCE.createItem(Long.parseLong(req.getRequestParameter("id")[0]),
+        return ItemFactory.INSTANCE.createItem(Long.parseLong(req.getRequestParameter("id")[0]),
                 req.getRequestParameter("name")[0],
                 req.getRequestParameter("describe")[0],
                 Integer.parseInt(req.getRequestParameter("ownerId")[0]),
@@ -39,10 +49,5 @@ public enum UnblockItemCommand implements Command {
                 BigDecimal.valueOf(Double.parseDouble(req.getRequestParameter("price")[0])),
                 ItemStatus.VALID,
                 bid_time);
-
-        ITEM_SERVICE.update(updatedItem);
-        LOT_SERVICE.insertItemIntoLotHistory(updatedItem);
-
-        return ShowBlockedItemsCommand.INSTANCE.execute(req);
     }
 }

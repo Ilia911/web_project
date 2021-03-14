@@ -61,6 +61,7 @@ public enum LogInCommand implements Command {
         req.setSessionAttribute("name", userDto.getName());
         req.setSessionAttribute("role", userDto.getRole());
         req.setSessionAttribute("status", userDto.getStatus());
+        req.setSessionAttribute("account", userDto.getAccount());
         req.setSessionAttribute("errorLoginMessage", null);
         LOGGER.info("User successfully logged in");
     }

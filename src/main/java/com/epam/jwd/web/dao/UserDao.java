@@ -1,13 +1,15 @@
 package com.epam.jwd.web.dao;
 
 import com.epam.jwd.web.model.User;
+import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.model.UserStatus;
+import com.epam.jwd.web.observer.Publisher;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDao {
+public interface UserDao extends Publisher<UserDto> {
     Optional<List<User>> findAll();
 
     Optional<User> register(String userLogin, String userPassword, String name);
@@ -15,8 +17,6 @@ public interface UserDao {
     Optional<User> update(User user);
 
     Optional<User> findByLogin(String login);
-
-    boolean removeByLogin(String login);
 
     Optional<User> findById(int id);
 

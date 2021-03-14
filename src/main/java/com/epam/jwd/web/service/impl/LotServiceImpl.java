@@ -1,12 +1,11 @@
 package com.epam.jwd.web.service.impl;
 
-import com.epam.jwd.web.dao.ItemDao;
 import com.epam.jwd.web.dao.LotDao;
-import com.epam.jwd.web.dao.impl.ItemDaoImpl;
 import com.epam.jwd.web.dao.impl.LotDaoImpl;
 import com.epam.jwd.web.model.Item;
 import com.epam.jwd.web.model.ItemFactory;
 import com.epam.jwd.web.model.ItemStatus;
+import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.service.ItemService;
 import com.epam.jwd.web.service.LotService;
@@ -54,18 +53,18 @@ public enum LotServiceImpl implements LotService {
 
     @Override
     public void block(LotDto lot) {
-        if (lot.getOwnerId() != lot.getBidOwnerId()) {
+        if (lot.getOwnerId() != lot.getBidOwnerId() && lot.getType().equals(ItemType.STRAIGHT)) {
             USER_SERVICE.updateAccount(lot.getBidOwnerId(), lot.getPrice());
         }
         final Optional<Item> optionalItem = ITEM_SERVICE.findItemById(lot.getItemId());
 
         if (optionalItem.isPresent()) {
-            final Item updatedItem = blockItemStatus(optionalItem.get());
+            final Item updatedItem = createItemWithBlockedStatus(optionalItem.get());
             ITEM_SERVICE.update(updatedItem);
         }
     }
 
-    private Item blockItemStatus(Item item) {
+    private Item createItemWithBlockedStatus(Item item) {
         return ItemFactory.INSTANCE.createItem(item.getId(), item.getName(),item.getDescribe(), item.getOwner(),
                 item.getType(), item.getPrice(), ItemStatus.BLOCKED, GregorianCalendar.getInstance().getTimeInMillis());
     }

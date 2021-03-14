@@ -4,8 +4,10 @@ import com.epam.jwd.web.connection.ConnectionPool;
 import com.epam.jwd.web.dao.UserDao;
 import com.epam.jwd.web.model.Item;
 import com.epam.jwd.web.model.Role;
+import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.model.UserStatus;
 import com.epam.jwd.web.model.User;
+import com.epam.jwd.web.observer.Subscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,8 @@ import java.util.Optional;
 public enum UserDaoImpl implements UserDao {
     INSTANCE;
 
+    private static final List<Subscriber<? super UserDto>> SUBSCRIBERS = new ArrayList<>();
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
     private static final String FIND_USER_BY_ID_SQL = "SELECT * FROM auction_user where id = ?";
@@ -35,6 +39,7 @@ public enum UserDaoImpl implements UserDao {
 
     private static final String CHANGE_STATUS_SQL = "UPDATE auction_user SET user_status = ? WHERE (id = ?)";
 
+    @Override
     public Optional<User> findByLogin(String login) {
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
@@ -50,11 +55,6 @@ public enum UserDaoImpl implements UserDao {
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
         return Optional.empty();
-    }
-
-    @Override
-    public boolean removeByLogin(String login) {
-        return false;
     }
 
     @Override
@@ -83,6 +83,7 @@ public enum UserDaoImpl implements UserDao {
             preparedStatement.setString(2, newPassword);
             preparedStatement.setInt(3, id);
             preparedStatement.executeUpdate();
+            updateCash(id);
             LOGGER.info("Profile was successfully updated!");
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
@@ -107,6 +108,7 @@ public enum UserDaoImpl implements UserDao {
             preparedStatement.setBigDecimal(1, newAccount);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
+            updateCash(userId);
             LOGGER.info("Account was successfully updated!");
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
@@ -124,12 +126,14 @@ public enum UserDaoImpl implements UserDao {
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();
             LOGGER.info("Status was successfully updated!");
+            updateCash(id);
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
     }
 
+    @Override
     public Optional<User> register(String userLogin, String userPassword, String userName) {
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
@@ -165,6 +169,26 @@ public enum UserDaoImpl implements UserDao {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<User> update(User entity) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void subscribe(Subscriber<? super UserDto> subscriber) {
+        SUBSCRIBERS.add(subscriber);
+    }
+
+    private void updateCash(int userId) {
+        final Optional<User> optionalUser = findById(userId);
+        if(optionalUser.isPresent()) {
+            final Optional<UserDto> userDto = optionalUser.map(this::convertToDto);
+            for (Subscriber<? super UserDto> subscriber : SUBSCRIBERS) {
+                subscriber.update(userDto.get());
+            }
+        }
+    }
+
     private User readUser(ResultSet resultSet) throws SQLException {
         return new User(resultSet.getInt(1),
                 resultSet.getString(2),
@@ -176,9 +200,8 @@ public enum UserDaoImpl implements UserDao {
         );
     }
 
-    @Override
-    public Optional<User> update(User entity) {
-        return Optional.empty();
+    private UserDto convertToDto(User user) {
+        return new UserDto(user.getId(), user.getLogin(), null, user.getName(), user.getAccount(),
+                user.getRole(), user.getStatus());
     }
-
 }

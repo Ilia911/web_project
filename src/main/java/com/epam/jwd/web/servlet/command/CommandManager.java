@@ -1,6 +1,6 @@
 package com.epam.jwd.web.servlet.command;
 
-import com.epam.jwd.web.servlet.command.item.DoBidCommand;
+import com.epam.jwd.web.servlet.command.lot.DoBidCommand;
 import com.epam.jwd.web.servlet.command.item.RegisterItemCommand;
 import com.epam.jwd.web.servlet.command.item.SaveEditedItemCommand;
 import com.epam.jwd.web.servlet.command.item.UnblockItemCommand;
