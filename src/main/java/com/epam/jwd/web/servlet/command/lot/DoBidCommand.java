@@ -4,7 +4,6 @@ import com.epam.jwd.web.cash.LotCash;
 import com.epam.jwd.web.cash.UserCash;
 import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.model.LotDto;
-import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.model.UserStatus;
 import com.epam.jwd.web.service.LotService;
 import com.epam.jwd.web.service.UserService;
@@ -43,6 +42,15 @@ public enum DoBidCommand implements Command {
         if (req.getSessionAttribute("login") == null) {
             req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
                     (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.logged.in"));
+            return ShowAllLotsCommand.INSTANCE.execute(req);
+        }
+        return checkOwner(req);
+    }
+
+    private ResponseContext checkOwner(RequestContent req) {
+        if (req.getSessionAttribute("login").equals(Integer.parseInt(req.getRequestParameter("ownerId")[0]))) {
+            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.your.lot"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
         return checkValidityOfItem(req);

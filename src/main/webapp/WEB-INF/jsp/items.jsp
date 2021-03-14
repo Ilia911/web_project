@@ -41,6 +41,7 @@
                 <form method="post" action="${pageContext.request.contextPath}/controller?command=do_bid">
                     <input name="id" type="hidden" value="${item.id}"/>
                     <input name="itemId" type="hidden" value="${item.itemId}"/>
+                    <input name="ownerId" type="hidden" value="${item.ownerId}"/>
                     <input name="previousBidOwnerId" type="hidden" value="${item.bidOwnerId}"/>
                     <input name="type" type="hidden" value="${item.type}"/>
                     <input name="previousPrice" type="hidden" value="${item.price}"/>
