@@ -92,20 +92,20 @@ public enum UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateAccount(int id, BigDecimal newPrice) {
+    public void updateAccount(int userId, BigDecimal subtractedSum) {
 
-        final Optional<User> optionalUser = this.findById(id);
+        final Optional<User> optionalUser = this.findById(userId);
         if (!optionalUser.isPresent()) {
             return;
         }
         BigDecimal oldAccount = optionalUser.get().getAccount();
-        BigDecimal newAccount = oldAccount.subtract(newPrice);
+        BigDecimal newAccount = oldAccount.subtract(subtractedSum);
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
 
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ACCOUNT_SQL);
             preparedStatement.setBigDecimal(1, newAccount);
-            preparedStatement.setInt(2, id);
+            preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
             LOGGER.info("Account was successfully updated!");
         } catch (SQLException | InterruptedException e) {

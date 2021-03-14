@@ -3,7 +3,6 @@ package com.epam.jwd.web.service.impl;
 import com.epam.jwd.web.dao.ItemDao;
 import com.epam.jwd.web.dao.impl.ItemDaoImpl;
 import com.epam.jwd.web.model.Item;
-import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.service.ItemService;
 
@@ -18,18 +17,14 @@ public enum ItemServiceImpl implements ItemService {
     @Override
     public Optional<List<Item>> findAll(ItemStatus status) {
         return ITEM_DAO.findItemsByStatus(status);
-//                .map(
-//                        items -> items.stream()
-//                                .map(this::convertToDtoForList)
-//                                .collect(Collectors.toList()));
     }
 
     @Override
-    public Optional<LotDto> register(String itemName, String itemDescribe, Object ownerId, String itemType,
-                                     String itemPrice) {
-        ITEM_DAO.register(itemName, itemDescribe, Integer.parseInt(ownerId.toString()), Integer.parseInt(itemType),Integer.parseInt(itemPrice));
+    public boolean register(String itemName, String itemDescribe, Object ownerId, String itemType,
+                            String itemPrice) {
 
-        return Optional.empty();
+        return ITEM_DAO.register(itemName, itemDescribe, Integer.parseInt(ownerId.toString()),
+                Integer.parseInt(itemType), Integer.parseInt(itemPrice));
     }
 
     @Override
@@ -49,7 +44,7 @@ public enum ItemServiceImpl implements ItemService {
 
     @Override
     public Optional<Item> findItemById(long id) {
-        return Optional.empty();
+        return ITEM_DAO.findItemById(id);
     }
 
 }

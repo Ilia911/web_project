@@ -1,7 +1,6 @@
 package com.epam.jwd.web.dao;
 
 import com.epam.jwd.web.model.Item;
-import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.observer.Publisher;
 
@@ -18,7 +17,7 @@ public interface ItemDao  extends Publisher<Long> {
 
     Optional<List<Item>> findItemsByUserId(int userId);
 
-    Optional<LotDto> findItemById(long id);
+    Optional<Item> findItemById(long id);
 
     void complete(long id);
 }

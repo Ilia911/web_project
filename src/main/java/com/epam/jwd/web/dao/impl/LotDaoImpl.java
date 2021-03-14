@@ -129,6 +129,7 @@ public enum LotDaoImpl implements LotDao {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void updateCash(long id) {
 
         for (Subscriber subscriber : subscribers) {

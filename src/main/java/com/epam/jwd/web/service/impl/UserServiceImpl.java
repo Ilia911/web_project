@@ -73,8 +73,8 @@ public enum UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAccount(int id, BigDecimal newUserAccount) {
-        USER_DAO.updateAccount(id, newUserAccount);
+    public void updateAccount(int userId, BigDecimal subtractedSum) {
+        USER_DAO.updateAccount(userId, subtractedSum);
     }
 
     @Override

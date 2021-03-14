@@ -4,7 +4,6 @@ import com.epam.jwd.web.connection.ConnectionPool;
 import com.epam.jwd.web.dao.ItemDao;
 import com.epam.jwd.web.model.Item;
 import com.epam.jwd.web.model.ItemFactory;
-import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.observer.Subscriber;
@@ -33,7 +32,7 @@ public enum ItemDaoImpl implements ItemDao {
             "(item_name, item_describe, owner_id, item_type, start_price) VALUES (?, ?, ?, ?, ?)";
 
     private static final String UPDATE_ITEM_SQL = "UPDATE item SET item_name = ?, item_describe = ?, start_price = ?, " +
-            "item_status = ? WHERE (id = ?)";
+            "item_status = ?, item_type = ? WHERE (id = ?)";
 
     private static final String FIND_ITEMS_BY_USER_ID_SQL = "SELECT * FROM item where owner_id = ?";
 
@@ -86,7 +85,8 @@ public enum ItemDaoImpl implements ItemDao {
             preparedStatement.setString(2, item.getDescribe());
             preparedStatement.setBigDecimal(3, item.getPrice());
             preparedStatement.setInt(4, item.getStatus().getInt());
-            preparedStatement.setLong(5, item.getId());
+            preparedStatement.setInt(5, item.getType().getType());
+            preparedStatement.setLong(6, item.getId());
             preparedStatement.executeUpdate();
             updateCash(item.getId());
             LOGGER.info("Item was successfully updated");
@@ -116,7 +116,19 @@ public enum ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public Optional<LotDto> findItemById(long id) {
+    public Optional<Item> findItemById(long id) {
+
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(FIND_ITEM_BY_ID_SQL);
+            preparedStatement.setLong(1, id);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(readItem(resultSet));
+            }
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
         return Optional.empty();
     }
 
@@ -147,6 +159,7 @@ public enum ItemDaoImpl implements ItemDao {
                 0);
     }
 
+@SuppressWarnings("unchecked")
     private void updateCash(long id) {
 
         for (Subscriber subscriber : subscribers) {

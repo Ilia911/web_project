@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface LotService {
 
-
     Optional<List<LotDto>> findAll();
 
     Optional<LotDto> findLotByItemId(long id);
@@ -19,4 +18,6 @@ public interface LotService {
     void insertItemIntoLotHistory(Item item);
 
     void complete(LotDto lot);
+
+    void block(LotDto lot);
 }

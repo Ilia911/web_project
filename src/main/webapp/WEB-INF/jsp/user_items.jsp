@@ -34,13 +34,9 @@
                 <td>${item.price}</td>
                 <td>${item.status}</td>
                 <td>
-                <form method="get" action="${pageContext.request.contextPath}/controller?command=show_user_edit_item">
+                <form method="GET" action="${pageContext.request.contextPath}/controller">
+                    <input name="command" type="hidden" value="show_user_edit_item"/>
                     <input name="id" type="hidden" value="${item.id}"/>
-                    <input name="name" type="hidden" value="${item.name}"/>
-                    <input name="describe" type="hidden" value="${item.describe}"/>
-                    <input name="type" type="hidden" value="${item.type}"/>
-                    <input name="price" type="hidden" value="${item.price}"/>
-                    <input name="status" type="hidden" value="${item.status}"/>
                     <input type="submit" value=<locale:loc value="user.items.edit"/>/>
                 </form>
                 </td>
