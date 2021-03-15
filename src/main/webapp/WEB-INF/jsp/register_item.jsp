@@ -11,7 +11,7 @@
     <label for="itemName"><locale:loc value="register.item.name"/></label><br>
     <input name="itemName"><br/>
     <label for="itemDescribe"><locale:loc value="register.item.describe"/></label><br>
-    <input name="itemDescribe"><br/>
+    <textarea name="itemDescribe" cols="60" rows="5"></textarea><br/>
     <label for="itemType"></label><locale:loc value="register.item.type"/><br>
     <input type ="radio" name="itemType" value = "1"><locale:loc value="register.item.straight"/><br/>
     <input type ="radio" name="itemType" value = "2"><locale:loc value="register.item.reverse"/><br/>

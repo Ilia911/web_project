@@ -1,0 +1,135 @@
+body{
+    width:98.9%;
+    margin-top :40px;
+    font: 17px Arial, sans-serif;
+}
+
+h3{
+    color:#e74c3c;
+}
+
+.table button{
+    height:40px !important;
+}
+
+ul{
+    padding-left:0;
+    list-style:none;
+}
+
+select{
+    height:35px;
+    margin-right:10px;
+    float:left;
+}
+
+input[type="text"],input[type="number"], input[type="password"]{
+    font-size:18px;
+}
+
+body{
+    margin-top: 50px;
+}
+
+dl{
+    margin-left:-25px;
+}
+
+.panel{
+    margin:0 40px;
+    margin-top:30px;
+}
+
+.col-lg-3{
+    padding-top:30px;
+    height:187%;
+
+}
+
+.col-lg-6{
+    width:50%;
+    padding:0 !important;
+    margin:0 !important;
+}
+
+#icon{
+    width:160px;
+    border-radius:100px;
+    margin-left:78px;
+    margin-bottom:20px;
+    border:gray 1px solid;
+}
+
+dt{
+    color:#27ae60;
+    font-size:16px;
+}
+
+dd{
+    font-size:16px;
+}
+
+.bs-const{
+    height:95vh;
+}
+
+.glyphicon-ban-circle, .glyphicon-ok-sign{
+    font-size:16px;
+    padding-bottom:3px;
+}
+
+.glyphicon-ban-circle{
+    color:red;
+}
+
+.glyphicon-ok-sign{
+    color:green;
+}
+
+.space{
+    padding:20px 0;
+}
+
+button span{
+    padding-right:5px;
+    margin-bottom:-2px;
+    margin-right:0;
+    font-size:17px;
+}
+
+table button {
+    max-width:175px;
+}
+
+.control-label{
+    width:30%;
+    font-size:15px;
+}
+
+.form-horizontal{
+    padding-top:10px;
+}
+
+.form-control.select{
+    float:left;
+    margin-left:15px;
+    width:45%
+}
+
+th,td{
+    text-align:center;
+}
+
+button.spacebtn{
+    display:table;
+    margin:0 auto 20px auto;
+}
+
+.glyphicon-plus, .glyphicon-pencil, .glyphicon-trash{
+    color:white;
+}
+
+
+.profile{
+    margin-left:6%
+}
