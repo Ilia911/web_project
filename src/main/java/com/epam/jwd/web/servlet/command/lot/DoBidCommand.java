@@ -48,7 +48,7 @@ public enum DoBidCommand implements Command {
     }
 
     private ResponseContext checkOwner(RequestContent req) {
-        if (req.getSessionAttribute("login").equals(Integer.parseInt(req.getRequestParameter("ownerId")[0]))) {
+        if (req.getSessionAttribute("id").equals(Integer.parseInt(req.getRequestParameter("ownerId")[0]))) {
             req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
                     (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.your.lot"));
             return ShowAllLotsCommand.INSTANCE.execute(req);

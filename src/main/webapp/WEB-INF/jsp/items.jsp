@@ -52,14 +52,14 @@
                 <td><locale:time value="${item.endTime}"/></td>
                 <td>
                     <c:choose>
-                        <c:when test="${requestScope.item.bidOwnerId eq sessionScope.id}">
+                        <c:when test="${item.bidOwnerId eq sessionScope.id}">
                             <p style="color:green;font-size:20px;"><locale:loc value="items.you"/></p>
                         </c:when>
                         <c:otherwise>
                             <locale:loc value="items.client"/>
                         </c:otherwise>
                     </c:choose>
-                ${item.bidOwnerId}</td>
+                </td>
                 <td>
                 <form method="post" action="${pageContext.request.contextPath}/controller?command=do_bid">
                     <input name="id" type="hidden" value="${item.id}"/>
