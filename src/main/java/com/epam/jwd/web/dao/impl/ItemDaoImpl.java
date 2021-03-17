@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Optional;
 
 public enum ItemDaoImpl implements ItemDao {
-          INSTANCE;
+    INSTANCE;
 
-    private static final List<Subscriber> subscribers = new ArrayList<>();
+    private static final List<Subscriber<? super Long>> subscribers = new ArrayList<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemDaoImpl.class);
 
@@ -78,26 +78,6 @@ public enum ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public Optional<Item> update(Item item) {
-        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ITEM_SQL);
-            preparedStatement.setString(1, item.getName());
-            preparedStatement.setString(2, item.getDescribe());
-            preparedStatement.setBigDecimal(3, item.getPrice());
-            preparedStatement.setInt(4, item.getStatus().getInt());
-            preparedStatement.setInt(5, item.getType().getType());
-            preparedStatement.setLong(6, item.getId());
-            preparedStatement.executeUpdate();
-            updateCash(item.getId());
-            LOGGER.info("Item was successfully updated");
-        } catch (SQLException | InterruptedException e) {
-            e.printStackTrace();
-            LOGGER.error(Arrays.toString(e.getStackTrace()));
-        }
-        return Optional.empty();
-    }
-
-    @Override
     public Optional<List<Item>> findItemsByUserId(int userId) {
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
             final PreparedStatement preparedStatement = connection.prepareStatement(FIND_ITEMS_BY_USER_ID_SQL);
@@ -133,18 +113,46 @@ public enum ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public void complete(long id) {
+    public boolean update(Item item) {
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ITEM_SQL);
+            preparedStatement.setString(1, item.getName());
+            preparedStatement.setString(2, item.getDescribe());
+            preparedStatement.setBigDecimal(3, item.getPrice());
+            preparedStatement.setInt(4, item.getStatus().getInt());
+            preparedStatement.setInt(5, item.getType().getType());
+            preparedStatement.setLong(6, item.getId());
+            preparedStatement.executeUpdate();
+            updateCash(item.getId());
+            LOGGER.info("Item was successfully updated");
+            return true;
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return false;
+    }
+
+    @Override
+    public boolean complete(long id) {
 
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
             final PreparedStatement preparedStatement = connection.prepareStatement(COMPLETE_LOT_SQL);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            LOGGER.info("Lot # " + id + " was successfully completed");
             updateCash(id);
+            LOGGER.info("Lot # " + id + " was successfully completed");
+            return true;
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
+        return false;
+    }
+
+    @Override
+    public void subscribe(Subscriber<? super Long> subscriber) {
+        subscribers.add(subscriber);
     }
 
     private Item readItem(ResultSet resultSet) throws SQLException {
@@ -159,17 +167,10 @@ public enum ItemDaoImpl implements ItemDao {
                 0);
     }
 
-@SuppressWarnings("unchecked")
     private void updateCash(long id) {
 
-        for (Subscriber subscriber : subscribers) {
+        for (Subscriber<? super Long> subscriber : subscribers) {
             subscriber.update(id);
         }
     }
-
-    @Override
-    public void subscribe(Subscriber<? super Long> subscriber) {
-        subscribers.add(subscriber);
-    }
-
 }

@@ -42,7 +42,7 @@ public enum ConnectionPool {
     private Connection connection;
     private int currentAmountOfConnections = 0;
 
-    protected void init() throws SQLException {
+    public void init() throws SQLException {
         registerDrivers();
         for (int i = 0; i < INITIAL_CONNECTIONS_AMOUNT; i++) {
             addConnection();

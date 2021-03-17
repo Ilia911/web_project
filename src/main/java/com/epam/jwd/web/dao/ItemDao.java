@@ -13,11 +13,11 @@ public interface ItemDao  extends Publisher<Long> {
 
     Optional<List<Item>> findItemsByStatus(ItemStatus status);
 
-    Optional<Item> update(Item item);
+    boolean update(Item item);
 
     Optional<List<Item>> findItemsByUserId(int userId);
 
     Optional<Item> findItemById(long id);
 
-    void complete(long id);
+    boolean complete(long id);
 }
