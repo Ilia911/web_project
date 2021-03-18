@@ -25,7 +25,7 @@ public enum LotDaoImpl implements LotDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LotDaoImpl.class);
 
-    private static final List<Subscriber> subscribers = new ArrayList<>();
+    private static final List<Subscriber<? super Long>> subscribers = new ArrayList<>();
 
     private static final String FIND_ALL_LOTS_SQL = "SELECT lh.id, i.id, i.item_name, i.item_describe, i.owner_id, " +
             "i.item_type, lh.current_price, lh.bid_time, lh.bid_owner_id FROM lot_history lh join (select item_id, " +
@@ -82,6 +82,51 @@ public enum LotDaoImpl implements LotDao {
         return Optional.empty();
     }
 
+
+    @Override
+    public boolean doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice) {
+
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_LOT_HISTORY_SQL);
+            preparedStatement.setLong(1, itemId);
+            preparedStatement.setLong(2, bidTime);
+            preparedStatement.setInt(3, bidOwnerId);
+            preparedStatement.setBigDecimal(4, currentPrice);
+            preparedStatement.executeUpdate();
+            LOGGER.info("Lot history was successfully updated");
+            updateCash(itemId);
+            return true;
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return false;
+    }
+
+    @Override
+    public boolean insertItemIntoLotHistory(Item item) {
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ITEM_INTO_LOT_HISTORY_SQL);
+            preparedStatement.setLong(1, item.getId());
+            preparedStatement.setLong(2, item.getTime());
+            preparedStatement.setInt(3, item.getOwner());
+            preparedStatement.setBigDecimal(4, item.getPrice());
+            preparedStatement.executeUpdate();
+            updateCash(item.getId());
+            LOGGER.info("Item was successfully inserted into lot_history table");
+            return true;
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return false;
+    }
+
+    @Override
+    public void subscribe(Subscriber<? super Long> subscriber) {
+        subscribers.add(subscriber);
+    }
+
     private LotDto readLot(ResultSet resultSet) throws SQLException {
         return new LotDto(resultSet.getLong(1),
                 resultSet.getLong(2),
@@ -94,51 +139,11 @@ public enum LotDaoImpl implements LotDao {
                 resultSet.getInt(9));
     }
 
-    @Override
-    public void doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice) {
-
-        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_LOT_HISTORY_SQL);
-            preparedStatement.setLong(1, itemId);
-            preparedStatement.setLong(2, bidTime);
-            preparedStatement.setInt(3, bidOwnerId);
-            preparedStatement.setBigDecimal(4, currentPrice);
-            preparedStatement.executeUpdate();
-            LOGGER.info("Lot history was successfully updated");
-            updateCash(itemId);
-        } catch (SQLException | InterruptedException e) {
-            e.printStackTrace();
-            LOGGER.error(Arrays.toString(e.getStackTrace()));
-        }
-    }
-
-    @Override
-    public void insertItemIntoLotHistory(Item item) {
-        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            final PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ITEM_INTO_LOT_HISTORY_SQL);
-            preparedStatement.setLong(1, item.getId());
-            preparedStatement.setLong(2, item.getTime());
-            preparedStatement.setInt(3, item.getOwner());
-            preparedStatement.setBigDecimal(4, item.getPrice());
-            preparedStatement.executeUpdate();
-            updateCash(item.getId());
-            LOGGER.info("Item was successfully inserted into lot_history table");
-        } catch (SQLException | InterruptedException e) {
-            e.printStackTrace();
-            LOGGER.error(Arrays.toString(e.getStackTrace()));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     private void updateCash(long id) {
 
-        for (Subscriber subscriber : subscribers) {
+        for (Subscriber<? super Long> subscriber : subscribers) {
             subscriber.update(id);
         }
     }
 
-    @Override
-    public void subscribe(Subscriber<? super Long> subscriber) {
-        subscribers.add(subscriber);
-    }
 }

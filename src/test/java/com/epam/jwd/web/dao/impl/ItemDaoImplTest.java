@@ -6,7 +6,6 @@ import com.epam.jwd.web.model.Item;
 import com.epam.jwd.web.model.ItemFactory;
 import com.epam.jwd.web.model.ItemStatus;
 import com.epam.jwd.web.model.ItemType;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,16 +19,22 @@ import java.util.Optional;
 public class ItemDaoImplTest {
 
     private static final ItemDao ITEM_DAO = ItemDaoImpl.INSTANCE;
+    private static long temporaryItemId;
+    private static final long EXISTED_ITEM_ID = 12;
+    private static final int EXISTED_ITEM_OWNER_ID = 1;
+    private static final int TEMPORARY_ITEM_OWNER_ID = 2;
 
     @BeforeClass
     public static void createConnection() throws SQLException {
         ConnectionPool.INSTANCE.init();
+        final Optional<List<Item>> optionalItems = ITEM_DAO.findItemsByUserId(TEMPORARY_ITEM_OWNER_ID);
+        optionalItems.ifPresent(items -> temporaryItemId = items.get(0).getId());
     }
 
     @Test
     public void register_shouldSaveItemInDatabase_always() {
-
-        boolean actual = ITEM_DAO.register("Item", "test example", 2, 1, 10);
+        boolean actual = ITEM_DAO.register("Item", "test example",
+                TEMPORARY_ITEM_OWNER_ID, 1, 10);
         Assert.assertTrue(actual);
     }
 
@@ -41,31 +46,32 @@ public class ItemDaoImplTest {
 
     @Test
     public void findItemsByUserId_shouldReturnListOfItems_always() {
-        final Optional<List<Item>> itemsByUserId = ITEM_DAO.findItemsByUserId(2);
-        Assert.assertTrue(itemsByUserId.isPresent());
+        final Optional<List<Item>> optionalItems = ITEM_DAO.findItemsByUserId(TEMPORARY_ITEM_OWNER_ID);
+        optionalItems.ifPresent(items -> temporaryItemId = items.get(0).getId());
+        Assert.assertTrue(optionalItems.isPresent());
     }
 
     @Test
     public void findItemById_shouldReturnItem_always() {
-        final Optional<Item> itemById = ITEM_DAO.findItemById(2);
+        final Optional<Item> itemById = ITEM_DAO.findItemById(EXISTED_ITEM_ID);
         Assert.assertTrue(itemById.isPresent());
     }
 
     @Test
     public void update_shouldUpdateItem_ifItemWithSuchIdExists() {
         final Item item = ItemFactory.INSTANCE.createItem(
-                1, "name after test", "describe after test", 2,
-                ItemType.STRAIGHT, BigDecimal.ONE, ItemStatus.VALID, GregorianCalendar.getInstance().getTimeInMillis());
+                EXISTED_ITEM_ID, "name after test", "describe after test", EXISTED_ITEM_OWNER_ID,
+                ItemType.REVERSE, BigDecimal.ONE, ItemStatus.VALID, GregorianCalendar.getInstance().getTimeInMillis());
         Assert.assertTrue(ITEM_DAO.update(item));
     }
 
     @Test
     public void complete_shouldUpdateItem_ifItemWithSuchIdExists() {
-        Assert.assertTrue(ITEM_DAO.complete(1));
+        Assert.assertTrue(ITEM_DAO.complete(EXISTED_ITEM_ID));
     }
 
-    @AfterClass
-    public static void closeConnection() throws SQLException {
-        ConnectionPool.INSTANCE.destroy();
+    @Test
+    public void removeItemById_shouldRemoveItem_ifSuchExists() {
+        Assert.assertTrue(ITEM_DAO.removeItemById(temporaryItemId));
     }
 }

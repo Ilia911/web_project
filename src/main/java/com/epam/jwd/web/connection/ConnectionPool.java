@@ -111,6 +111,7 @@ public enum ConnectionPool {
             freeConnection.closeConnection();
         }
         deregisterDrivers();
+        LOGGER.info("Connection pool was successfully destroyed");
     }
 
     private class AddConnectionThread extends Thread {

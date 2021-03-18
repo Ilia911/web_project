@@ -40,6 +40,8 @@ public enum ItemDaoImpl implements ItemDao {
 
     private static final String COMPLETE_LOT_SQL = "UPDATE item SET item_status = '3' WHERE (`id` = ?)";
 
+    private static final String REMOVE_ITEM_BY_ID_SQL = "DELETE FROM item WHERE (id = ?)";
+
     @Override
     public boolean register(String itemName, String itemDescribe, int ownerId, int itemType, long itemPrice) {
         try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
@@ -142,6 +144,23 @@ public enum ItemDaoImpl implements ItemDao {
             preparedStatement.executeUpdate();
             updateCash(id);
             LOGGER.info("Lot # " + id + " was successfully completed");
+            return true;
+        } catch (SQLException | InterruptedException e) {
+            e.printStackTrace();
+            LOGGER.error(Arrays.toString(e.getStackTrace()));
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeItemById(long id) {
+
+        try (final Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
+            final PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_ITEM_BY_ID_SQL);
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+            updateCash(id);
+            LOGGER.info("Lot # " + id + " was successfully removed");
             return true;
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();

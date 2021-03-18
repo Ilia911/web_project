@@ -21,4 +21,6 @@ public interface ItemService {
 
     Optional<Item> findItemById(long id);
 
+    boolean removeItemById(long id);
+
 }

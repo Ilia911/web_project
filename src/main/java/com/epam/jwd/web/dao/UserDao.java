@@ -14,7 +14,7 @@ public interface UserDao extends Publisher<UserDto> {
 
     Optional<User> register(String userLogin, String userPassword, String name);
 
-    Optional<User> update(User user);
+//    Optional<User> update(User user);
 
     Optional<User> findByLogin(String login);
 
@@ -22,7 +22,7 @@ public interface UserDao extends Publisher<UserDto> {
 
     Optional<User> save(int id, String newName, String newPassword);
 
-    void updateAccount(int userId, BigDecimal subtractedSum);
+    boolean updateAccount(int userId, BigDecimal subtractedSum);
 
-    void changeStatus(int id, UserStatus status);
+    boolean changeStatus(int id, UserStatus status);
 }

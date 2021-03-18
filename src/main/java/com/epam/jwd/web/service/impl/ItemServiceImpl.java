@@ -47,4 +47,9 @@ public enum ItemServiceImpl implements ItemService {
         return ITEM_DAO.findItemById(id);
     }
 
+    @Override
+    public boolean removeItemById(long id) {
+        return ITEM_DAO.removeItemById(id);
+    }
+
 }

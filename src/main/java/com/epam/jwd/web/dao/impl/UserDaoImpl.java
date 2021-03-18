@@ -2,7 +2,6 @@ package com.epam.jwd.web.dao.impl;
 
 import com.epam.jwd.web.connection.ConnectionPool;
 import com.epam.jwd.web.dao.UserDao;
-import com.epam.jwd.web.model.Item;
 import com.epam.jwd.web.model.Role;
 import com.epam.jwd.web.model.UserDto;
 import com.epam.jwd.web.model.UserStatus;
@@ -93,11 +92,11 @@ public enum UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateAccount(int userId, BigDecimal subtractedSum) {
+    public boolean updateAccount(int userId, BigDecimal subtractedSum) {
 
         final Optional<User> optionalUser = this.findById(userId);
         if (!optionalUser.isPresent()) {
-            return;
+            return false;
         }
         BigDecimal oldAccount = optionalUser.get().getAccount();
         BigDecimal newAccount = oldAccount.subtract(subtractedSum);
@@ -110,14 +109,16 @@ public enum UserDaoImpl implements UserDao {
             preparedStatement.executeUpdate();
             updateCash(userId);
             LOGGER.info("Account was successfully updated!");
+            return true;
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
+        return false;
     }
 
     @Override
-    public void changeStatus(int id, UserStatus status) {
+    public boolean changeStatus(int id, UserStatus status) {
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
 
@@ -127,10 +128,12 @@ public enum UserDaoImpl implements UserDao {
             preparedStatement.executeUpdate();
             LOGGER.info("Status was successfully updated!");
             updateCash(id);
+            return true;
         } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
+        return false;
     }
 
     @Override
@@ -169,10 +172,10 @@ public enum UserDaoImpl implements UserDao {
         return Optional.empty();
     }
 
-    @Override
-    public Optional<User> update(User entity) {
-        return Optional.empty();
-    }
+//    @Override
+//    public Optional<User> update(User entity) {
+//        return Optional.empty();
+//    }
 
     @Override
     public void subscribe(Subscriber<? super UserDto> subscriber) {

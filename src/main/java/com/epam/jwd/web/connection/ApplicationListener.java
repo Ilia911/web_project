@@ -50,7 +50,5 @@ public class ApplicationListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
 
         ConnectionPool.INSTANCE.destroy();
-
-        LOGGER.info("Connection pool was successfully destroyed");
     }
 }

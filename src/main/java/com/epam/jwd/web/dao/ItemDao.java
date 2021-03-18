@@ -20,4 +20,6 @@ public interface ItemDao  extends Publisher<Long> {
     Optional<Item> findItemById(long id);
 
     boolean complete(long id);
+
+    boolean removeItemById(long id);
 }
