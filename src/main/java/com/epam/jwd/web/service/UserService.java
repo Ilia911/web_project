@@ -20,9 +20,9 @@ public interface UserService {
 
     Optional<UserDto> findById(int id);
 
-    void updateAccount(int userId, BigDecimal subtractedSum);
+    boolean updateAccount(int userId, BigDecimal subtractedSum);
 
-    void changeStatus(int id, UserStatus status);
+    boolean changeStatus(int id, UserStatus status);
 
-    void complete(LotDto lot);
+    boolean complete(LotDto lot);
 }

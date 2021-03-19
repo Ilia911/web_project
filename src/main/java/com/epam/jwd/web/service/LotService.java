@@ -13,11 +13,11 @@ public interface LotService {
 
     Optional<LotDto> findLotByItemId(long id);
 
-    void doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice);
+    boolean doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice);
 
-    void insertItemIntoLotHistory(Item item);
+    boolean insertItemIntoLotHistory(Item item);
 
-    void complete(LotDto lot);
+    boolean complete(LotDto lot);
 
-    void block(LotDto lot);
+    boolean block(LotDto lot);
 }

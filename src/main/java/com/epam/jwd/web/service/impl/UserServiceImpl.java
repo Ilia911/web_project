@@ -73,21 +73,22 @@ public enum UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAccount(int userId, BigDecimal subtractedSum) {
-        USER_DAO.updateAccount(userId, subtractedSum);
+    public boolean updateAccount(int userId, BigDecimal subtractedSum) {
+        return USER_DAO.updateAccount(userId, subtractedSum);
     }
 
     @Override
-    public void changeStatus(int id, UserStatus status) {
-        USER_DAO.changeStatus(id, status);
+    public boolean changeStatus(int id, UserStatus status) {
+        return USER_DAO.changeStatus(id, status);
     }
 
     @Override
-    public void complete(LotDto lot) {
+    public boolean complete(LotDto lot) {
         if (lot.getOwnerId() != lot.getBidOwnerId()) {
             final Optional<UserDto> optionalItemOwner = findById(lot.getOwnerId());
-            updateAccount(lot.getOwnerId(), optionalItemOwner.get().getAccount().add(lot.getPrice()));
+            return updateAccount(lot.getOwnerId(), optionalItemOwner.get().getAccount().add(lot.getPrice()));
         }
+        return false;
     }
 
     private UserDto convertToDto(User user) {

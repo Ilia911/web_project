@@ -34,38 +34,38 @@ public enum LotServiceImpl implements LotService {
     }
 
     @Override
-    public void doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice) {
-        LOT_DAO.doBid(itemId, bidTime, bidOwnerId, currentPrice);
+    public boolean doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice) {
+        return LOT_DAO.doBid(itemId, bidTime, bidOwnerId, currentPrice);
 
     }
 
     @Override
-    public void insertItemIntoLotHistory(Item item) {
-        LOT_DAO.insertItemIntoLotHistory(item);
+    public boolean insertItemIntoLotHistory(Item item) {
+        return LOT_DAO.insertItemIntoLotHistory(item);
     }
 
     @Override
-    public void complete(LotDto lot) {
-        ITEM_SERVICE.complete(lot.getItemId());
-        USER_SERVICE.complete(lot);
-
+    public boolean complete(LotDto lot) {
+        return (ITEM_SERVICE.complete(lot.getItemId()) && USER_SERVICE.complete(lot));
     }
 
     @Override
-    public void block(LotDto lot) {
+    public boolean block(LotDto lot) {
+        boolean updateAccountResult = false;
         if (lot.getOwnerId() != lot.getBidOwnerId() && lot.getType().equals(ItemType.STRAIGHT)) {
-            USER_SERVICE.updateAccount(lot.getBidOwnerId(), lot.getPrice());
+            updateAccountResult = USER_SERVICE.updateAccount(lot.getBidOwnerId(), lot.getPrice().negate());
         }
         final Optional<Item> optionalItem = ITEM_SERVICE.findItemById(lot.getItemId());
 
         if (optionalItem.isPresent()) {
             final Item updatedItem = createItemWithBlockedStatus(optionalItem.get());
-            ITEM_SERVICE.update(updatedItem);
+            return ITEM_SERVICE.update(updatedItem) && updateAccountResult;
         }
+        return false;
     }
 
     private Item createItemWithBlockedStatus(Item item) {
         return ItemFactory.INSTANCE.createItem(item.getId(), item.getName(),item.getDescribe(), item.getOwner(),
-                item.getType(), item.getPrice(), ItemStatus.BLOCKED, GregorianCalendar.getInstance().getTimeInMillis());
+                item.getType(), item.getPrice(), ItemStatus.BLOCKED, 0);
     }
 }

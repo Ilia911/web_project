@@ -13,14 +13,12 @@ public interface ItemService {
     boolean register(String itemName, String itemDescribe, Object ownerId, String itemType,
                               String itemPrice);
 
-    void update(Item item);
+    boolean update(Item item);
 
-    void complete(long itemId);
+    boolean complete(long itemId);
 
     Optional<List<Item>> findItemsByUserId(int userId);
 
     Optional<Item> findItemById(long id);
-
-    boolean removeItemById(long id);
 
 }

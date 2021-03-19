@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public enum ItemServiceImpl implements ItemService {
-    INSTANCE;
+    INSTANCE();
 
     private static final ItemDao ITEM_DAO = ItemDaoImpl.INSTANCE;
 
@@ -28,13 +28,13 @@ public enum ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void update(Item item) {
-        ITEM_DAO.update(item);
+    public boolean update(Item item) {
+       return ITEM_DAO.update(item);
     }
 
     @Override
-    public void complete(long itemId) {
-        ITEM_DAO.complete(itemId);
+    public boolean complete(long itemId) {
+        return ITEM_DAO.complete(itemId);
     }
 
     @Override
@@ -46,10 +46,4 @@ public enum ItemServiceImpl implements ItemService {
     public Optional<Item> findItemById(long id) {
         return ITEM_DAO.findItemById(id);
     }
-
-    @Override
-    public boolean removeItemById(long id) {
-        return ITEM_DAO.removeItemById(id);
-    }
-
 }
