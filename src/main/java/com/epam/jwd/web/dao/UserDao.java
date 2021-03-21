@@ -14,8 +14,6 @@ public interface UserDao extends Publisher<UserDto> {
 
     Optional<User> register(String userLogin, String userPassword, String name);
 
-//    Optional<User> update(User user);
-
     Optional<User> findByLogin(String login);
 
     Optional<User> findById(int id);

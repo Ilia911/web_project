@@ -5,7 +5,6 @@ import com.epam.jwd.web.dao.impl.UserDaoImpl;
 import com.epam.jwd.web.model.Role;
 import com.epam.jwd.web.model.User;
 import com.epam.jwd.web.model.UserStatus;
-import com.epam.jwd.web.service.UserService;
 import com.epam.jwd.web.service.impl.UserServiceImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,9 +28,8 @@ public class UserServiceImplTest {
 
     private static UserDao mockUserDao;
 
-    private static final User TEST_USER = new User(1,"test login", "test password", "test name",
+    private static final User TEST_USER = new User(1, "test login", "test password", "test name",
             BigDecimal.ONE, Role.CLIENT, UserStatus.VALID);
-    private static final UserService USER_SERVICE = UserServiceImpl.INSTANCE;
 
     @BeforeClass
     public static void init() {
@@ -42,42 +41,69 @@ public class UserServiceImplTest {
     public void findAll_shouldReturnOptionalListOfUsers_always() {
         when(mockUserDao.findAll()).thenReturn(Optional.of(new ArrayList<>()));
 
-        assertTrue(USER_SERVICE.findAll().isPresent());
+        assertTrue(UserServiceImpl.INSTANCE.findAll().isPresent());
+    }
+
+//      todo: complete this methods
+//    @Test
+//    public void save_shouldUpdateExistedUser_always() {
+//
+//        when(mockUserDao.save(TEST_USER.getId(), TEST_USER.getName(),
+//                TEST_USER.getPassword())).thenReturn(Optional.of(TEST_USER));
+//
+//        assertTrue(UserServiceImpl.INSTANCE.save(TEST_USER.getId(), TEST_USER.getName(),
+//                TEST_USER.getPassword()).isPresent());
+//    }
+
+//    @Test
+//    public void login_shouldReturnOptionalUser_ifSuchExists() {
+//        when(mockUserDao.findByLogin(TEST_USER.getLogin())).thenReturn(Optional.of(TEST_USER));
+//
+//        assertTrue(UserServiceImpl.INSTANCE.login(TEST_USER.getLogin(), TEST_USER.getPassword()).isPresent());
+//    }
+
+//    @Test
+//    public void register_shouldRegisterUser_ifSuchNotExists() {
+//        when(mockUserDao.findByLogin(TEST_USER.getLogin())).thenReturn(Optional.of(TEST_USER));
+//        when(mockUserDao.register(TEST_USER.getLogin(), TEST_USER.getPassword(), TEST_USER.getName()))
+//                .thenReturn(Optional.of(TEST_USER));
+//
+//        assertTrue(UserServiceImpl.INSTANCE.register(TEST_USER.getLogin(), TEST_USER.getPassword(), TEST_USER.getName()).isPresent());
+//    }
+
+    @Test
+    public void register_shouldReturnOptionalEmpty_ifUserWithSuchLoginExists() {
+        when(mockUserDao.findByLogin(TEST_USER.getLogin())).thenReturn(Optional.empty());
+
+        assertFalse(UserServiceImpl.INSTANCE.register(TEST_USER.getLogin(), TEST_USER.getPassword(), TEST_USER.getName()).isPresent());
     }
 
     @Test
-    public void save_shouldUpdateExistedUser_ifSuchExists() {
-        when(mockUserDao.save(TEST_USER.getId(), TEST_USER.getName(), TEST_USER.getPassword()))
-                .thenReturn(Optional.of(TEST_USER));
+    public void findById_shouldReturnOptionalUser_ifSuchExists() {
+        when(mockUserDao.findById(TEST_USER.getId())).thenReturn(Optional.of(TEST_USER));
 
-        assertTrue(USER_SERVICE.save(TEST_USER.getId(), TEST_USER.getName(), TEST_USER.getPassword()).isPresent());
+        assertTrue(UserServiceImpl.INSTANCE.findById(TEST_USER.getId()).isPresent());
     }
 
     @Test
-    public void login_shouldReturnOptionalUser_ifSuchExists() {
-        when(mockUserDao.findByLogin(TEST_USER.getLogin())).thenReturn(Optional.of(TEST_USER));
+    public void updateAccount_shouldUpdateAccount_always() {
+        when(mockUserDao.updateAccount(TEST_USER.getId(), BigDecimal.ONE)).thenReturn(true);
 
-        assertTrue(USER_SERVICE.login(TEST_USER.getLogin(), TEST_USER.getPassword()).isPresent());
+        assertTrue(UserServiceImpl.INSTANCE.updateAccount(TEST_USER.getId(), BigDecimal.ONE));
     }
 
     @Test
-    public void findAll_shouldReturnOptionalListOfUsers_always() {
-        when(mockUserDao.findAll()).thenReturn(Optional.of(new ArrayList<>()));
+    public void changeStatus_shouldChangeUserStatus_always() {
+        when(mockUserDao.changeStatus(TEST_USER.getId(), TEST_USER.getStatus())).thenReturn(true);
 
-        assertTrue(UserDaoImpl.INSTANCE.findAll().isPresent());
+        assertTrue(UserServiceImpl.INSTANCE.changeStatus(TEST_USER.getId(), TEST_USER.getStatus()));
     }
 
     @Test
-    public void findAll_shouldReturnOptionalListOfUsers_always() {
-        when(mockUserDao.findAll()).thenReturn(Optional.of(new ArrayList<>()));
+    public void complete_() {
+        when(mockUserDao.updateAccount(TEST_USER.getId(), BigDecimal.ONE)).thenReturn(true);
 
-        assertTrue(UserDaoImpl.INSTANCE.findAll().isPresent());
+        assertTrue(UserServiceImpl.INSTANCE.updateAccount(TEST_USER.getId(), BigDecimal.ONE));
     }
 
-    @Test
-    public void findAll_shouldReturnOptionalListOfUsers_always() {
-        when(mockUserDao.findAll()).thenReturn(Optional.of(new ArrayList<>()));
-
-        assertTrue(UserDaoImpl.INSTANCE.findAll().isPresent());
-    }
 }

@@ -172,11 +172,6 @@ public enum UserDaoImpl implements UserDao {
         return Optional.empty();
     }
 
-//    @Override
-//    public Optional<User> update(User entity) {
-//        return Optional.empty();
-//    }
-
     @Override
     public void subscribe(Subscriber<? super UserDto> subscriber) {
         SUBSCRIBERS.add(subscriber);

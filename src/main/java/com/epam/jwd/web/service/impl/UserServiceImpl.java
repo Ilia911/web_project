@@ -30,12 +30,13 @@ public enum UserServiceImpl implements UserService {
     @Override
     public Optional<UserDto> save(int id, String newName, String newPassword) {
 
-        final Optional<User> optionalUser = USER_DAO.save(id, newName, BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+        final Optional<User> optionalUser = USER_DAO.save(id, newName,  BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 
         if (optionalUser.isPresent()) {
             return optionalUser.map(this::convertToDto);
+        } else {
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     @Override
