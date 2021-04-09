@@ -1,19 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="locale" uri="customtags"%>
+<html>
 <head>
     <meta charset="UTF-8">
     <title><locale:loc value="user.edit.item.title"/></title>
-    <style>
-        table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/main.css"/>
 </head>
 <body>
+<div class="header">
 <%@ include file="/WEB-INF/jsp/common/header.jsp"%>
+</div>
 <h2><locale:loc value="user.edit.item.title"/></h2>
 <strong>${requestScope.errorUserItemsMessage}</strong><br/>
     <c:if test="${not empty requestScope.item}">
@@ -28,7 +25,7 @@
                 <tr>
                 <form method="post" action="${pageContext.request.contextPath}/controller?command=save_edited_item">
                 <td><input name="name" value="${item.name}"/></td>
-                <td><input name="describe" value="${item.describe}"/></td>
+                <td><textarea name="describe" cols="60" rows="5">${item.describe}</textarea></td>
                 <td>
                     <select name="type">
                         <option value = "1"><locale:loc value="register.item.straight"/></option>
@@ -44,4 +41,9 @@
                 </tr>
         </table>
     </c:if>
+    <br/>
+    <div class="footer">
+    <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
+    </div>
 </body>
+</html>

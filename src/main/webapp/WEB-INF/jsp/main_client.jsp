@@ -4,13 +4,20 @@
 <html>
 <head>
     <title><locale:loc value="main.title"/></title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/main.css"/>
 </head>
 <body>
+<div class="header">
 <%@ include file="/WEB-INF/jsp/common/header.jsp"%><br/><br/>
-<a href="${pageContext.request.contextPath}/controller?command=show_lots"><locale:loc value="main.items"/></a><br/>
+</div>
+<div class="commands">
 <a href="${pageContext.request.contextPath}/controller?command=show_user_items"><locale:loc value="client.items"/></a><br/>
 <a href="${pageContext.request.contextPath}/controller?command=show_profile"><locale:loc value="admin.profile"/></a><br/>
 <a href="${pageContext.request.contextPath}/controller?command=show_register_item"><locale:loc value="main.register.item"/></a><br/>
-<br/><br/>
+</div>
+<br/>
+<div class="footer">
+<%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
+</div>
 </body>
 </html>

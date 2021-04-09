@@ -4,16 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title><locale:loc value="blocked.items.title"/></title>
-    <style>
-        table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/main.css" />
 </head>
 <body>
+<div class="header">
 <%@ include file="/WEB-INF/jsp/common/header.jsp"%>
+</div>
 <h2><locale:loc value="blocked.items.title"/></h2>
     <c:if test="${not empty requestScope.items}">
         <table style="width:100%">
@@ -51,4 +47,8 @@
             </c:forEach>
         </table>
     </c:if>
+    <br/>
+    <div class="footer">
+    <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
+    </div>
 </body>

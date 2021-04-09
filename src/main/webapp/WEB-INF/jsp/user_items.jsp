@@ -1,19 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="locale" uri="customtags"%>
+<html>
 <head>
     <meta charset="UTF-8">
     <title><locale:loc value="user.items.title"/></title>
-    <style>
-        table, th, td {
-        border: 1px solid black;
-        border-collapse: collapse;
-        text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/main.css"/>
 </head>
 <body>
+<div class="header">
 <%@ include file="/WEB-INF/jsp/common/header.jsp"%>
+</div>
 <h2><locale:loc value="user.items.title"/></h2>
 <strong>${errorUserItemsMessage}</strong><br/>
     <c:if test="${not empty requestScope.items}">
@@ -44,4 +41,9 @@
             </c:forEach>
         </table>
     </c:if>
+    <br/>
+    <div class="footer">
+    <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
+    </div>
 </body>
+</html>

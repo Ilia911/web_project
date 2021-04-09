@@ -4,15 +4,15 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{yy-MM-dd HH:mm:ss:SSS}] [%t] [%5p] [%c{5}:%M:%L] - %m%n" />
         </Console>
-        <!--<File name="MyFile" fileName="${sys:catalina.home}/webapps/output/log.txt">-->
-        <File name="MyFile" fileName="src/main/resources/output/log.txt">
-        <PatternLayout pattern="[%d{yy-MM-dd HH:mm:ss:SSS}] [%t] [%5p] [%c{5}:%M:%L] - %m%n"/>
-        </File>
-    </Appenders>
-    <Loggers>
-        <Root level="debug">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="MyFile"/>
-        </Root>
-    </Loggers>
-</Configuration>
+        <File name="MyFile" fileName="${sys:catalina.home}/webapps/output/log.txt">
+            <!--<File name="MyFile" fileName="src/main/resources/output/log.txt">-->
+            <PatternLayout pattern="[%d{yy-MM-dd HH:mm:ss:SSS}] [%t] [%5p] [%c{5}:%M:%L] - %m%n"/>
+            </File>
+        </Appenders>
+        <Loggers>
+            <Root level="debug">
+                <AppenderRef ref="Console" />
+                <AppenderRef ref="MyFile"/>
+            </Root>
+        </Loggers>
+    </Configuration>

@@ -4,9 +4,13 @@
 <html>
 <head>
     <title><locale:loc value="register.item.title"/></title>
+        <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/main.css"/>
 <head>
 <body>
+<div class="header">
 <%@ include file="/WEB-INF/jsp/common/header.jsp"%>
+</div>
+<br/>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=register_item">
     <label for="itemName"><locale:loc value="register.item.name"/></label><br>
     <input name="itemName"><br/>
@@ -20,5 +24,9 @@
     <input type="submit" value=<locale:loc value="login.submit"/>>
     <input type="reset" value=<locale:loc value="login.reset"/>>
 </form>
+    <br/>
+    <div class="footer">
+    <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
+    </div>
 </body>
 </html>

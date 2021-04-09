@@ -30,6 +30,8 @@ public enum UserDaoImpl implements UserDao {
 
     private static final String FIND_USER_BY_ID_SQL = "SELECT * FROM auction_user where id = ?";
 
+    private static final String FIND_USER_BY_LOGIN_SQL = "SELECT * FROM auction_user where user_login = ?";
+
     private static final String UPDATE_USER_ACCOUNT_SQL = "UPDATE auction_user SET user_account = ? WHERE (id = ?)";
 
     private static final String FIND_ALL_USERS_SQL = "SELECT * FROM auction_user";
@@ -42,7 +44,7 @@ public enum UserDaoImpl implements UserDao {
     public Optional<User> findByLogin(String login) {
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserSQL.FIND_USER_BY_LOGIN_SQL);
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_SQL);
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {

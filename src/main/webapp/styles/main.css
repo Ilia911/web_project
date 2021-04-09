@@ -1,0 +1,75 @@
+body {
+  font-family: Arial, Verdana,  sans-serif; /* Семейство шрифтов */
+  font-size: 11pt; /* Размер основного шрифта в пунктах  */
+  background-color: #f0f0f0; /* Цвет фона веб-страницы */
+  color: #333; /* Цвет основного текста */
+}
+.header {
+  background-color: #40e0d0;
+  font-size: 15pt;
+}
+.footer {
+  text-align: center;
+  position: fixed; /* Фиксированное положение */
+  left: 0; bottom: 0; /* Левый нижний угол */
+  background-color: #40e0d0;
+  color: #fff; /* Цвет текста */
+  width: 100%; /* Ширина слоя */
+  font-size: 12pt;
+}
+h1 {
+  color: #a52a2a; /* Цвет заголовка */
+  text-align: center;
+  font-size: 24pt; /* Размер шрифта в пунктах */
+  font-family: Georgia, Times, serif; /* Семейство шрифтов */
+  font-weight: normal; /* Нормальное начертание текста  */
+}
+h2 {
+  color: navy; /* Цвет заголовка */
+  font-size: 20pt; /* Размер шрифта в пунктах */
+  text-align: center;
+  font-family: Georgia, Times, serif; /* Семейство шрифтов */
+  font-weight: normal; /* Нормальное начертание текста  */
+}
+h3 {
+  color: red; /* Цвет заголовка */
+  text-align: center;
+  font-size: 16pt; /* Размер шрифта в пунктах */
+  font-family: Georgia, Times, serif; /* Семейство шрифтов */
+  font-weight: normal; /* Нормальное начертание текста  */
+}
+p {
+  text-align: justify; /* Выравнивание по ширине */
+  margin-left: 60px; /* Отступ слева в пикселах */
+  margin-right: 10px; /* Отступ справа в пикселах */
+  border-left: 1px solid #999; /* Параметры линии слева */
+  border-bottom: 1px solid #999; /* Параметры линии снизу */
+  padding-left: 10px; /* Отступ от линии слева до текста  */
+  padding-bottom: 10px; /* Отступ от линии снизу до текста  */
+}
+
+table, td, th {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: left;
+  background-color: #dcdcdc;
+}
+table {
+  width: 100%;
+}
+.bid-owner {
+  background-color: #90ee90;
+  font-size: 12pt;
+}
+th {
+  background-color: #40e0d0;
+}
+.commands {
+  color: #a52a2a; /* Цвет заголовка */
+  font-size: 16pt; /* Размер шрифта в пунктах */
+  font-family: Georgia, Times, serif; /* Семейство шрифтов */
+  font-weight: normal; /* Нормальное начертание текста  */
+  margin-left: 60px; /* Отступ слева в пикселах */
+  margin-right: 10px; /* Отступ справа в пикселах */
+
+}

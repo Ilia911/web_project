@@ -75,7 +75,8 @@ public class UserServiceImplTest {
     public void register_shouldReturnOptionalEmpty_ifUserWithSuchLoginExists() {
         when(mockUserDao.findByLogin(TEST_USER.getLogin())).thenReturn(Optional.empty());
 
-        assertFalse(UserServiceImpl.INSTANCE.register(TEST_USER.getLogin(), TEST_USER.getPassword(), TEST_USER.getName()).isPresent());
+        assertFalse(UserServiceImpl.INSTANCE.register(TEST_USER.getLogin(), TEST_USER.getPassword(),
+                TEST_USER.getName()).isPresent());
     }
 
     @Test

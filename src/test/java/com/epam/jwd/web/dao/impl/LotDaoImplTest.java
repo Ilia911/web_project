@@ -46,8 +46,5 @@ public class LotDaoImplTest {
         Assert.assertTrue(LOT_DAO.insertItemIntoLotHistory(item));
     }
 
-    @AfterClass
-    public static void closeConnection() throws SQLException {
-        ConnectionPool.INSTANCE.destroy();
-    }
+
 }

@@ -1,11 +1,14 @@
 package com.epam.jwd.web.dao.impl;
 
+import com.epam.jwd.web.connection.ConnectionPool;
 import com.epam.jwd.web.dao.UserDao;
 import com.epam.jwd.web.model.UserStatus;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 
 public class UserDaoImplTest {
 
@@ -48,4 +51,8 @@ public class UserDaoImplTest {
         Assert.assertTrue(USER_DAO.findAll().isPresent());
     }
 
+    @AfterClass
+    public static void closeConnection() throws SQLException {
+        ConnectionPool.INSTANCE.destroy();
+    }
 }

@@ -42,6 +42,11 @@ public enum UserCash implements Subscriber<UserDto> {
     }
 
     public void actualizeUserData(RequestContent req) {
+
+        if (req.getSessionAttribute("id") == null) {
+            return;
+        }
+
         final Optional<UserDto> optionalUserDto = getUserDto((Integer) req.getSessionAttribute("id"));
 
         if (optionalUserDto.isPresent()) {
