@@ -47,6 +47,9 @@ public enum ShowMainPageCommand implements Command {
 
     @Override
     public ResponseContext execute(RequestContent req) {
+
+        ShowAllLotsCommand.INSTANCE.execute(req);
+
         if (req.getSessionAttribute("role") == null) {
             return GUEST_RESPONSE;
         }

@@ -18,12 +18,13 @@
 </h2>
 <c:if test="${ not empty sessionScope.successfulMessage }"><h2>${sessionScope.successfulMessage}!<h2></c:if>
 <c:if test="${ not empty sessionScope.failedMessage }"><h3>${sessionScope.failedMessage}!</h3></c:if>
+<%@ include file="/WEB-INF/jsp/common/lots.jsp"%>
 <br/>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=choose_locale">
     <input type ="radio" name="locale" value ="en_US"><locale:loc value="main.language.english"/><br/>
     <input type ="radio" name="locale" value ="zh_TW"><locale:loc value="main.language.chinese"/><br/>
     <input type ="radio" name="locale" value ="ru_RU"><locale:loc value="main.language.russian"/><br/>
-    <input type="submit" value=<locale:loc value="main.submit"/>/>
+    <input type="submit" value=<locale:loc value="main.submit"/>>
 </form>
 <br/>
 <div class="footer">
