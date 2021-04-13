@@ -14,11 +14,11 @@
 <form method="post" action="${pageContext.request.contextPath}/controller?command=register">
 <h3>${failedRegisterMessage}</h3><br/>
     <label for="login"><locale:loc value="login.login"/></label><br>
-    <input name="login"><br/>
+    <input name="login" required autofocus><br/>
     <label for="password"><locale:loc value="login.password"/></label><br>
-    <input type="password" name="password"><br/>
+    <input type="password" name="password" required><br/>
     <label for="name"><locale:loc value="register.name"/></label><br>
-    <input name="name"><br/>
+    <input name="name" required><br/>
     <input type="submit" value=<locale:loc value="login.submit"/>>
     <input type="reset" value=<locale:loc value="login.reset"/>>
 </form>

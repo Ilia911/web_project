@@ -12,6 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Main servlet controller in model MVC
+ *
+ * @author Ilia Eriomkin
+ *
+ */
+
 @WebServlet("/controller")
 public class ApplicationController extends HttpServlet {
 
@@ -26,6 +33,13 @@ public class ApplicationController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         doAction(req, resp);
     }
+    /**
+     * Put all data from {@link javax.servlet.http.HttpServletRequest} into auxiliary safe object
+     * {@link com.epam.jwd.web.servlet.command.RequestContent} and exercise command.
+     *
+     * @param   request  input data.
+     * @param response  returned data.
+     */
 
     private void doAction(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final String commandName = request.getParameter(COMMAND_PARAMETER_NAME);

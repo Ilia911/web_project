@@ -14,7 +14,7 @@
 <h2><locale:loc value="user.edit.item.title"/></h2>
 <strong>${requestScope.errorUserItemsMessage}</strong><br/>
     <c:if test="${not empty requestScope.item}">
-        <table style="width:100%">
+        <table>
             <tr>
                 <th><locale:loc value="items.name"/></th>
                 <th><locale:loc value="items.describe"/></th>
@@ -24,15 +24,15 @@
             </tr>
                 <tr>
                 <form method="post" action="${pageContext.request.contextPath}/controller?command=save_edited_item">
-                <td><input name="name" value="${item.name}"/></td>
-                <td><textarea name="describe" cols="60" rows="5">${item.describe}</textarea></td>
+                <td><input name="name" value="${item.name}" required/></td>
+                <td><textarea name="describe" cols="60" rows="5">${item.describe} required</textarea></td>
                 <td>
-                    <select name="type">
+                    <select name="type" required>
                         <option value = "1"><locale:loc value="register.item.straight"/></option>
                         <option value = "2"><locale:loc value="register.item.reverse"/></option>
                     </select>
                 </td>
-                <td><input name="price" value="${item.price}"/></td>
+                <td><input name="price" value="${item.price}" required/></td>
                 <td>
                     <input name="id" type="hidden" value="${item.id}"/>
                     <input type="submit" value=<locale:loc value="user.edit.item.save"/>/>

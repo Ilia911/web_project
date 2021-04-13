@@ -22,6 +22,7 @@ import com.epam.jwd.web.servlet.command.user.LogOutCommand;
 import com.epam.jwd.web.servlet.command.user.RegisterCommand;
 import com.epam.jwd.web.servlet.command.user.SaveEditedUserCommand;
 
+
 public enum CommandManager {
     LOG_IN(LogInCommand.INSTANCE),
     LOG_OUT(LogOutCommand.INSTANCE),

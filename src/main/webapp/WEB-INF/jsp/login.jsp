@@ -16,9 +16,9 @@
 <strong>${errorLoginMessage}</strong>
 <br/>
     <label for="login"><locale:loc value="login.login"/></label><br>
-    <input name="login" value=""><br/>
+    <input name="login" required autofocus><br/>
     <label for="password"><locale:loc value="login.password"/></label><br>
-    <input type="password" name="password" value=""><br/>
+    <input type="password" name="password" required><br/>
     <input type="submit" value=<locale:loc value="login.submit"/>>
     <input type="reset" value=<locale:loc value="login.reset"/>>
 </form>

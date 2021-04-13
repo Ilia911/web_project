@@ -1,5 +1,10 @@
 package com.epam.jwd.web.servlet.command;
 
+/**
+ * This is an object for storage path we can forward to
+ *
+ * @author Ilia Eriomkin
+ */
 public class Path {
     public static final String SHOW_ALL_ITEMS_PAGE = "/WEB-INF/jsp/items.jsp";
     public static final String SHOW_BLOCKED_ITEMS_PAGE = "/WEB-INF/jsp/blocked_items.jsp";
@@ -16,6 +21,4 @@ public class Path {
     public static final String SHOW_ADMIN_MAIN_PAGE = "/WEB-INF/jsp/main_admin.jsp";
     public static final String SHOW_USER_LOGIN_AGAIN_PAGE = "/controller?command=show_login";
     public static final String SHOW_USER_REGISTER_AGAIN_PAGE ="/controller?command=show_register";
-
-
 }

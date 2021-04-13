@@ -20,8 +20,8 @@
             </tr>
             <tr>
                 <form method="post" action="${pageContext.request.contextPath}/controller?command=SAVE_EDITED_USER">
-                <td><input name="name" value="${user.name}"/></td>
-                <td><input type="password" name="password"/></td>
+                <td><input name="name" value="${user.name}" required/></td>
+                <td><input type="password" name="password" required autofocus/></td>
             </tr>
         </table>
                     <input name="id" type="hidden" value="${user.id}"/>
