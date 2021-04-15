@@ -22,7 +22,12 @@ import com.epam.jwd.web.servlet.command.user.LogOutCommand;
 import com.epam.jwd.web.servlet.command.user.RegisterCommand;
 import com.epam.jwd.web.servlet.command.user.SaveEditedUserCommand;
 
-
+/**
+ * This object contains all {@link Command} objects.
+ * Evaluates string commands and returns specific {@link Command} instance.
+ *
+ * @author Ilia Eriomkin
+ */
 public enum CommandManager {
     LOG_IN(LogInCommand.INSTANCE),
     LOG_OUT(LogOutCommand.INSTANCE),
@@ -53,6 +58,12 @@ public enum CommandManager {
         this.command = command;
     }
 
+    /**
+     * Evaluates string command and returns specific {@link Command} instance.
+     *
+     * @param name string command.
+     * @return {@link Command} which instance contains specific logic
+     */
     public static Command of(String name) {
         for (CommandManager value : CommandManager.values()) {
             if(value.name().equalsIgnoreCase(name)) {

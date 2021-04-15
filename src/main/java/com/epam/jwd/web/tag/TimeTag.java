@@ -14,6 +14,11 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Tag for presenting the rest of the time in locale format.
+ *
+ * @author Ilia Eriomkin
+ */
 public class TimeTag extends TagSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocaleTag.class);

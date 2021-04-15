@@ -17,6 +17,12 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Connection pool.
+ * It can automatically enlarge or decries quantity of connections.
+ *
+ * @author Ilia Eriomkin
+ */
 public enum ConnectionPool {
     INSTANCE;
 
@@ -42,6 +48,10 @@ public enum ConnectionPool {
     private Connection connection;
     private int currentAmountOfConnections = 0;
 
+    /**
+     * Initializing connection pool.
+     * @throws SQLException
+     */
     public void init() throws SQLException {
         registerDrivers();
         for (int i = 0; i < INITIAL_CONNECTIONS_AMOUNT; i++) {
@@ -52,6 +62,13 @@ public enum ConnectionPool {
         LOGGER.info("Connection pool was successfully initialized");
     }
 
+    /**
+     * <li>Retrieve connection from this.</li>
+     * <li>Check sufficiency of current amount of free connections and if needed enlarge connection pool.</li>
+     *
+     * @return connection from connection pool.
+     * @throws InterruptedException
+     */
     public Connection retrieveConnection() throws InterruptedException {
 
         lock.lock();
@@ -68,6 +85,11 @@ public enum ConnectionPool {
         return connection;
     }
 
+    /**
+     * If returned connection is valid and current amount of free connections more than enough, then close connection.
+     *
+     * @param returnedConnection is returned connection.
+     */
     public void returnConnection(Connection returnedConnection) {
         if (returnedConnection == null) {
             return;
@@ -117,18 +139,20 @@ public enum ConnectionPool {
     private class AddConnectionThread extends Thread {
         @Override
         public void run() {
-            lock.lock();
-            try {
-                while (checkSufficiencyOfCurrentAmountOfFreeConnections()) {
-                    enlargeCondition.await();
+            while (true) {
+                lock.lock();
+                try {
+                    while (checkSufficiencyOfCurrentAmountOfFreeConnections()) {
+                        enlargeCondition.await();
+                    }
+                    addConnection();
+                } catch (InterruptedException e) {
+                    LOGGER.error("Lock was interrupted!");
+                } catch (SQLException e) {
+                    LOGGER.error("It's not allowed to create additional connection!");
+                } finally {
+                    lock.unlock();
                 }
-                addConnection();
-            } catch (InterruptedException e) {
-                LOGGER.error("Lock was interrupted!");
-            } catch (SQLException e) {
-                LOGGER.error("It's not allowed to create additional connection!");
-            } finally {
-                lock.unlock();
             }
         }
 

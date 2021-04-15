@@ -1,8 +1,5 @@
 package com.epam.jwd.web.filter;
 
-import com.epam.jwd.web.model.Role;
-import com.epam.jwd.web.model.UserStatus;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -16,6 +13,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Locale;
 
+/**
+ * This filter sets default locale.
+ *
+ * @author Ilia Eriomkin
+ */
 @WebFilter(urlPatterns = {"/*"},
         initParams = {@WebInitParam(name = "locale", value = "en_US")
         })
@@ -30,7 +32,8 @@ public class LocaleFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
         if (request.getSession(false) == null || request.getSession().getAttribute("locale") == null) {
@@ -39,10 +42,5 @@ public class LocaleFilter implements Filter {
             session.setAttribute("locale", new Locale(localeParameters[0], localeParameters[1]));
         }
         filterChain.doFilter(request, servletResponse);
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

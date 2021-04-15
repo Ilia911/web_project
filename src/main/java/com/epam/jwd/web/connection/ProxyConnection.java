@@ -23,6 +23,11 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * Proxy connection. It helps us save resources when apply database queries.
+ *
+ * @author Ilia Eriomkin
+ */
 public final class ProxyConnection implements Connection{
     private final Connection realConnection;
     private final Logger LOGGER = LoggerFactory.getLogger(ProxyConnection.class);
@@ -71,11 +76,18 @@ public final class ProxyConnection implements Connection{
         realConnection.rollback();
     }
 
+    /**
+     * Return connection into connection pool.
+     * @throws SQLException
+     */
     @Override
     public void close() throws SQLException {
         ConnectionPool.INSTANCE.returnConnection(this);
     }
 
+    /**
+     * Close real connection.
+     */
     protected void closeConnection() {
         try {
             this.realConnection.close();

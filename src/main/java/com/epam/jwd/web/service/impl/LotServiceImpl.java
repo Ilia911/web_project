@@ -34,8 +34,8 @@ public enum LotServiceImpl implements LotService {
     }
 
     @Override
-    public boolean doBid(long itemId, long bidTime, int bidOwnerId, BigDecimal currentPrice) {
-        return LOT_DAO.doBid(itemId, bidTime, bidOwnerId, currentPrice);
+    public boolean doBid(long itemId, long endTime, int bidOwnerId, BigDecimal currentPrice) {
+        return LOT_DAO.doBid(itemId, endTime, bidOwnerId, currentPrice);
 
     }
 

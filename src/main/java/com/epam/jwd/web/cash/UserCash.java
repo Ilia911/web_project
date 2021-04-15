@@ -10,6 +10,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Cash for users.
+ *
+ * @author Ilia Eriomkin
+ */
 public enum UserCash implements Subscriber<UserDto> {
     INSTANCE;
 

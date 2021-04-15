@@ -8,6 +8,11 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Thread for checking end time of lots.
+ *
+ * @author Ilia Eriomkin
+ */
 public class LotManager extends Thread {
 
     private static final LotCash LOT_CASH = LotCash.INSTANCE;

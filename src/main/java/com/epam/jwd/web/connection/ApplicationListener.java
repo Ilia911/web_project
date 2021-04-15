@@ -9,8 +9,6 @@ import com.epam.jwd.web.dao.UserDao;
 import com.epam.jwd.web.dao.impl.ItemDaoImpl;
 import com.epam.jwd.web.dao.impl.LotDaoImpl;
 import com.epam.jwd.web.dao.impl.UserDaoImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -21,7 +19,6 @@ import java.util.Locale;
 @WebListener
 public class ApplicationListener implements ServletContextListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationListener.class);
     private static final Thread LOT_MANAGER = new LotManager();
     private static final LotDao LOT_DAO = LotDaoImpl.INSTANCE;
     private static final ItemDao ITEM_DAO = ItemDaoImpl.INSTANCE;

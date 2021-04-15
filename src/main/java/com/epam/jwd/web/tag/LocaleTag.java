@@ -11,13 +11,18 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * Tag for presenting information in selected language.
+ *
+ * @author Ilia Eriomkin
+ */
 public class LocaleTag extends TagSupport {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocaleTag.class);
     private String value;
 
-    public void setValue(String value){
-        this.value= value;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override
@@ -25,8 +30,7 @@ public class LocaleTag extends TagSupport {
         HttpSession session = pageContext.getSession();
         Locale locale = (Locale) session.getAttribute("locale");
 
-
-        if (value!=null){
+        if (value != null) {
             ResourceBundle rb = ResourceBundle.getBundle("generalKeys", locale);
             JspWriter out = pageContext.getOut();
             try {

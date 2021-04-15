@@ -11,6 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Cash for lots.
+ *
+ * @author Ilia Eriomkin
+ */
 public enum LotCash implements Subscriber<Long> {
     INSTANCE;
 
@@ -19,6 +24,9 @@ public enum LotCash implements Subscriber<Long> {
 
     private final List<LotDto> lots = new LinkedList<>();
 
+    /**
+     * Initialize cash when starting application.
+     */
     public void init() {
 
         final Optional<List<LotDto>> optionalLotDto = LOT_SERVICE.findAll();
@@ -30,6 +38,11 @@ public enum LotCash implements Subscriber<Long> {
         return lots;
     }
 
+    /**
+     * Returns lot by id.
+     *
+     * @return {@link Optional} with <tt>lot</tt> if <tt>id</tt> lot with such id exists.
+     */
     public Optional<LotDto> getLot(long itemId) {
         for (LotDto lot : lots) {
             if (lot.getItemId() == itemId) {
