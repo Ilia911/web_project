@@ -28,7 +28,7 @@ public interface RequestContent {
      * If this object previously contained a mapping for
      * the key for request attribute, the old value is replaced by the specified value.
      *
-     * @param key key with which the specified value is to be associated
+     * @param key       key with which the specified value is to be associated
      * @param attribute value to be associated with the specified key
      */
     void setRequestAttribute(String key, Object attribute);
@@ -38,7 +38,7 @@ public interface RequestContent {
      * If this object previously contained a mapping for
      * the key for session attribute, the old value is replaced by the specified value.
      *
-     * @param key key with which the specified value is to be associated
+     * @param key       key with which the specified value is to be associated
      * @param attribute value to be associated with the specified key
      */
     void setSessionAttribute(String key, Object attribute);

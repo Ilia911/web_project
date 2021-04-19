@@ -50,6 +50,7 @@ public enum ConnectionPool {
 
     /**
      * Initializing connection pool.
+     *
      * @throws SQLException
      */
     public void init() throws SQLException {

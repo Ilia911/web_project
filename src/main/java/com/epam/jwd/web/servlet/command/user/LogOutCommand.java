@@ -6,7 +6,7 @@ import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 import com.epam.jwd.web.servlet.command.page.ShowMainPageCommand;
 
-public enum  LogOutCommand implements Command {
+public enum LogOutCommand implements Command {
     INSTANCE;
 
     private static final ResponseContext RESPONSE = new ResponseContext() {
@@ -21,6 +21,7 @@ public enum  LogOutCommand implements Command {
             return true;
         }
     };
+
     @Override
     public ResponseContext execute(RequestContent req) {
         req.setInvalidateSession(true);

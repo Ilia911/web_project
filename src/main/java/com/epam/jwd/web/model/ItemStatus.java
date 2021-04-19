@@ -1,5 +1,10 @@
 package com.epam.jwd.web.model;
 
+/**
+ * Item's status.
+ *
+ * @author Ilia Eriomkin
+ */
 public enum ItemStatus {
     VALID(1),
     BLOCKED(2),

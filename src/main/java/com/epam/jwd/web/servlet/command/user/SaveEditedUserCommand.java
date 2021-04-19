@@ -21,7 +21,7 @@ public enum SaveEditedUserCommand implements Command {
                 req.getRequestParameter("name")[0],
                 req.getRequestParameter("password")[0]);
 
-        if(optionalUserDto.isPresent()) {
+        if (optionalUserDto.isPresent()) {
             req.setSessionAttribute("name", optionalUserDto.get().getName());
             req.setRequestAttribute("user", optionalUserDto.get());
         }

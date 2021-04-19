@@ -29,7 +29,7 @@ public enum ItemServiceImpl implements ItemService {
 
     @Override
     public boolean update(Item item) {
-       return ITEM_DAO.update(item);
+        return ITEM_DAO.update(item);
     }
 
     @Override

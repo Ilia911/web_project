@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 
 public class SessionRequestContentFactory {
 
-    private SessionRequestContentFactory() {}
+    private SessionRequestContentFactory() {
+    }
 
     /**
      * Extracts data from {@link javax.servlet.http.HttpServletRequest} object.
+     *
      * @param request {@link javax.servlet.http.HttpServletRequest} object.
      * @return {@link RequestContent} with all data from {@link javax.servlet.http.HttpServletRequest} object.
      */

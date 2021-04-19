@@ -31,7 +31,7 @@ public enum ShowProfileCommand implements Command {
     public ResponseContext execute(RequestContent req) {
 
         final Optional<UserDto> optionalUserDto
-                = USER_SERVICE.findById((Integer)req.getSessionAttribute("id"));
+                = USER_SERVICE.findById((Integer) req.getSessionAttribute("id"));
         if (!optionalUserDto.isPresent()) {
             return ShowMainPageCommand.INSTANCE.execute(req);
         }

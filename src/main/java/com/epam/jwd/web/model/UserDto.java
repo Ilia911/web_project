@@ -2,6 +2,11 @@ package com.epam.jwd.web.model;
 
 import java.math.BigDecimal;
 
+/**
+ * Basic model for transferring user data.
+ *
+ * @author Ilia Eriomkin
+ */
 public class UserDto {
     private final Integer id;
     private final String login;
@@ -11,6 +16,17 @@ public class UserDto {
     private final Role role;
     private final UserStatus userStatus;
 
+    /**
+     * Basic constructor
+     *
+     * @param id         user id.
+     * @param login      user login.
+     * @param password   user password.
+     * @param name       user name.
+     * @param account    user account.
+     * @param role       user role {@link Role}.
+     * @param userStatus user status {@link UserStatus}.
+     */
     public UserDto(Integer id, String login, String password, String name,
                    BigDecimal account, Role role, UserStatus userStatus) {
         this.id = id;

@@ -65,7 +65,7 @@ public enum LotServiceImpl implements LotService {
     }
 
     private Item createItemWithBlockedStatus(Item item) {
-        return ItemFactory.INSTANCE.createItem(item.getId(), item.getName(),item.getDescribe(), item.getOwner(),
+        return ItemFactory.INSTANCE.createItem(item.getId(), item.getName(), item.getDescribe(), item.getOwner(),
                 item.getType(), item.getPrice(), ItemStatus.BLOCKED, 0);
     }
 }

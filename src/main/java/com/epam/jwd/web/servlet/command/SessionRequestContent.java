@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-public class SessionRequestContent implements RequestContent{
+public class SessionRequestContent implements RequestContent {
 
     private final HashMap<String, Object> requestAttributes = new HashMap<>();
     private final HashMap<String, String[]> requestParameters = new HashMap<>();
@@ -51,7 +51,7 @@ public class SessionRequestContent implements RequestContent{
             String key = initParameterNames.nextElement();
             servletContextParameters.put(key, servletContext.getInitParameter(key));
         }
-     }
+    }
 
     @Override
     public void insertAttributes(HttpServletRequest request) {

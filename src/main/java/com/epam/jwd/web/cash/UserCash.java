@@ -25,7 +25,7 @@ public enum UserCash implements Subscriber<UserDto> {
         return USERS_DTO;
     }
 
-    public void addUserDto(UserDto newUser){
+    public void addUserDto(UserDto newUser) {
         for (UserDto user : USERS_DTO) {
             if (user.getId().equals(newUser.getId())) {
                 return;

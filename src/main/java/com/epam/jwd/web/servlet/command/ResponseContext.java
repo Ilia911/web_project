@@ -5,7 +5,6 @@ package com.epam.jwd.web.servlet.command;
  * where we should forward to and check if we should be redirected
  *
  * @author Ilia Eriomkin
- *
  */
 public interface ResponseContext {
     /**

@@ -54,7 +54,7 @@ public enum LogInCommand implements Command {
         }
     }
 
-    private void setLoginAttributesIntoSession (RequestContent req, UserDto userDto) {
+    private void setLoginAttributesIntoSession(RequestContent req, UserDto userDto) {
 
         req.setSessionAttribute("id", userDto.getId());
         req.setSessionAttribute("login", userDto.getLogin());

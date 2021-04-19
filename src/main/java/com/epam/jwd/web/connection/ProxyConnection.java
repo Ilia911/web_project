@@ -28,7 +28,7 @@ import java.util.concurrent.Executor;
  *
  * @author Ilia Eriomkin
  */
-public final class ProxyConnection implements Connection{
+public final class ProxyConnection implements Connection {
     private final Connection realConnection;
     private final Logger LOGGER = LoggerFactory.getLogger(ProxyConnection.class);
 
@@ -78,6 +78,7 @@ public final class ProxyConnection implements Connection{
 
     /**
      * Return connection into connection pool.
+     *
      * @throws SQLException
      */
     @Override
@@ -92,7 +93,7 @@ public final class ProxyConnection implements Connection{
         try {
             this.realConnection.close();
         } catch (SQLException e) {
-           LOGGER.error("Connection was not able to be closed!");
+            LOGGER.error("Connection was not able to be closed!");
         }
     }
 

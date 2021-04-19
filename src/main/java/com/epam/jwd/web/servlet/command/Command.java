@@ -10,7 +10,6 @@ public interface Command {
      * Do some logic for the specific command
      *
      * @param req {@link RequestContent} object.
-     *
      * @return {@link ResponseContext} object.
      */
     ResponseContext execute(RequestContent req);
@@ -23,6 +22,6 @@ public interface Command {
      * @return command object.
      */
     static Command of(String name) {
-       return CommandManager.of(name);
+        return CommandManager.of(name);
     }
 }

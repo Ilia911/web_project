@@ -5,7 +5,7 @@ import com.epam.jwd.web.servlet.command.Path;
 import com.epam.jwd.web.servlet.command.RequestContent;
 import com.epam.jwd.web.servlet.command.ResponseContext;
 
-public enum  ShowRegisterItemCommand implements Command {
+public enum ShowRegisterItemCommand implements Command {
     INSTANCE;
 
     private static final ResponseContext RESPONSE = new ResponseContext() {
@@ -19,10 +19,11 @@ public enum  ShowRegisterItemCommand implements Command {
             return false;
         }
     };
+
     @Override
     public ResponseContext execute(RequestContent req) {
 
-        if (req.getSessionAttribute("login") != null ) {
+        if (req.getSessionAttribute("login") != null) {
             return RESPONSE;
         }
         return ShowMainPageCommand.INSTANCE.execute(req);

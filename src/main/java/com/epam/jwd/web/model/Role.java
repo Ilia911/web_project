@@ -1,5 +1,10 @@
 package com.epam.jwd.web.model;
 
+/**
+ * User role.
+ *
+ * @author Ilia Eriomkin
+ */
 public enum Role {
     CLIENT(1),
     ADMIN(2),

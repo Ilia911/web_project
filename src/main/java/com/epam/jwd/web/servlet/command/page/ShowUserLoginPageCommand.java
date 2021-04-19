@@ -19,6 +19,7 @@ public enum ShowUserLoginPageCommand implements Command {
             return false;
         }
     };
+
     @Override
     public ResponseContext execute(RequestContent req) {
         if (req.getSessionAttribute("login") != null) {

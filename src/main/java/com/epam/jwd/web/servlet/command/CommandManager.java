@@ -54,7 +54,7 @@ public enum CommandManager {
 
     private final Command command;
 
-    CommandManager(Command command){
+    CommandManager(Command command) {
         this.command = command;
     }
 
@@ -66,7 +66,7 @@ public enum CommandManager {
      */
     public static Command of(String name) {
         for (CommandManager value : CommandManager.values()) {
-            if(value.name().equalsIgnoreCase(name)) {
+            if (value.name().equalsIgnoreCase(name)) {
                 return value.command;
             }
         }

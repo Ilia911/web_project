@@ -36,9 +36,13 @@ public enum UserDaoImpl implements UserDao {
 
     private static final String FIND_ALL_USERS_SQL = "SELECT * FROM auction_user";
 
-    private static final String UPDATE_USER_SQL = "UPDATE auction_user SET user_name = ?, user_password = ? WHERE (id = ?)";
+    private static final String UPDATE_USER_SQL = "UPDATE auction_user SET user_name = ?, user_password = ? " +
+            "WHERE (id = ?)";
 
     private static final String CHANGE_STATUS_SQL = "UPDATE auction_user SET user_status = ? WHERE (id = ?)";
+
+    static final String REGISTER_USER_SQL = "INSERT INTO auction_user ( user_login, user_password, user_name) " +
+            "VALUES (?, ?, ?)";
 
     @Override
     public Optional<User> findByLogin(String login) {
@@ -142,7 +146,7 @@ public enum UserDaoImpl implements UserDao {
     public Optional<User> register(String userLogin, String userPassword, String userName) {
 
         try (Connection connection = ConnectionPool.INSTANCE.retrieveConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(UserSQL.REGISTER_USER_SQL);
+            PreparedStatement preparedStatement = connection.prepareStatement(REGISTER_USER_SQL);
             preparedStatement.setString(1, userLogin);
             preparedStatement.setString(2, userPassword);
             preparedStatement.setString(3, userName);
@@ -181,7 +185,7 @@ public enum UserDaoImpl implements UserDao {
 
     private void updateCash(int userId) {
         final Optional<User> optionalUser = findById(userId);
-        if(optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
             final Optional<UserDto> userDto = optionalUser.map(this::convertToDto);
             for (Subscriber<? super UserDto> subscriber : SUBSCRIBERS) {
                 subscriber.update(userDto.get());
