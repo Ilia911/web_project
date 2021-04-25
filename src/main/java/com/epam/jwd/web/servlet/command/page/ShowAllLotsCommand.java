@@ -31,20 +31,22 @@ public enum ShowAllLotsCommand implements Command {
     private static final String TOTAL_AMOUNT_OF_PAGES = "allPages";
     private static final int FIRST_SHOWED_PAGE = 1;
     private static final int ORIGIN_NUMBER_OF_SHOWED_ITEMS_ON_ONE_PAGE = 5;
+    private static final List<LotDto> lots = LotCash.INSTANCE.getLots();
 
     @Override
     public ResponseContext execute(RequestContent req) {
-        final List<LotDto> lots = LotCash.INSTANCE.getLots();
+
         final int[] parameters = defineParameters(req);
         int fromIndex = (parameters[1] - 1) * parameters[0];
-        int toIndex = Math.min((parameters[0] * parameters[1]), lots.size() - 1);
+        int toIndex = Math.min((parameters[0] * parameters[1]), lots.size());
         final List<LotDto> lotSublist = lots.subList(fromIndex, toIndex);
 
         req.setRequestAttribute(SHOWED_ITEMS_ON_PAGE, parameters[0]);
         req.setRequestAttribute(SHOWED_PAGE, parameters[1]);
         req.setRequestAttribute(ITEMS_ATTRIBUTE_NAME, lotSublist);
         req.setRequestAttribute(TOTAL_AMOUNT_OF_ITEMS, lots.size());
-        req.setRequestAttribute(TOTAL_AMOUNT_OF_PAGES, Math.floorDiv(lots.size(), parameters[0]));
+        req.setRequestAttribute(TOTAL_AMOUNT_OF_PAGES,
+                lots.size() % parameters[0] > 0 ? lots.size() / parameters[0] + 1 : lots.size() / parameters[0]);
         return RESPONSE;
     }
 
@@ -61,6 +63,11 @@ public enum ShowAllLotsCommand implements Command {
             parameters[1] = FIRST_SHOWED_PAGE;
         } else {
             parameters[1] = Integer.parseInt(req.getRequestParameter(SHOWED_PAGE)[0]);
+
+            if ((parameters[1] - 1) * parameters[0] >= lots.size()) {
+                parameters[1] =
+                        lots.size() % parameters[0] > 0 ? lots.size() / parameters[0] + 1 : lots.size() / parameters[0];
+            }
         }
 
         return parameters;

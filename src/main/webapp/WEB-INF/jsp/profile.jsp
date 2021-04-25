@@ -39,7 +39,7 @@
                     <input type="submit" value=<locale:loc value="profile.edit.button"/>/>
                 </form>
     </c:if>
-    <br/>
+    <br/><br/><br/><br/>
     <div class="footer">
     <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
     </div>

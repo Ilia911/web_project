@@ -74,6 +74,16 @@ public enum DoBidCommand implements Command {
                     (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.actual"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
         }
+        return checkValidityOfBidAmount(req, lot);
+    }
+
+    private ResponseContext checkValidityOfBidAmount(RequestContent req, LotDto lot) {
+        if (req.getRequestParameter("bid")[0].equals("") ||
+        Integer.parseInt(req.getRequestParameter("bid")[0]) <= 0) {
+            req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
+                    (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.valid.bid"));
+            return ShowAllLotsCommand.INSTANCE.execute(req);
+        }
         return checkValidityOfNewBidder(req, lot);
     }
 
@@ -93,7 +103,7 @@ public enum DoBidCommand implements Command {
 
     private ResponseContext checkSumOfMoneyOnBidderAccount(RequestContent req, LotDto lot) {
         final BigDecimal newPrice
-                = lot.getPrice().add(BigDecimal.valueOf(Long.parseLong(req.getRequestParameter("bid")[0])).abs());
+                = lot.getPrice().add(BigDecimal.valueOf(Long.parseLong(req.getRequestParameter("bid")[0])));
         final BigDecimal availableMoney = (BigDecimal) req.getSessionAttribute("account");
         final BigDecimal allowableSum
                 = BigDecimal.valueOf(Long.parseLong(req.getContextParameter("allowable_debt"))).add(availableMoney);

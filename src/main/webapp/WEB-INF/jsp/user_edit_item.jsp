@@ -41,7 +41,7 @@
                 </tr>
         </table>
     </c:if>
-    <br/>
+    <br/><br/><br/><br/>
     <div class="footer">
     <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
     </div>

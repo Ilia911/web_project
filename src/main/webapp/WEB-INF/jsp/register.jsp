@@ -22,7 +22,7 @@
     <input type="submit" value=<locale:loc value="login.submit"/>>
     <input type="reset" value=<locale:loc value="login.reset"/>>
 </form>
-    <br/>
+    <br/><br/><br/><br/>
     <div class="footer">
     <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
     </div>

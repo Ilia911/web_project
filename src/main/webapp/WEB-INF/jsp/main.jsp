@@ -26,7 +26,7 @@
     <input type ="radio" name="locale" value ="ru_RU"><locale:loc value="main.language.russian"/><br/>
     <input type="submit" value=<locale:loc value="main.submit"/>>
 </form>
-<br/>
+<br/><br/><br/><br/>
 <div class="footer">
 <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
 </div>

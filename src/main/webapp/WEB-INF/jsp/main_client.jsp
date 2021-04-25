@@ -15,7 +15,7 @@
 <a href="${pageContext.request.contextPath}/controller?command=show_profile"><locale:loc value="admin.profile"/></a><br/>
 <a href="${pageContext.request.contextPath}/controller?command=show_register_item"><locale:loc value="main.register.item"/></a><br/>
 </div>
-<br/>
+<br/><br/><br/><br/>
 <div class="footer">
 <%@ include file="/WEB-INF/jsp/common/footer.jsp"%><br/><br/>
 </div>

@@ -54,7 +54,7 @@
                     <option value = "${requestScope.showedItems}">${requestScope.showedItems}</option>
                     <option value = "5">5</option>
                     <option value = "10">10</option>
-                    <option value = "15">25</option>
+                    <option value = "25">25</option>
                 </select>
              <locale:loc value="items.lots"/></p>
         <p><locale:loc value="items.page"/> ${requestScope.showedPage} <locale:loc value="items.from"/>
@@ -63,4 +63,5 @@
         <input type="submit" value=<locale:loc value="items.show"/>/></p>
         </form>
         </div>
+        <br/><br/><br/>
     </c:if>
