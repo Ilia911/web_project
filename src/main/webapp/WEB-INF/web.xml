@@ -22,11 +22,11 @@
 
     <context-param>
         <param-name>item_show_time</param-name><!--in millisecond - Show time after unblocking item-->
-        <param-value>43200000</param-value>
+        <param-value>432000</param-value>
     </context-param>
     <context-param>
         <param-name>item_additional_show_time</param-name><!--in millisecond - Additional show time after doing bid-->
-        <param-value>4320000</param-value>
+        <param-value>432000</param-value>
     </context-param>
     <context-param>
         <param-name>allowable_debt</param-name><!--sum of allowable debt-->

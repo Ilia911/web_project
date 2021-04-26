@@ -79,7 +79,7 @@ public enum DoBidCommand implements Command {
 
     private ResponseContext checkValidityOfBidAmount(RequestContent req, LotDto lot) {
         if (req.getRequestParameter("bid")[0].equals("") ||
-        Integer.parseInt(req.getRequestParameter("bid")[0]) <= 0) {
+                Integer.parseInt(req.getRequestParameter("bid")[0]) <= 0) {
             req.setRequestAttribute("errorDoBidMessage", ResourceBundle.getBundle("generalKeys",
                     (Locale) req.getSessionAttribute("locale")).getString("message.do.bid.not.valid.bid"));
             return ShowAllLotsCommand.INSTANCE.execute(req);
@@ -120,20 +120,24 @@ public enum DoBidCommand implements Command {
         final long possibleEndTime = GregorianCalendar.getInstance().getTimeInMillis()
                 + Long.parseLong(req.getContextParameter("item_additional_show_time"));
         final long endTime = Math.max(lot.getEndTime(), possibleEndTime);
+
+        if (lot.getOwnerId() != lot.getBidOwnerId()) {
+            USER_SERVICE.updateAccount(lot.getBidOwnerId(), lot.getPrice().negate());
+        }
+
         LOT_SERVICE.doBid(lot.getItemId(), endTime, (Integer) req.getSessionAttribute("id"), newPrice);
         USER_SERVICE.updateAccount((Integer) req.getSessionAttribute("id"), newPrice);
-        USER_SERVICE.updateAccount(Integer.parseInt(req.getRequestParameter
-                ("previousBidOwnerId")[0]), lot.getPrice().negate());
+
         return ShowAllLotsCommand.INSTANCE.execute(req);
     }
 
-    private ResponseContext doReverseBid(RequestContent req, LotDto item) {
+    private ResponseContext doReverseBid(RequestContent req, LotDto lot) {
         final BigDecimal newPrice
-                = item.getPrice().subtract(BigDecimal.valueOf(Long.parseLong(req.getRequestParameter("bid")[0])).abs());
+                = lot.getPrice().subtract(BigDecimal.valueOf(Long.parseLong(req.getRequestParameter("bid")[0])));
         final long possibleEndTime = GregorianCalendar.getInstance().getTimeInMillis()
                 + Long.parseLong(req.getContextParameter("item_additional_show_time"));
-        final long endTime = Math.max(item.getEndTime(), possibleEndTime);
-        LOT_SERVICE.doBid(item.getItemId(), endTime, (Integer) req.getSessionAttribute("id"), newPrice);
+        final long endTime = Math.max(lot.getEndTime(), possibleEndTime);
+        LOT_SERVICE.doBid(lot.getItemId(), endTime, (Integer) req.getSessionAttribute("id"), newPrice);
         return ShowAllLotsCommand.INSTANCE.execute(req);
     }
 }

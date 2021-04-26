@@ -140,7 +140,7 @@ public enum ConnectionPool {
     private class AddConnectionThread extends Thread {
         @Override
         public void run() {
-            while (true) {
+
                 lock.lock();
                 try {
                     while (checkSufficiencyOfCurrentAmountOfFreeConnections()) {
@@ -154,7 +154,7 @@ public enum ConnectionPool {
                 } finally {
                     lock.unlock();
                 }
-            }
+
         }
 
         private boolean checkSufficiencyOfCurrentAmountOfFreeConnections() {

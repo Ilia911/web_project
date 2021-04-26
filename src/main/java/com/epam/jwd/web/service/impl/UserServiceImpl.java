@@ -2,6 +2,7 @@ package com.epam.jwd.web.service.impl;
 
 import com.epam.jwd.web.dao.UserDao;
 import com.epam.jwd.web.dao.impl.UserDaoImpl;
+import com.epam.jwd.web.model.ItemType;
 import com.epam.jwd.web.model.LotDto;
 import com.epam.jwd.web.model.User;
 import com.epam.jwd.web.model.UserDto;
@@ -85,9 +86,8 @@ public enum UserServiceImpl implements UserService {
 
     @Override
     public boolean complete(LotDto lot) {
-        if (lot.getOwnerId() != lot.getBidOwnerId()) {
-            final Optional<UserDto> optionalItemOwner = findById(lot.getOwnerId());
-            return updateAccount(lot.getOwnerId(), optionalItemOwner.get().getAccount().add(lot.getPrice()));
+        if (lot.getOwnerId() != lot.getBidOwnerId() && ItemType.STRAIGHT.equals(lot.getType())) {
+            return updateAccount(lot.getOwnerId(), lot.getPrice().negate());
         }
         return false;
     }
