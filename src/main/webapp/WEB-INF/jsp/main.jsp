@@ -18,6 +18,7 @@
 </h2>
 <c:if test="${ not empty sessionScope.successfulMessage }"><h2>${sessionScope.successfulMessage}!<h2></c:if>
 <c:if test="${ not empty sessionScope.failedMessage }"><h3>${sessionScope.failedMessage}!</h3></c:if>
+<c:if test="${ not empty requestScope.failedMessage }"><h3>${requestScope.failedMessage}!</h3></c:if>
 <%@ include file="/WEB-INF/jsp/common/lots.jsp"%>
 <br/>
 <form method="post" action="${pageContext.request.contextPath}/controller?command=choose_locale">
